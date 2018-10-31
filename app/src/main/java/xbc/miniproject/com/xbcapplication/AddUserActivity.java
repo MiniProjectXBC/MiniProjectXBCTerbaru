@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class AddUserActivity extends Activity {
 
         ActionBar actionBar = getActionBar();
         ((ActionBar)actionBar).setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Add User");
 
         addUserEditTexUsername = (EditText) findViewById(R.id.addUserEditTexUsername);
         addUserEditTexPassword = (EditText) findViewById(R.id.addUserEditTexPassword);

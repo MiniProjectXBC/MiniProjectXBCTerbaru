@@ -88,7 +88,7 @@ public class EditUserActivity extends Activity {
                 editUserEditTextRole.setError(null);
                 DataListRole selected = (DataListRole) parent.getAdapter().getItem(position);
                 int cariID =  selected.getId();
-                Toast.makeText(context,"idnya ini bos: "+cariID,Toast.LENGTH_LONG).show();
+               // Toast.makeText(context,"idnya ini bos: "+cariID,Toast.LENGTH_LONG).show();
             }
         });
         editUserEditTextRole.addTextChangedListener(new TextWatcher() {

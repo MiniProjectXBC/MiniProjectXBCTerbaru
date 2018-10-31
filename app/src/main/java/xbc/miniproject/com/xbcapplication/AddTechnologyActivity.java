@@ -17,8 +17,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.model.technology.DataList;
 import xbc.miniproject.com.xbcapplication.model.technology.ModelTechnology;
+import xbc.miniproject.com.xbcapplication.model.user.ModelUser;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AddTechnologyActivity extends Activity {
     private Context context =this;
@@ -34,6 +37,7 @@ public class AddTechnologyActivity extends Activity {
 
         ActionBar actionBar = getActionBar();
         ((ActionBar)actionBar).setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Add Technology");
 
         addTechnologyEditTextName = (EditText) findViewById(R.id.addTechnologyEditTextName);
         addTechnologyEditTexNote = (EditText) findViewById(R.id.addTechnologyEditTexNote);
@@ -65,6 +69,7 @@ public class AddTechnologyActivity extends Activity {
             panggilAPICreateTechnology();
         }
     }
+
     private void panggilAPICreateTechnology(){
         apiServices = APIUtilities.getAPIServices();
         DataList data = new DataList();
