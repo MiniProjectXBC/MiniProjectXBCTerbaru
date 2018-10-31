@@ -18,6 +18,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import xbc.miniproject.com.xbcapplication.model.assignment.AssignmentList;
+import xbc.miniproject.com.xbcapplication.model.assignment.ModelAssignment;
+import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
+import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
+
 public class DoneAssignmentActivity extends Activity {
     private Context context = this;
 
@@ -27,6 +36,8 @@ public class DoneAssignmentActivity extends Activity {
     private Button doneAssignmentButtonSave,
             doneAssignmentButtonCancel;
     private Calendar calendar;
+
+    RequestAPIServices apiServices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,15 +103,64 @@ public class DoneAssignmentActivity extends Activity {
         if (doneAssignmentEditTextRealDate.getText().toString().trim().length() == 0){
             Toast.makeText(context,"Realization Date Field still empty!",Toast.LENGTH_SHORT).show();
         } else{
-            SaveSuccessNotification();
+            DoneQuestion();
         }
     }
 
-    private void SaveSuccessNotification() {
+    private void DoneQuestion(){
+        final AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(context);
+        builder.setTitle("Warning!")
+                .setMessage("Apakah Anda Yakin Akan Update Data ?")
+                .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        DoneAssignmentAPI();
+                    }
+                })
+                .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false).show();
+    }
+
+    private void DoneAssignmentAPI(){
+        apiServices = APIUtilities.getAPIServices();
+        AssignmentList data = new AssignmentList();
+        data.setRealizationDate(doneAssignmentEditTextRealDate.getText().toString());
+        data.setNotes(doneAssignmentEditTextNote.getText().toString());
+
+        apiServices.doneAssigment("application/json", SessionManager.getToken(context), data)
+                .enqueue(new Callback<ModelAssignment>() {
+                    @Override
+                    public void onResponse(Call<ModelAssignment> call, Response<ModelAssignment> response) {
+                        if (response.code()==200){
+                            String message = response.body().getMessage();
+                            if (message != null){
+                                DoneSuccessNotification(context, message);
+                            }
+                            else {
+                                DoneSuccessNotification(context, "Message Gagal Diambil");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelAssignment> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void DoneSuccessNotification(final Context context, String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Testimony Successfully Update!")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

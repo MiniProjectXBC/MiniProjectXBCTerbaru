@@ -13,45 +13,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_margin="30dp">
+            android:layout_margin="30dp"
+            android:orientation="vertical">
 
             <AutoCompleteTextView
                 android:id="@+id/addMonitoringEditTextName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:inputType="text"
-                android:hint="Name"/>
+                android:hint="Name"
+                android:inputType="text" />
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/addMonitoringEditTextIdleDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/addMonitoringEditTextIdleDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="9"
-                    android:inputType="text"
-                    android:hint="Idle Date"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/baseline_calendar_today_black_18"/>
-                </LinearLayout>
-
-            </LinearLayout>
+                android:layout_marginBottom="10dp"
+                android:layout_weight="9"
+                android:hint="Idle Date"
+                android:inputType="text"
+                android:drawableRight="@drawable/baseline_calendar_today_black_18"/>
 
 
             <EditText
@@ -59,34 +40,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:inputType="text"
-                android:hint="Last Project At"/>
+                android:hint="Last Project At"
+                android:inputType="text" />
 
             <EditText
                 android:id="@+id/addMonitoringEditTextIdleReason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:inputType="text"
-                android:hint="Idle Reason"/>
+                android:hint="Idle Reason"
+                android:inputType="text" />
 
             <LinearLayout
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="right">
 
                 <Button
                     android:id="@+id/addMonitoringButtonSave"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="Save"/>
+                    android:text="Save" />
 
                 <Button
                     android:id="@+id/addMonitoringButtonCancel"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="Cancel"/>
+                    android:text="Cancel" />
 
             </LinearLayout>
 

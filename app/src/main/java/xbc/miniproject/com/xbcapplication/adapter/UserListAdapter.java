@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.UserModel;
 import xbc.miniproject.com.xbcapplication.model.user.DataList;
 import xbc.miniproject.com.xbcapplication.viewHolder.UserViewHolder;
 

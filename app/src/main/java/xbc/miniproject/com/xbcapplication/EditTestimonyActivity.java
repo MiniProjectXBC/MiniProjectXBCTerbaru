@@ -17,11 +17,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.model.testimony.ModelTestimony;
 import xbc.miniproject.com.xbcapplication.model.testimony.Testimony;
-import xbc.miniproject.com.xbcapplication.model.trainer.ModelTrainer;
-import xbc.miniproject.com.xbcapplication.model.trainer.Trainer;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class EditTestimonyActivity extends Activity {
     private Context context = this;
@@ -106,7 +105,7 @@ public class EditTestimonyActivity extends Activity {
         data.setContent(editTestimonyEditTexContent.getText().toString());
 
         apiServices.editTestimony(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_EDIT_BIODATA, data)
+                SessionManager.getToken(context), data)
                 .enqueue(new Callback<ModelTestimony>() {
                     @Override
                     public void onResponse(Call<ModelTestimony> call, Response<ModelTestimony> response) {

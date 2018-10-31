@@ -24,12 +24,25 @@
                 android:layout_weight="4"
                 android:hint="Search by Name" />
 
-            <Button
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:id="@+id/userButtonSearch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/custom_button_login"
+                android:src="@android:drawable/ic_menu_search" />
+
+            <ImageView
+                android:layout_gravity="center_vertical"
                 android:id="@+id/userButtonInsert"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/baseline_add_black_24"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button_login"
+                android:src="@android:drawable/ic_menu_add" />
+
 
         </LinearLayout>
 
@@ -37,20 +50,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:background="@drawable/custom_head_linear_table"
             android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
             <TextView
                 android:textSize="16sp"
                 android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:padding="5dp"
+                android:gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:textStyle="bold"
-                android:text="USERNAME"/>
+                android:text="USERNAME"
+                />
             <TextView
                 android:textSize="16sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:padding="5dp"
+                android:gravity="center_vertical"
                 android:layout_weight="3"
                 android:textStyle="bold"
                 android:text="ROLE"/>
@@ -59,6 +80,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
+                android:padding="5dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:text="STATUS"/>
 

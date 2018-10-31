@@ -10,11 +10,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.BiodataModel;
-import xbc.miniproject.com.xbcapplication.dummyModel.ClassModel;
-import xbc.miniproject.com.xbcapplication.model.kelas.Batch;
 import xbc.miniproject.com.xbcapplication.model.kelas.DataList;
-import xbc.miniproject.com.xbcapplication.viewHolder.BiodataViewHolder;
 import xbc.miniproject.com.xbcapplication.viewHolder.ClassViewHolder;
 
 public class ClassListAdapter extends RecyclerView.Adapter<ClassViewHolder> {

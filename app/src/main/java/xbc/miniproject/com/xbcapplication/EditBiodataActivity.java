@@ -3,6 +3,7 @@ package xbc.miniproject.com.xbcapplication;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class EditBiodataActivity extends Activity {
 
@@ -46,6 +49,7 @@ public class EditBiodataActivity extends Activity {
     int id;
 
     List<BiodataList> listBiodata = new ArrayList<BiodataList>();
+    private ProgressDialog loadingInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +90,15 @@ public class EditBiodataActivity extends Activity {
     }
 
     private void getOneBiodataAPI(int id) {
+        final ProgressDialog loading = LoadingClass.loadingAnimationAndText(context,
+            "Sedang Memuat Data . . .");
+        loading.show();
+
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getOneBiodata(id).enqueue(new Callback<ModelBiodata>() {
+        apiServices.getOneBiodata(SessionManager.getToken(context),id).enqueue(new Callback<ModelBiodata>() {
             @Override
             public void onResponse(Call<ModelBiodata> call, Response<ModelBiodata> response) {
+                loading.dismiss();
                 if (response.code() == 200){
                     Biodata data = response.body().getData();
                     editBiodataEditTextName.setText(data.getName());
@@ -105,7 +114,8 @@ public class EditBiodataActivity extends Activity {
 
             @Override
             public void onFailure(Call<ModelBiodata> call, Throwable t) {
-                Toast.makeText(context, "Get Testimony onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                loading.dismiss();
+                Toast.makeText(context, "Get One Biodata onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -124,6 +134,9 @@ public class EditBiodataActivity extends Activity {
         } else if(editBiodataEditTextGpa.getText().toString().trim().length() == 0){
             Toast.makeText(context,"GPA Field still empty!",Toast.LENGTH_SHORT).show();
         } else{
+            loadingInput = LoadingClass.loadingAnimationAndText(context,
+                    "Sedang Mengupload Data . . .");
+            loadingInput.show();
             inputEditBiodataAPI();
             //SaveSuccessNotification();
         }
@@ -142,11 +155,12 @@ public class EditBiodataActivity extends Activity {
         data.setGpa(editBiodataEditTextGpa.getText().toString());
 
         apiServices.editBiodata(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_EDIT_BIODATA,
+                SessionManager.getToken(context),
                 data)
                 .enqueue(new Callback<ModelBiodata>() {
             @Override
             public void onResponse(Call<ModelBiodata> call, Response<ModelBiodata> response) {
+                loadingInput.dismiss();
                 if (response.code() == 200) {
                     String message = response.body().getMessage();
                     if (message!=null){
@@ -160,6 +174,7 @@ public class EditBiodataActivity extends Activity {
 
             @Override
             public void onFailure(Call<ModelBiodata> call, Throwable t) {
+                loadingInput.dismiss();
                 Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

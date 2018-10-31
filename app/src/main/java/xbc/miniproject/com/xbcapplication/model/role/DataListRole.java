@@ -6,6 +6,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class DataListRole {
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     @SerializedName("name")
     @Expose
     private String name;

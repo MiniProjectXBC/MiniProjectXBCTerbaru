@@ -1,11 +1,10 @@
 
 package xbc.miniproject.com.xbcapplication.model.trainer;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import xbc.miniproject.com.xbcapplication.model.biodata.Biodata;
+import java.util.List;
 
 public class ModelTrainer {
 

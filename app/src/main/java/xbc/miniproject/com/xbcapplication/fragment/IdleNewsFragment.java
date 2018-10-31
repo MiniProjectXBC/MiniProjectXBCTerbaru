@@ -1,5 +1,6 @@
 package xbc.miniproject.com.xbcapplication.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,13 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -30,10 +29,11 @@ import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.idleNews.ModelIdleNews;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
 
 public class IdleNewsFragment extends Fragment {
     private EditText idleNewsEditTextSearch;
-    private Button idleNewsButtonInsert;
+    private ImageView idleNewsButtonSearch, idleNewsButtonInsert;
     private RecyclerView idleNewsRecyclerViewList;
 
     private List<IdleNewsList> listIdleNews = new ArrayList<>();
@@ -50,38 +50,36 @@ public class IdleNewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_idle_news, container, false);
 
-        getDataFromAPI();
-
         idleNewsRecyclerViewList = (RecyclerView) view.findViewById(R.id.idleNewsRecyclerViewList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayout.VERTICAL, false);
         idleNewsRecyclerViewList.setLayoutManager(layoutManager);
 
         idleNewsEditTextSearch = (EditText) view.findViewById(R.id.idleNewsEditTextSearch);
-        idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
-        idleNewsEditTextSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//        idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
+//        idleNewsEditTextSearch.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                if (idleNewsEditTextSearch.getText().toString().trim().length() == 0) {
+//                    idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
+//                } else {
+//                    idleNewsRecyclerViewList.setVisibility(View.VISIBLE);
+//                    filter(editable.toString());
+//                }
+//            }
+//        });
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (idleNewsEditTextSearch.getText().toString().trim().length() == 0) {
-                    idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
-                } else {
-                    idleNewsRecyclerViewList.setVisibility(View.VISIBLE);
-                    filter(editable.toString());
-                }
-            }
-        });
-
-        idleNewsButtonInsert = (Button) view.findViewById(R.id.idleNewsButtonInsert);
+        idleNewsButtonInsert = (ImageView) view.findViewById(R.id.idleNewsButtonInsert);
         idleNewsButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,23 +88,45 @@ public class IdleNewsFragment extends Fragment {
             }
         });
 
-        tampilkanListIdleNews();
+        idleNewsButtonSearch = (ImageView) view.findViewById(R.id.idleNewsButtonSearch);
+        idleNewsButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (idleNewsEditTextSearch.getText().toString().trim().length() == 0){
+
+                }
+                else {
+                    String keyword = idleNewsEditTextSearch.getText().toString().trim();
+                    listIdleNews = new ArrayList<>();
+                    getDataFromAPI(keyword);
+                }
+            }
+        });
+
+//        tampilkanListIdleNews();
 
 
         return view;
     }
 
-    private void getDataFromAPI() {
+    private void getDataFromAPI(String keyword) {
+        final ProgressDialog loading = LoadingClass.loadingAnimationAndText(getContext(),
+                "Sedang Memuat Data . . .");
+        loading.show();
+
         apiServices = APIUtilities.getAPIServices();
         apiServices.getListIdleNews().enqueue(new Callback<ModelIdleNews>() {
             @Override
             public void onResponse(Call<ModelIdleNews> call, Response<ModelIdleNews> response) {
+                loading.dismiss();
                 if (response.code() == 200){
                     List<IdleNewsList> tmp = (List<IdleNewsList>) response.body().getDataList();
                     for (int i = 0; i<tmp.size();i++){
                         IdleNewsList data = tmp.get(i);
                         listIdleNews.add(data);
                     }
+                    idleNewsRecyclerViewList.setVisibility(View.VISIBLE);
+                    tampilkanListIdleNews();
                 } else{
                     Toast.makeText(getContext(), "Gagal Mendapatkan List Idle News: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
                 }
@@ -128,6 +148,17 @@ public class IdleNewsFragment extends Fragment {
             }
         }
         idleNewsListAdapter.filterList(filteredList);
+    }
+
+    @Override
+    public void onResume() {
+        clearSearch();
+        super.onResume();
+    }
+
+    public void clearSearch(){
+        idleNewsEditTextSearch.setText("");
+        idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
     }
 
     private void tampilkanListIdleNews() {

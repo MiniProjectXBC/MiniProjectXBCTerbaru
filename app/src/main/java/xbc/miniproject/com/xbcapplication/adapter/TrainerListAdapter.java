@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.TechnologyModel;
-import xbc.miniproject.com.xbcapplication.dummyModel.TrainerModel;
 import xbc.miniproject.com.xbcapplication.model.trainer.DataListTrainer;
-import xbc.miniproject.com.xbcapplication.viewHolder.TechnologyViewHolder;
 import xbc.miniproject.com.xbcapplication.viewHolder.TrainerViewHolder;
 
 public class TrainerListAdapter extends RecyclerView.Adapter<TrainerViewHolder> {

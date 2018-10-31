@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,10 +42,16 @@ import xbc.miniproject.com.xbcapplication.dummyModel.MonitoringModel;
 import xbc.miniproject.com.xbcapplication.model.monitoring.ModelMonitoring;
 import xbc.miniproject.com.xbcapplication.model.monitoring.MonitoringBiodata;
 import xbc.miniproject.com.xbcapplication.model.monitoring.MonitoringDataList;
+import xbc.miniproject.com.xbcapplication.model.monitoring.autoComplete.DataList;
+import xbc.miniproject.com.xbcapplication.model.monitoring.autoComplete.ModelMonitoringAutoComplete;
+import xbc.miniproject.com.xbcapplication.model.monitoring.getOne.ModelMonitoringGetOne;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.KArrayAdapter;
+import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
-public class AddIdleMonitoringActivity extends AppCompatActivity {
+public class AddIdleMonitoringActivity extends Activity {
     private Context context = this;
 
     private EditText addMonitoringEditTextIdleDate,
@@ -55,23 +63,24 @@ public class AddIdleMonitoringActivity extends AppCompatActivity {
     private Button addMonitoringButtonSave,
             addMonitoringButtonCancel;
 
-    private List<String> names = new ArrayList<>();
-
     private boolean isNameSelected;
+
+    KArrayAdapter<DataList> adapter;
 
     private Calendar calendar;
 
+    String idBiodata;
+
     private RequestAPIServices apiServices;
-    private List<MonitoringDataList> listMonitoring = new ArrayList<>();
+    private List<DataList> listMonitoring = new ArrayList<>();
+    private ProgressDialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_idle_monitoring);
 
-        getAutoCompleteAPI();
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Input Idle");
 
@@ -88,25 +97,17 @@ public class AddIdleMonitoringActivity extends AppCompatActivity {
         };
 
         addMonitoringEditTextName = (AutoCompleteTextView) findViewById(R.id.addMonitoringEditTextName);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this, android.R.layout.select_dialog_item, names);
-        addMonitoringEditTextName.setThreshold(0);
-        addMonitoringEditTextName.setAdapter(adapter);
 
-        addMonitoringEditTextName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (addMonitoringEditTextName.getText().toString().trim().length() == 0){
-                    addMonitoringEditTextName.showDropDown();
-                }
-            }
-        });
 
         addMonitoringEditTextName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 isNameSelected = true;
                 addMonitoringEditTextName.setError(null);
+
+                DataList selected = (DataList) parent.getAdapter().getItem(position);
+                int idLocal = selected.getId();
+                idBiodata = idLocal+"";
             }
         });
 
@@ -120,11 +121,15 @@ public class AddIdleMonitoringActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 isNameSelected = false;
                 addMonitoringEditTextName.setError("Name must from the list!");
+                listMonitoring = new ArrayList<>();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (addMonitoringEditTextName.getText().toString().trim().length() != 0) {
+                    String keyword = addMonitoringEditTextName.getText().toString().trim();
+                    getAutoCompleteAPI(keyword);
+                }
             }
         });
 
@@ -147,7 +152,7 @@ public class AddIdleMonitoringActivity extends AppCompatActivity {
         addMonitoringButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    inputValidation();
+                inputValidation();
             }
         });
 
@@ -158,30 +163,37 @@ public class AddIdleMonitoringActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
-    private void getAutoCompleteAPI() {
+    private void getAutoCompleteAPI(String keyword) {
+
         apiServices = APIUtilities.getAPIServices();
-
-        apiServices.getAutoCompleteMonitoringList().enqueue(new Callback<MonitoringDataList>() {
+        apiServices.getAutoCompleteMonitoringList(SessionManager.getToken(context), keyword).enqueue(new Callback<ModelMonitoringAutoComplete>() {
             @Override
-            public void onResponse(Call<MonitoringDataList> call, Response<MonitoringDataList> response) {
-                if (response.code()== 200){
-
+            public void onResponse(Call<ModelMonitoringAutoComplete> call, Response<ModelMonitoringAutoComplete> response) {
+                if (response.code() == 200) {
+                    listMonitoring = response.body().getDataList();
+                    getAutoCompletAdapter();
                 }
             }
 
             @Override
-            public void onFailure(Call<MonitoringDataList> call, Throwable t) {
-
+            public void onFailure(Call<ModelMonitoringAutoComplete> call, Throwable t) {
             }
         });
+    }
+
+    private void getAutoCompletAdapter() {
+        adapter = new KArrayAdapter<>
+                (context, android.R.layout.simple_list_item_1, listMonitoring);
+        addMonitoringEditTextName.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     private void updateLabel() {
         String myFormat = "dd-MM-yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
         addMonitoringEditTextIdleDate.setText(sdf.format(calendar.getTime()));
     }
 
@@ -194,15 +206,50 @@ public class AddIdleMonitoringActivity extends AppCompatActivity {
             addMonitoringEditTextName.setText("");
             Toast.makeText(context, "Name Field Must From the List!", Toast.LENGTH_SHORT).show();
         } else {
-            SaveSuccessNotification();
+//            SaveSuccessNotification();
+            loading = LoadingClass.loadingAnimationAndText(context,
+                    "Sedang Mengupload Data . . .");
+            loading.show();
+            callAPICreateMonitoring();
+
         }
     }
 
-    private void SaveSuccessNotification() {
+    private void callAPICreateMonitoring() {
+        String contentType = "application/json";
+        String tokenAuthorization = SessionManager.getToken(context);
+        String idleDate = addMonitoringEditTextIdleDate.getText().toString();
+        String lastProject = addMonitoringEditTextLastProjectAt.getText().toString();
+        String idleReason = addMonitoringEditTextIdleReason.getText().toString();
+
+        String json = APIUtilities.generateMonitoring(idBiodata,idleDate,lastProject,idleReason);
+        RequestBody requestBody = RequestBody.create(APIUtilities.mediaType(),json);
+
+        apiServices = APIUtilities.getAPIServices();
+        apiServices.createMonitoring(contentType,tokenAuthorization,requestBody).enqueue(new Callback<ModelMonitoringGetOne>() {
+            @Override
+            public void onResponse(Call<ModelMonitoringGetOne> call, Response<ModelMonitoringGetOne> response) {
+                loading.dismiss();
+                if (response.code() == 201){
+//                    Toast.makeText(context, "Result : "+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    SaveSuccessNotification(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ModelMonitoringGetOne> call, Throwable t) {
+                loading.dismiss();
+                Toast.makeText(context, "Create Monitoring onFailure : "+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void SaveSuccessNotification(String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Idle Successfully Added!")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

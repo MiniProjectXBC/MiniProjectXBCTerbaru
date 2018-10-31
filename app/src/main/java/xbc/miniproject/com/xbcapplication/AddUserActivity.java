@@ -11,26 +11,26 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xbc.miniproject.com.xbcapplication.utility.KArrayAdapter;
 import xbc.miniproject.com.xbcapplication.model.role.DataListRole;
 import xbc.miniproject.com.xbcapplication.model.role.ModelRole;
 import xbc.miniproject.com.xbcapplication.model.user.DataList;
 import xbc.miniproject.com.xbcapplication.model.user.ModelUser;
-import xbc.miniproject.com.xbcapplication.model.user.Role;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AddUserActivity extends Activity {
     private Context context = this;
@@ -40,39 +40,48 @@ public class AddUserActivity extends Activity {
     private AutoCompleteTextView addUserEditTextRole;
     private Button addUserButtonSave;
     private Button addUserButtonCancel;
+    private KArrayAdapter<DataListRole> adapter;
     private List<DataListRole> dataListRoles =  new ArrayList<>();
-    private ArrayList<String> listRole = new ArrayList<String>();
     private boolean isRoleSelected;
     private RequestAPIServices apiServices;
-    int banyak;
+    int id1;
+    private static final Pattern CEK_PASSWORD =
+            Pattern.compile("^"+
+                "(?=.*[a-z])"+
+                "(?=.*[0-9])"+
+                "(?=.*[A-Z])"+
+                "(?=\\S+$)"+
+                ".{4,}"+
+                "$");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
+
+        ActionBar actionBar = getActionBar();
+        ((ActionBar)actionBar).setDisplayHomeAsUpEnabled(true);
+
         addUserEditTexUsername = (EditText) findViewById(R.id.addUserEditTexUsername);
         addUserEditTexPassword = (EditText) findViewById(R.id.addUserEditTexPassword);
         addUserEditTexRetypePassword = (EditText) findViewById(R.id.addUserEditTexRetypePassword);
         addUserEditTextRole =  (AutoCompleteTextView) findViewById(R.id.addUserEditTextRole);
 
-        getRole();
-        final ArrayAdapter<String> adapter =  new ArrayAdapter<String>
-                (this, android.R.layout.select_dialog_item, listRole);
-        addUserEditTextRole.setThreshold(0);
-        addUserEditTextRole.setAdapter(adapter);
         addUserEditTextRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(addUserEditTextRole.getText().toString().trim().length()==0){
-                    addUserEditTextRole.showDropDown();
-                }
+
             }
         });
+        addUserEditTextRole.setThreshold(1);
         addUserEditTextRole.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 isRoleSelected =  true;
-                banyak =  position;
+                id1 =  position;
                 addUserEditTextRole.setError(null);
+                DataListRole selected =  (DataListRole) parent.getAdapter().getItem(position);
+                int cariId= selected.getId();
+                Toast.makeText(context,"idnya ini bos: "+cariId,Toast.LENGTH_LONG).show();
             }
         });
         addUserEditTextRole.addTextChangedListener(new TextWatcher() {
@@ -83,24 +92,25 @@ public class AddUserActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(addUserEditTextRole.getText().toString().trim().length()==0){
-                    addUserEditTextRole.setError(null);
-                }else{
                     isRoleSelected =  false;
-                    addUserEditTextRole.setError("Role Must from the list !");
-                }
+                    getRole(addUserEditTextRole.getText().toString().trim());
+                    dataListRoles = new ArrayList<>();
+//               addUserEditTextRole.setError("Role Must from the list !");
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if(addUserEditTextRole.getText().toString().trim().length()!=0){
+                    String keyword =  addUserEditTextRole.getText().toString().trim();
+                    getRole(keyword);
+                }
             }
         });
         addUserButtonSave  =  (Button) findViewById(R.id.addUserButtonSave);
         addUserButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDataValidtaion(banyak);
+                addDataValidtaion(id1);
             }
         });
         addUserButtonCancel =  (Button) findViewById(R.id.addUserButtonCancel);
@@ -111,33 +121,28 @@ public class AddUserActivity extends Activity {
             }
         });
     }
-    private void getRole(){
+    private void getRole(String keyword){
+        String token = SessionManager.getToken(context);
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListRole().enqueue(new Callback<ModelRole>() {
+        apiServices.getListRole(token, keyword).enqueue(new Callback<ModelRole>() {
             @Override
             public void onResponse(Call<ModelRole> call, Response<ModelRole> response) {
-                List<DataListRole> tmp = response.body().getDataList();
-
                 if(response.code()==200){
-                    for(int i=0; i<tmp.size(); i++){
-                        DataListRole data = tmp.get(i);
-                        dataListRoles.add(data);
-                        listRole.add(data.getName());
-                        System.out.println(dataListRoles);
-
-
+                        List<DataListRole> tmp = response.body().getDataList();
+                        dataListRoles =  response.body().getDataList();
+                        tampilkanData();
                     }
-
-                }else{
-                    Toast.makeText(context, "Gagal Mendapatkan List Role"+response.message(), Toast.LENGTH_LONG).show();
-                }
             }
-
             @Override
             public void onFailure(Call<ModelRole> call, Throwable t) {
                 Toast.makeText(context, "List User onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+    private void tampilkanData(){
+        adapter = new KArrayAdapter<>(context, android.R.layout.simple_list_item_1, dataListRoles);
+        addUserEditTextRole.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     private void addDataValidtaion(final int position){
@@ -151,32 +156,25 @@ public class AddUserActivity extends Activity {
             Toast.makeText(context, "Please Retype password !", Toast.LENGTH_SHORT).show();
         }else if(isRoleSelected ==false){
             Toast.makeText(context, "Role Must from the list!", Toast.LENGTH_SHORT).show();
+        }else if(!CEK_PASSWORD.matcher(addUserEditTexPassword.getText().toString().trim()).matches()){
+            Toast.makeText(context, "Password Harus Ada kombinasi Huruf dan Angka", Toast.LENGTH_SHORT).show();
         }else{
             final String pas = addUserEditTexPassword.getText().toString();
             final String repas = addUserEditTexRetypePassword.getText().toString();
             if(pas.equalsIgnoreCase(repas)){
+//                panggilValidasiChar(addUserEditTexPassword.getText().toString().trim());
                 panggilAPI(position);
             }else{
                 Toast.makeText(context, "Password Tidak Sama!", Toast.LENGTH_SHORT).show();
             }
         }
     }
-    public void getRolefromApi(){
-//        apiServices =  APIUtilities.getAPIServices();
 
-//        DataListTestimony data = new DataListTestimony();
-//        Role role = new Role();
-//        for(role.getId()!){
+//    public void panggilValidasiChar(String data){
+//        if(!CEK_PASSWORD.matcher(data).matches()){
 //
-        }
-
-
-
-    public void panggilAPI() {
-//        saveDataNotification();
-    }
-
-
+//        }
+//    }
     public void panggilAPI(final int position){
         DataList dataUser = new DataList();
         dataUser.setUsername(addUserEditTexUsername.getText().toString());

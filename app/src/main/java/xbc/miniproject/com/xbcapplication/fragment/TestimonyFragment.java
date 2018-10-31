@@ -1,5 +1,6 @@
 package xbc.miniproject.com.xbcapplication.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,17 +26,16 @@ import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.AddTestimonyActivity;
 import xbc.miniproject.com.xbcapplication.R;
 import xbc.miniproject.com.xbcapplication.adapter.TestimonyListAdapter;
-import xbc.miniproject.com.xbcapplication.dummyModel.TestimonyModel;
 import xbc.miniproject.com.xbcapplication.model.testimony.DataListTestimony;
 import xbc.miniproject.com.xbcapplication.model.testimony.ModelTestimony;
-import xbc.miniproject.com.xbcapplication.model.trainer.DataListTrainer;
-import xbc.miniproject.com.xbcapplication.model.trainer.ModelTrainer;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class TestimonyFragment extends Fragment {
     private EditText testimonyEditTextSearch;
-    private Button testimonyButtonInsert;
+    private Button testimonyButtonSearch, testimonyButtonInsert;
     private RecyclerView testimonyRecyclerViewList;
     private List<DataListTestimony> testimonyModelList =  new ArrayList<>();
     private TestimonyListAdapter testimonyListAdapter;
@@ -48,60 +47,70 @@ public class TestimonyFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view =  inflater.inflate(R.layout.fragment_testimony,container,false);
-        getDataFromAPI();
-
-        testimonyRecyclerViewList = (RecyclerView) view.findViewById(R.id.testimonyRecyclerViewList);
-        RecyclerView.LayoutManager layoutManager =  new LinearLayoutManager(getContext(),
-                LinearLayout.VERTICAL,
-                false);
-        testimonyRecyclerViewList.setLayoutManager(layoutManager);
-        testimonyEditTextSearch =  (EditText)view.findViewById(R.id.testimonyEditTextSearch);
-        testimonyRecyclerViewList.setVisibility(view.INVISIBLE);
-        testimonyEditTextSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(testimonyEditTextSearch.getText().toString().trim().length()==0){
-                    testimonyRecyclerViewList.setVisibility(View.INVISIBLE);
-                }else{
-                    testimonyRecyclerViewList.setVisibility(view.VISIBLE);
-                    filter(s.toString());
-                }
-            }
-        });
         testimonyButtonInsert = (Button) view.findViewById(R.id.testimonyButtonInsert);
         testimonyButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //panggil activity add Testimony
-                Intent intent = new Intent(getContext(), AddTestimonyActivity.class);
+                Intent intent = new Intent(getContext(),AddTestimonyActivity.class);
                 startActivity(intent);
             }
         });
-        tampilkanListTestimony();
+
+
+
+        testimonyRecyclerViewList = (RecyclerView) view.findViewById(R.id.testimonyRecyclerViewList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        testimonyRecyclerViewList.setLayoutManager(layoutManager);
+
+        testimonyEditTextSearch = (EditText) view.findViewById(R.id.testimonyEditTextSearch);
+        testimonyEditTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (testimonyEditTextSearch.getText().toString().trim().length() == 0){
+
+                }
+                else{
+                    String keyword = testimonyEditTextSearch.getText().toString().trim();
+                    testimonyModelList = new ArrayList<>();
+                    getDataFromAPI(keyword);
+                }
+
+            }
+        });
+
         return  view;
     }
 
-    private void getDataFromAPI() {
+    private void getDataFromAPI(String keyword) {
+
+        final ProgressDialog loading = LoadingClass.loadingAnimationAndText(getContext(),
+                "Sedang Memuat Data . . .");
+        loading.show();
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListTestimony().enqueue(new Callback<ModelTestimony>() {
+        apiServices.getListTestimony(SessionManager.getToken(getContext()),keyword).enqueue(new Callback<ModelTestimony>() {
             @Override
             public void onResponse(Call<ModelTestimony> call, Response<ModelTestimony> response) {
+                loading.dismiss();
                 if (response.code() == 200){
                     List<DataListTestimony> tmp = response.body().getDataList();
                     for (int i = 0; i<tmp.size();i++){
                         DataListTestimony data = tmp.get(i);
                         testimonyModelList.add(data);
                     }
+                    testimonyRecyclerViewList.setVisibility(View.VISIBLE);
+                    tampilkanListTestimony();
                 } else{
                     Toast.makeText(getContext(), "Gagal Mendapatkan List Trainer: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
                 }
@@ -109,7 +118,7 @@ public class TestimonyFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ModelTestimony> call, Throwable t) {
-                Toast.makeText(getContext(), "List Trainer onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                loading.dismiss();
             }
         });
     }
@@ -120,6 +129,7 @@ public class TestimonyFragment extends Fragment {
             if (item.getTitle().toLowerCase().contains(text.toLowerCase())){
                 filteredList.add(item);
             }
+
         }
         testimonyListAdapter.filterList(filteredList);
     }
@@ -129,6 +139,17 @@ public class TestimonyFragment extends Fragment {
             testimonyListAdapter =  new TestimonyListAdapter(getContext(), testimonyModelList);
             testimonyRecyclerViewList.setAdapter(testimonyListAdapter);
         }
+    }
+
+    @Override
+    public void onResume() {
+        clearSearch();
+        super.onResume();
+    }
+
+    public void clearSearch(){
+        testimonyEditTextSearch.setText("");
+        testimonyRecyclerViewList.setVisibility(View.INVISIBLE);
     }
 
 

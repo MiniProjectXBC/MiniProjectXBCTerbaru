@@ -10,18 +10,30 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.ClassModel;
 import xbc.miniproject.com.xbcapplication.model.kelas.DataList;
+import xbc.miniproject.com.xbcapplication.model.kelas.ModelClass;
+import xbc.miniproject.com.xbcapplication.model.kelas.delete.ModelClassDelete;
+import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
+import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class ClassViewHolder extends RecyclerView.ViewHolder {
-    TextView listClassTextViewBatch,
+    private TextView listClassTextViewBatch,
             listClassTextViewName;
-    ImageView listClassButtonAction;
+    private ImageView listClassButtonAction;
+    private RequestAPIServices apiServices;
+    int id;
 
     public ClassViewHolder(@NonNull View itemView) {
         super(itemView);
+
 
         listClassTextViewBatch = (TextView) itemView.findViewById(R.id.listClassTextViewBatch);
         listClassTextViewName = (TextView) itemView.findViewById(R.id.listClassTextViewName);
@@ -29,7 +41,7 @@ public class ClassViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setModel (final DataList classModel, final int position, final Context context){
-        listClassTextViewBatch.setText(classModel.getBatch().getName());
+        listClassTextViewBatch.setText(classModel.getBatch().getTechnology().getName());
         listClassTextViewName.setText(classModel.getBiodata().getName());
 
         listClassButtonAction.setOnClickListener(new View.OnClickListener() {
@@ -42,8 +54,7 @@ public class ClassViewHolder extends RecyclerView.ViewHolder {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.classMenuDelete:
-                                //Toast.makeText(context, "Anda Menekan Action Deactive pada Posisi: "+position,Toast.LENGTH_SHORT).show();
-//                                DeleteQuestion(classModel,position,context);
+                                DeleteQuestion(classModel, position, context);
                                 return true;
                             default:
                                 return false;
@@ -55,16 +66,16 @@ public class ClassViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private void DeleteQuestion(final ClassModel classModel, final int position, final Context context) {
+    private void DeleteQuestion(final DataList classModel, final int position, final Context context) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("Warning!")
-                .setMessage("Apakah Anda Yakin Akan Menghapus "+ classModel.getName()+"?")
+                .setMessage("Apakah Anda Yakin Akan Menghapus "+ classModel.getBiodata().getName()+"?")
                 .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DeleteSuccessNotification(context);
                         dialog.dismiss();
+                        deleteClassApi(classModel, position, context);
                     }
                 })
                 .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -77,11 +88,37 @@ public class ClassViewHolder extends RecyclerView.ViewHolder {
                 .show();
     }
 
-    private void DeleteSuccessNotification(final Context context) {
+    private void deleteClassApi(DataList classModel, final int position, final Context context){
+        apiServices = APIUtilities.getAPIServices();
+        id = classModel.getId();
+
+        apiServices.deleteClass(Constanta.CONTENT_TYPE_API,
+                SessionManager.getToken(context), id)
+                .enqueue(new Callback<ModelClass>() {
+                    @Override
+                    public void onResponse(Call<ModelClass> call, Response<ModelClass> response) {
+                        if(response.code() == 200){
+                            String message = response.body().getMessage();
+                            if(message!=null){
+                                DeleteSuccessNotification(context, message);
+                            }else{
+                                DeleteSuccessNotification(context, "Message Gagal Diambil");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelClass> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void DeleteSuccessNotification(final Context context, String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Testimony Successfully Delete!")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

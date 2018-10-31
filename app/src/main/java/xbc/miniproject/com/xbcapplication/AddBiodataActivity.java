@@ -3,6 +3,7 @@ package xbc.miniproject.com.xbcapplication;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import xbc.miniproject.com.xbcapplication.model.biodata.BiodataList;
 import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AddBiodataActivity extends Activity {
     Context context = this;
@@ -36,6 +39,7 @@ public class AddBiodataActivity extends Activity {
     RequestAPIServices apiServices;
 
     String notification;
+    private ProgressDialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,9 @@ public class AddBiodataActivity extends Activity {
             Toast.makeText(context, "GPA Field still empty!", Toast.LENGTH_SHORT).show();
         } else {
 //            SaveSuccessNotification();
+            loading = LoadingClass.loadingAnimationAndText(context,
+                    "Sedang Mengupload Data . . .");
+            loading.show();
             callAPICreateBiodata();
         }
     }
@@ -101,10 +108,11 @@ public class AddBiodataActivity extends Activity {
         data.setMajors(addBiodataEditTextMajors.getText().toString());
         data.setGpa(addBiodataEditTextGpa.getText().toString());
 
-        apiServices.createNewBiodata("application/json", data)
+        apiServices.createNewBiodata(SessionManager.getToken(context),"application/json", data)
                 .enqueue(new Callback<ModelBiodata>() {
                     @Override
                     public void onResponse(Call<ModelBiodata> call, Response<ModelBiodata> response) {
+                        loading.dismiss();
                         if (response.code() == 201) {
                             String message = response.body().getMessage();
                             if (message!=null){
@@ -118,6 +126,7 @@ public class AddBiodataActivity extends Activity {
 
                     @Override
                     public void onFailure(Call<ModelBiodata> call, Throwable t) {
+                        loading.dismiss();
                         Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });

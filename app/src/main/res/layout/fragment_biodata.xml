@@ -21,17 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:inputType="text"
+            android:layout_marginRight="10dp"
             android:hint="Searh by Name" />
-
-        <ImageView
-            android:layout_gravity="center_vertical"
-            android:id="@+id/biodataButtonSearch"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/custom_button_login"
-            android:src="@android:drawable/ic_menu_search" />
 
         <ImageView
             android:layout_gravity="center_vertical"

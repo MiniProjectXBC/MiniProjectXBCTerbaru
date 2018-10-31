@@ -24,12 +24,24 @@
                 android:hint="Search by Title"
                 android:layout_marginRight="20dp"/>
 
-            <Button
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:id="@+id/idleNewsButtonSearch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/custom_button_login"
+                android:src="@android:drawable/ic_menu_search" />
+
+            <ImageView
+                android:layout_gravity="center_vertical"
                 android:id="@+id/idleNewsButtonInsert"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/baseline_add_black_24"
-                android:layout_weight="1"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button_login"
+                android:src="@android:drawable/ic_menu_add" />
 
         </LinearLayout>
 

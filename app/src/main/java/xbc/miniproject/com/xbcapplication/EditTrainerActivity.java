@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,14 +15,12 @@ import android.widget.Toast;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xbc.miniproject.com.xbcapplication.model.biodata.Biodata;
-import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
-import xbc.miniproject.com.xbcapplication.model.trainer.DataListTrainer;
 import xbc.miniproject.com.xbcapplication.model.trainer.ModelTrainer;
 import xbc.miniproject.com.xbcapplication.model.trainer.Trainer;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class EditTrainerActivity extends Activity {
     private Context context=this;
@@ -77,13 +74,13 @@ public class EditTrainerActivity extends Activity {
                     editTrainerEditTextName.setText(data.getName());
                     editTrainerEditTexNote.setText(data.getNotes().toString());
                 } else{
-                    Toast.makeText(context, "Gagal Mendapatkan Testimony Trainer: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Gagal Mendapatkan Trainer: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ModelTrainer> call, Throwable t) {
-                Toast.makeText(context, "Get Testimony onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Get Trainer onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -99,7 +96,8 @@ public class EditTrainerActivity extends Activity {
         }
     }
 
-    private void callAPIEditTrainer(){apiServices = APIUtilities.getAPIServices();
+    private void callAPIEditTrainer(){
+        apiServices = APIUtilities.getAPIServices();
 
         Trainer data = new Trainer();
         data.setId(id);
@@ -107,7 +105,7 @@ public class EditTrainerActivity extends Activity {
         data.setNotes(editTrainerEditTexNote.getText().toString());
 
         apiServices.editTrainer(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_EDIT_BIODATA,
+                SessionManager.getToken(context),
                 data)
                 .enqueue(new Callback<ModelTrainer>() {
                     @Override

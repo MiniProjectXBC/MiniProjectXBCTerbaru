@@ -22,14 +22,27 @@
                 android:layout_weight="4"
                 android:inputType="text"
                 android:layout_marginRight="20dp"
+                android:textSize="15dp"
                 android:hint="Search by Technology / Name" />
 
-            <Button
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:id="@+id/bathcButtonSearch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/custom_button_login"
+                android:src="@android:drawable/ic_menu_search" />
+
+            <ImageView
+                android:layout_gravity="center_vertical"
                 android:id="@+id/batchButtonInsert"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/baseline_add_black_24"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button_login"
+                android:src="@android:drawable/ic_menu_add" />
 
         </LinearLayout>
 

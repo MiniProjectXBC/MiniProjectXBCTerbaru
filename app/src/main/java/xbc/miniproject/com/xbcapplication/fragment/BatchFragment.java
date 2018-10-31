@@ -12,8 +12,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -30,10 +30,12 @@ import xbc.miniproject.com.xbcapplication.model.batch.DataList;
 import xbc.miniproject.com.xbcapplication.model.batch.ModelBatch;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class BatchFragment extends Fragment {
     private EditText batchEditTextSearch;
-    private Button batchButtonInsert;
+    private ImageView bathcButtonSearch, batchButtonInsert;
     private RecyclerView batchRecyclerViewList;
 
     private List<DataList> listBatch = new ArrayList<>();
@@ -48,12 +50,10 @@ public class BatchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_batch, container, false);
+        final View view = inflater.inflate(R.layout.fragment_batch, container, false);
 
         //Cara mendapatkan Context di Fragment dengan menggunakan getActivity() atau getContext()
         //Toast.makeText(getContext(),"Test Context Behasil", Toast.LENGTH_LONG).show();
-
-        getDataFromAPI();
 
         batchRecyclerViewList = (RecyclerView) view.findViewById(R.id.batchRecyclerViewList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
@@ -78,14 +78,23 @@ public class BatchFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if(batchEditTextSearch.getText().toString().trim().length() == 0) {
                     batchRecyclerViewList.setVisibility(View.INVISIBLE);
-                } else{
-                    batchRecyclerViewList.setVisibility(View.VISIBLE);
-                    filter(s.toString());
                 }
             }
         });
 
-        batchButtonInsert = (Button) view.findViewById(R.id.batchButtonInsert);
+        bathcButtonSearch = (ImageView) view.findViewById(R.id.bathcButtonSearch);
+        bathcButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(batchEditTextSearch.getText().toString().trim().length()==0){
+                    Toast.makeText(getContext(),"Empty Keyword !", Toast.LENGTH_SHORT).show();
+                }else {
+                    getDataFromAPI(batchEditTextSearch.getText().toString().trim());
+                }
+            }
+        });
+
+        batchButtonInsert = (ImageView) view.findViewById(R.id.batchButtonInsert);
         batchButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,23 +102,22 @@ public class BatchFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        tampilkanListBatch();
-
-
         return view;
     }
 
-    private void getDataFromAPI(){
+    private void getDataFromAPI(String keyword){
+        String contentType = Constanta.CONTENT_TYPE_API;
+        String token = SessionManager.getToken(getContext());
+
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListBatch().enqueue(new Callback<ModelBatch>() {
+        apiServices.getListBatch(contentType, token, keyword)
+                .enqueue(new Callback<ModelBatch>() {
             @Override
             public void onResponse(Call<ModelBatch> call, Response<ModelBatch> response) {
                 if (response.code() == 200){
-                    List<DataList> tmp = response.body().getDataList();
-                    for (int i = 0; i<tmp.size();i++){
-                        DataList data = tmp.get(i);
-                        listBatch.add(data);
+                    if(response.body().getDataList().size()>0){
+                        batchRecyclerViewList.setVisibility(View.VISIBLE);
+                        tampilkanListBatch(response.body().getDataList());
                     }
                 } else{
                     Toast.makeText(getContext(), "Gagal Mendapatkan List Batch: " + response.code() + " msg: " + response.message(), Toast.LENGTH_SHORT).show();
@@ -123,24 +131,23 @@ public class BatchFragment extends Fragment {
         });
     }
 
-    private void  filter(String text) {
-        ArrayList<DataList> filteredList = new ArrayList<>();
+//    private void  filter(String text) {
+//        ArrayList<DataList> filteredList = new ArrayList<>();
+//
+//        for(DataList item : listBatch){
+//            if (item.getName().toLowerCase().contains(text.toLowerCase())){
+//                filteredList.add(item);
+//            }
+//        }
+//
+//        batchListAdapter.filterList(filteredList);
+//    }
 
-        for(DataList item : listBatch){
-            if (item.getName().toLowerCase().contains(text.toLowerCase())){
-                filteredList.add(item);
-            }
-        }
+    private void tampilkanListBatch(List<DataList> dataLists){
 
-        batchListAdapter.filterList(filteredList);
-    }
-
-    private void tampilkanListBatch(){
-//        addDummyList();
-        if (batchListAdapter == null) {
-            batchListAdapter = new BatchListAdapter(getContext(), listBatch);
-            batchRecyclerViewList.setAdapter(batchListAdapter);
-        }
+        batchListAdapter = new BatchListAdapter(getContext(), dataLists);
+        batchRecyclerViewList.setAdapter(batchListAdapter);
+        batchListAdapter.notifyDataSetChanged();
     }
 
 //    private void addDummyList() {

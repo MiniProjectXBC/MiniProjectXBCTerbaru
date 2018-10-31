@@ -13,10 +13,17 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.DoneAssignmentActivity;
 import xbc.miniproject.com.xbcapplication.EditAssignmnetActivity;
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.AssignmentModel;
+import xbc.miniproject.com.xbcapplication.model.assignment.AssignmentList;
+import xbc.miniproject.com.xbcapplication.model.assignment.ModelAssignment;
+import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
+import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AssignmentViewHolder extends RecyclerView.ViewHolder {
     TextView listAssignmentTextViewName,
@@ -24,6 +31,10 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
             listAssignmentTextViewEndDate;
 
     ImageView listAssignmentButtonAction;
+
+    RequestAPIServices apiServices;
+
+    int id;
 
     public AssignmentViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -35,10 +46,10 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
         listAssignmentButtonAction = (ImageView) itemView.findViewById(R.id.listAssignmentButtonAction);
     }
 
-    public void setModel(final AssignmentModel assignmentModel, final int position, final Context context) {
-        listAssignmentTextViewName.setText(assignmentModel.getName());
-        listAssignmentTextViewStartDate.setText(assignmentModel.getStartDate());
-        listAssignmentTextViewEndDate.setText(assignmentModel.getEndDate());
+    public void setModel(final AssignmentList assignmentList, final int position, final Context context) {
+        listAssignmentTextViewName.setText(assignmentList.getBiodata().getName());
+        listAssignmentTextViewStartDate.setText(assignmentList.getStartDate());
+        listAssignmentTextViewEndDate.setText(assignmentList.getEndDate());
 
         listAssignmentButtonAction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,15 +64,20 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
                             case R.id.assignmentMenuEdit:
                                 //Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: " + position, Toast.LENGTH_SHORT).show();
                                 Intent intent1 = new Intent(context, EditAssignmnetActivity.class);
+                                intent1.putExtra("name", assignmentList.getBiodata().getName().toString());
+//                                intent1.putExtra("title", assignmentList.getTitle().toString());
+                                intent1.putExtra("startDate", assignmentList.getStartDate().toString());
+                                intent1.putExtra("endDate", assignmentList.getEndDate().toString());
+//                                intent1.putExtra("description", assignmentList.getNotes().toString());
                                 context.startActivity(intent1);
                                 return true;
                             case R.id.assignmentMenuDelete:
                                 //Toast.makeText(context, "Anda Menekan Action Deactive pada Posisi: "+position,Toast.LENGTH_SHORT).show();
-                                DeleteQuestion(assignmentModel,position,context);
+                                DeleteQuestion(assignmentList,position,context);
                                 return true;
                             case R.id.assignmentMenuHold:
 //                                Toast.makeText(context, "Anda Menekan Action Hold pada Posisi: " + position, Toast.LENGTH_SHORT).show();
-                                HoldQuestion(assignmentModel, position, context);
+                                HoldQuestion(assignmentList, position, context);
                                 return true;
                             case R.id.assignmentMenuDone:
 //                                Toast.makeText(context, "Anda Menekan Action Done pada Posisi: " + position, Toast.LENGTH_SHORT).show();
@@ -78,16 +94,17 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    private void DeleteQuestion(final AssignmentModel assignmentModel, final int position, final Context context) {
+    private void DeleteQuestion(final AssignmentList assignmentList, final int position, final Context context) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("Warning!")
-                .setMessage("Apakah Anda Yakin Akan Menghapus " + assignmentModel.getName() + "?")
+                .setMessage("Apakah Anda Yakin Akan Menghapus " + assignmentList.getBiodata().getName() + "?")
                 .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DeleteSuccessNotification(context);
+//                        DeleteSuccessNotification(context);
                         dialog.dismiss();
+                        DeleteAssignmentAPI(assignmentList, position, context);
                     }
                 })
                 .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -100,11 +117,36 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
                 .show();
     }
 
-    private void DeleteSuccessNotification(final Context context) {
+    private void DeleteAssignmentAPI(final AssignmentList assignmentList, final int position, final Context context){
+        apiServices = APIUtilities.getAPIServices();
+        id = assignmentList.getId();
+
+        apiServices.deleteAssignmnet("application/json", SessionManager.getToken(context), id)
+                .enqueue(new Callback<ModelAssignment>() {
+                    @Override
+                    public void onResponse(Call<ModelAssignment> call, Response<ModelAssignment> response) {
+                        if (response.code() == 200) {
+                            String message = response.body().getMessage();
+                            if (message != null) {
+                                DeleteSuccessNotification(context, message);
+                            } else {
+                                DeleteSuccessNotification(context, "Message Gagal Diambil");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelAssignment> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void DeleteSuccessNotification(final Context context, String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Testimony Successfully Delete!")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -115,16 +157,17 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
                 .show();
     }
 
-    private void HoldQuestion(final AssignmentModel assignmentModel, final int position, final Context context) {
+    private void HoldQuestion(final AssignmentList assignmentList, final int position, final Context context) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("Warning!")
-                .setMessage("Apakah Anda Yakin Akan Hold " + assignmentModel.getName() + "?")
+                .setMessage("Apakah Anda Yakin Akan Hold " + assignmentList.getBiodata().getName() + "?")
                 .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        HoldSuccessNotification(context);
+//                        HoldSuccessNotification(context);
                         dialog.dismiss();
+                        HoldAssignmentAPI(assignmentList, position, context);
                     }
                 })
                 .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -137,11 +180,36 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
                 .show();
     }
 
-    private void HoldSuccessNotification(final Context context) {
+    private void HoldAssignmentAPI(final AssignmentList assignmentList, final int position, final Context context){
+        apiServices = APIUtilities.getAPIServices();
+        id = assignmentList.getId();
+
+        apiServices.holdAssigment("application/json", SessionManager.getToken(context), id)
+                .enqueue(new Callback<ModelAssignment>() {
+                    @Override
+                    public void onResponse(Call<ModelAssignment> call, Response<ModelAssignment> response) {
+                        if (response.code() == 200) {
+                            String message = response.body().getMessage();
+                            if (message != null) {
+                                HoldSuccessNotification(context, message);
+                            } else {
+                                HoldSuccessNotification(context, "Message Gagal Diambil");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelAssignment> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void HoldSuccessNotification(final Context context, String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Testimony Successfully Update!")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -6,9 +6,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,26 +23,30 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xbc.miniproject.com.xbcapplication.model.biodata.Biodata;
-import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
-import xbc.miniproject.com.xbcapplication.model.idleNews.Category;
-import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNews;
-import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.idleNews.ModelIdleNews;
-import xbc.miniproject.com.xbcapplication.model.idleNews.getOne.ModelIdleNewsGetOne;
+import xbc.miniproject.com.xbcapplication.model.idleNews.autoComplete.DataList;
+import xbc.miniproject.com.xbcapplication.model.idleNews.autoComplete.ModelAutoCompleteIdleNews;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
-import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.KArrayAdapter;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class EditIdleNewsActivity extends Activity {
     private Context context = this;
 
     EditText editIdleNewsEditTextTitle,
-            editIdleNewsEditTextCategory,
             editIdleNewsEditTextContent;
+
+    AutoCompleteTextView editIdleNewsEditTextCategory;
 
     Button editIdleNewsButtonSave,
             editIdleNewsButtonCancel;
+
+    private boolean isNameSelected;
+
+    KArrayAdapter<DataList> adapter;
+
+    private List<DataList> listIdleNews = new ArrayList<>();
 
     RequestAPIServices apiServices;
 
@@ -55,8 +62,53 @@ public class EditIdleNewsActivity extends Activity {
         actionBar.setTitle("Edit Idle News");
 
         editIdleNewsEditTextTitle = (EditText) findViewById(R.id.editIdleNewsEditTextTitle);
-        editIdleNewsEditTextCategory = (EditText) findViewById(R.id.editIdleNewsEditTextCategory);
         editIdleNewsEditTextContent = (EditText) findViewById(R.id.editIdleNewsEditTextContent);
+
+        editIdleNewsEditTextCategory = (AutoCompleteTextView) findViewById(R.id.editIdleNewsEditTextCategory);
+        editIdleNewsEditTextCategory.setThreshold(1);
+
+        editIdleNewsEditTextCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                if (addIdleNewsEditTextCategory.getText().toString().trim().length() != 0){
+//                    addIdleNewsEditTextCategory.showDropDown();
+//                }
+            }
+        });
+
+        editIdleNewsEditTextCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                isNameSelected = true;
+                editIdleNewsEditTextCategory.setError(null);
+
+                DataList selected = (DataList) adapterView.getAdapter().getItem(i);
+                int aidi = selected.getId();
+//                Toast.makeText(context,"idnya ini bos: "+aidi,Toast.LENGTH_LONG).show();
+            }
+        });
+
+        editIdleNewsEditTextCategory.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                isNameSelected = false;
+                editIdleNewsEditTextCategory.setError("Category must from the list!");
+                listIdleNews = new ArrayList<>();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editIdleNewsEditTextCategory.getText().toString().trim().length() != 0){
+                    String keyword = editIdleNewsEditTextCategory.getText().toString().trim();
+                    getAutoCompleteAPI(keyword);
+                }
+            }
+        });
 
         editIdleNewsButtonSave =(Button) findViewById(R.id.editIdleNewsButtonSave);
         editIdleNewsButtonSave.setOnClickListener(new View.OnClickListener() {
@@ -89,12 +141,48 @@ public class EditIdleNewsActivity extends Activity {
 //        editIdleNewsEditTextContent.setText(content);
     }
 
+    private void getAutoCompleteAPI(String keyword) {
+//        final ProgressDialog loading = LoadingClass.loadingAnimationAndText(context,
+//                "Sedang Memuat Auto Complete . . .");
+//        loading.show();
+
+        apiServices = APIUtilities.getAPIServices();
+        apiServices.idleNewsAutoComplete("application/json",SessionManager.getToken(context), keyword)
+                .enqueue(new Callback<ModelAutoCompleteIdleNews>() {
+                    @Override
+                    public void onResponse(Call<ModelAutoCompleteIdleNews> call, Response<ModelAutoCompleteIdleNews> response) {
+                        if (response.code() == 200) {
+//                    loading.dismiss();
+                            List<DataList> tmp = response.body().getDataList();
+                            listIdleNews = response.body().getDataList();
+                            getAutoCompletAdapter();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelAutoCompleteIdleNews> call, Throwable t) {
+//                loading.dismiss();
+
+                    }
+                });
+    }
+
+    private void getAutoCompletAdapter() {
+        adapter = new KArrayAdapter<>
+                (context, android.R.layout.simple_list_item_1, listIdleNews);
+        editIdleNewsEditTextCategory.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
     private void inputValidation() {
         if (editIdleNewsEditTextTitle.getText().toString().trim().length() == 0){
             Toast.makeText(context,"Title Field still empty!",Toast.LENGTH_SHORT).show();
         } else if(editIdleNewsEditTextCategory.getText().toString().trim().length() == 0){
             Toast.makeText(context,"Category Field still empty!",Toast.LENGTH_SHORT).show();
-        } else{
+        } else if (!isNameSelected) {
+            editIdleNewsEditTextCategory.setText("");
+            Toast.makeText(context, "Category Field Must From the List!", Toast.LENGTH_SHORT).show();
+        } else {
             inputEditIdleNewsAPI(editIdleNewsEditTextTitle.getText().toString(), editIdleNewsEditTextCategory.getText().toString(), editIdleNewsEditTextContent.getText().toString());
         }
     }
@@ -106,19 +194,14 @@ public class EditIdleNewsActivity extends Activity {
         RequestBody bodyRequest = RequestBody.create(APIUtilities.mediaType(), json);
         apiServices = APIUtilities.getAPIServices();
 
-        IdleNewsList data = new IdleNewsList();
-//        data.setTitle(addIdleNewsEditTextTitle.getText().toString());
-//        data.setContent(addIdleNewsEditTextContent.getText().toString());
-//        data.getCategory().setName(addIdleNewsEditTextCategory.getText().toString());
-
-        apiServices.createNewIdleNews("application/json", bodyRequest)
+        apiServices.editIdleNews("application/json", SessionManager.getToken(context), bodyRequest)
                 .enqueue(new Callback<ModelIdleNews>() {
                     @Override
                     public void onResponse(Call<ModelIdleNews> call, Response<ModelIdleNews> response) {
-                        if (response.code() == 201) {
+                        if (response.code() == 200) {
                             String message = response.body().getMessage();
                             if (message!=null){
-                                SaveSuccessNotification();
+                                SaveSuccessNotification(context, message);
                             } else{
                                 Toast.makeText(context,"Message Gagal Diambil", Toast.LENGTH_SHORT).show();
                             }
@@ -133,11 +216,12 @@ public class EditIdleNewsActivity extends Activity {
                 });
     }
 
-    public void SaveSuccessNotification(){
+    public void SaveSuccessNotification(final Context context, String message){
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Data successfully updated !").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setMessage(message+"!")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();

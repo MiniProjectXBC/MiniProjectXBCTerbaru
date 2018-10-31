@@ -7,18 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.FeedbackModel;
-import xbc.miniproject.com.xbcapplication.dummyModel.TechnologyModel;
-import xbc.miniproject.com.xbcapplication.dummyModel.TrainerModel;
 import xbc.miniproject.com.xbcapplication.model.feedback.getQuestion.DataListQuestionFeedback;
-import xbc.miniproject.com.xbcapplication.model.feedback.getQuestion.ModelQuestionFeedback;
+import xbc.miniproject.com.xbcapplication.utility.Constanta;
 import xbc.miniproject.com.xbcapplication.viewHolder.FeedbackViewHolder;
-import xbc.miniproject.com.xbcapplication.viewHolder.TechnologyViewHolder;
-import xbc.miniproject.com.xbcapplication.viewHolder.TrainerViewHolder;
 
 public class FeedbackListAdapter extends RecyclerView.Adapter<FeedbackViewHolder> {
 
@@ -28,6 +22,23 @@ public class FeedbackListAdapter extends RecyclerView.Adapter<FeedbackViewHolder
     public FeedbackListAdapter(Context context, List<DataListQuestionFeedback> dataListQuestionFeedback) {
         this.context = context;
         this.dataListQuestionFeedback = dataListQuestionFeedback;
+        if (getItemCount() >0){
+            Constanta.ARRAY_FEEDBACK = new String[dataListQuestionFeedback.size()];
+            for (int x = 0; x<Constanta.ARRAY_FEEDBACK.length; x++){
+                Constanta.ARRAY_FEEDBACK[x]="-";
+
+            }
+            Constanta.ARRAY_ID= new  String[dataListQuestionFeedback.size()];
+            for (int x = 0; x<Constanta.ARRAY_FEEDBACK.length; x++){
+                Constanta.ARRAY_ID[x]=dataListQuestionFeedback.get(x).getId().toString();
+
+            }
+        }
+        else{
+            Constanta.ARRAY_FEEDBACK = new String[0];
+            Constanta.ARRAY_ID = new String[0];
+        }
+
     }
 
     @NonNull
@@ -47,6 +58,8 @@ public class FeedbackListAdapter extends RecyclerView.Adapter<FeedbackViewHolder
         feedbackViewHolder.setModel(user, i, context);
 
 
+
+
     }
 
 
@@ -63,5 +76,8 @@ public class FeedbackListAdapter extends RecyclerView.Adapter<FeedbackViewHolder
         dataListQuestionFeedback = filterList;
         notifyDataSetChanged();
     }
+
+
+
 
 }

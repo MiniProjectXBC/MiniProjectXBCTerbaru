@@ -10,14 +10,14 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.AssignmentModel;
+import xbc.miniproject.com.xbcapplication.model.assignment.AssignmentList;
 import xbc.miniproject.com.xbcapplication.viewHolder.AssignmentViewHolder;
 
 public class AssignmentListAdapter extends RecyclerView.Adapter<AssignmentViewHolder> {
     private Context context;
-    private List<AssignmentModel> assignmentList;
+    private List<AssignmentList> assignmentList;
 
-    public AssignmentListAdapter(Context context, List<AssignmentModel> assignmentList) {
+    public AssignmentListAdapter(Context context, List<AssignmentList> assignmentList) {
         this.context = context;
         this.assignmentList = assignmentList;
     }
@@ -35,7 +35,7 @@ public class AssignmentListAdapter extends RecyclerView.Adapter<AssignmentViewHo
 
     @Override
     public void onBindViewHolder(@NonNull AssignmentViewHolder assignmentViewHolder, int i) {
-        final AssignmentModel user = assignmentList.get(i);
+        final AssignmentList user = assignmentList.get(i);
         assignmentViewHolder.setModel(user, i, context);
     }
 
@@ -48,7 +48,7 @@ public class AssignmentListAdapter extends RecyclerView.Adapter<AssignmentViewHo
         }
     }
 
-    public void filterList(List<AssignmentModel> filterList) {
+    public void filterList(List<AssignmentList> filterList) {
         assignmentList = filterList;
         notifyDataSetChanged();
     }

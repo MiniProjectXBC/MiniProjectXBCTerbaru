@@ -1,11 +1,10 @@
 
 package xbc.miniproject.com.xbcapplication.model.feedback.autoComplete;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import xbc.miniproject.com.xbcapplication.model.feedback.autoComplete.DataListAutocompleteFeedback;
+import java.util.List;
 
 public class ModelAutocompleteFeedback {
 

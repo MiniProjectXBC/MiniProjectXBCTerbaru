@@ -19,15 +19,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.EditTestimonyActivity;
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.MonitoringModel;
-import xbc.miniproject.com.xbcapplication.dummyModel.TestimonyModel;
-import xbc.miniproject.com.xbcapplication.model.biodata.BiodataList;
-import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
 import xbc.miniproject.com.xbcapplication.model.testimony.DataListTestimony;
 import xbc.miniproject.com.xbcapplication.model.testimony.ModelTestimony;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class TestimonyViewHolder extends RecyclerView.ViewHolder {
     private TextView listTesimonyTitle;
@@ -96,7 +93,7 @@ public class TestimonyViewHolder extends RecyclerView.ViewHolder {
         id = dataListTestimony.getId();
 
         apiServices.deleteTestimony(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_DEACTIVATED_BIODATA,id)
+                SessionManager.getToken(context),id)
                 .enqueue(new Callback<ModelTestimony>() {
                     @Override
                     public void onResponse(Call<ModelTestimony> call, Response<ModelTestimony> response) {

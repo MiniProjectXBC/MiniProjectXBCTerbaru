@@ -47,6 +47,7 @@ public class BiodataFragment extends Fragment {
     private BiodataListAdapter biodataListAdapter;
 
     private RequestAPIServices apiServices;
+    private ProgressDialog loading;
 
     public BiodataFragment() {
 
@@ -57,39 +58,39 @@ public class BiodataFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_biodata, container, false);
 
-        //Cara mendapatkan Context di Fragment dengan menggunakan getActivity() atau getContext()
-        //Toast.makeText(getContext(),"Test Context Behasil", Toast.LENGTH_LONG).show();
-
-
-
         biodataRecyclerViewList = (RecyclerView) view.findViewById(R.id.biodataRecyclerViewList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayout.VERTICAL, false);
         biodataRecyclerViewList.setLayoutManager(layoutManager);
 
+        loading = LoadingClass.loadingAnimationAndText(getContext(),
+                "Sedang Memuat Data . . .");
+
         biodataEditTextSearch = (EditText) view.findViewById(R.id.biodataEditTextSearch);
-//        biodataRecyclerViewList.setVisibility(View.INVISIBLE);
-//        biodataEditTextSearch.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if (biodataEditTextSearch.getText().toString().trim().length() == 0){
-//                    biodataRecyclerViewList.setVisibility(View.INVISIBLE);
-//                } else{
-//                    biodataRecyclerViewList.setVisibility(View.VISIBLE);
-//                    filter(s.toString());
-//                }
-//            }
-//        });
+        biodataEditTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (biodataEditTextSearch.getText().toString().trim().length() == 0){
+                    biodataRecyclerViewList.setVisibility(View.INVISIBLE);
+
+                } else{
+                    biodataRecyclerViewList.setVisibility(View.VISIBLE);
+                    String keyword = biodataEditTextSearch.getText().toString().trim();
+                    listBiodata = new ArrayList<>();
+                    loading.show();
+                    getDataFromAPI(keyword);
+                }
+            }
+        });
 
         biodataButtonInsert = (ImageView) view.findViewById(R.id.biodataButtonInsert);
         biodataButtonInsert.setOnClickListener(new View.OnClickListener() {
@@ -100,32 +101,10 @@ public class BiodataFragment extends Fragment {
             }
         });
 
-        biodataButtonSearch = (ImageView) view.findViewById(R.id.biodataButtonSearch);
-        biodataButtonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (biodataEditTextSearch.getText().toString().trim().length() == 0){
-
-                } else{
-
-                    String keyword = biodataEditTextSearch.getText().toString().trim();
-                    listBiodata = new ArrayList<>();
-                    getDataFromAPI(keyword);
-                }
-            }
-        });
-
-
-
-
         return view;
     }
 
     private void getDataFromAPI(String keyword) {
-
-        final ProgressDialog loading = LoadingClass.loadingAnimationAndText(getContext(),
-                "Sedang Memuat Data . . .");
-        loading.show();
 
         apiServices = APIUtilities.getAPIServices();
         apiServices.getListBiodata(SessionManager.getToken(getContext()),keyword).enqueue(new Callback<ModelBiodata>() {
@@ -184,16 +163,4 @@ public class BiodataFragment extends Fragment {
         biodataRecyclerViewList.setVisibility(View.INVISIBLE);
 
     }
-
-    //    private void addDummyList() {
-//        int index = 1;
-//        for (int i = 0; i < 5; i++) {
-//            BiodataModel data = new BiodataModel();
-//            data.setName("Dummy Name " + index);
-//            data.setMajor("Dummy Major");
-//            data.setGpa("Dummy GPA");
-//            listBiodata.add(data);
-//            index++;
-//        }
-//    }
 }

@@ -8,9 +8,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,15 +18,23 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.CheckedOutputStream;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xbc.miniproject.com.xbcapplication.utility.KArrayAdapter;
 import xbc.miniproject.com.xbcapplication.model.role.DataListRole;
 import xbc.miniproject.com.xbcapplication.model.role.ModelRole;
+import xbc.miniproject.com.xbcapplication.model.user.ModelUser;
+import xbc.miniproject.com.xbcapplication.model.user.User;
+import xbc.miniproject.com.xbcapplication.model.user.UserGetOne.Data;
+import xbc.miniproject.com.xbcapplication.model.user.UserGetOne.ModelUserGetOne;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
+
+;
 
 public class EditUserActivity extends Activity {
     private Context context =  this;
@@ -36,10 +44,10 @@ public class EditUserActivity extends Activity {
     private AutoCompleteTextView editUserEditTextRole;
     private Button editUserButtonSave;
     private  Button editUserButtonCancel;
-    private ArrayList<String> listRole = new ArrayList<String>();
+    private KArrayAdapter<DataListRole> adapter;
     private List<DataListRole> dataListRoles =  new ArrayList<>();
     private RequestAPIServices apiServices;
-    int id;
+    int id1;
     private boolean isRoleSelected;
 
     @Override
@@ -56,31 +64,37 @@ public class EditUserActivity extends Activity {
         editUserEditTexRetypePassword = (EditText) findViewById(R.id.editUserEditTexRetypePassword);
         editUserEditTextRole = (AutoCompleteTextView) findViewById(R.id.editUserEditTextRole);
 
-        getRole();
+        //getRole(editUserEditTextRole.getText().toString().trim());
+//        getRole(editUserEditTextRole.getText().toString().trim());
 
-        final ArrayAdapter<String> adapter=  new ArrayAdapter<String>(this,
-                android.R.layout.select_dialog_item, listRole);
-        editUserEditTextRole.setThreshold(0);
-        editUserEditTextRole.setAdapter(adapter);
+//        final ArrayAdapter<String> adapter=  new ArrayAdapter<String>(this,
+//                android.R.layout.select_dialog_item, listRole);
+//        editUserEditTextRole.setThreshold(0);
+//        editUserEditTextRole.setAdapter(adapter);
+
+
         editUserEditTextRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editUserEditTextRole.getText().toString().trim().length()==0){
-                    editUserEditTextRole.showDropDown();
-                }
+
             }
         });
+        editUserEditTextRole.setThreshold(1);
         editUserEditTextRole.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 isRoleSelected = true;
+                id1 = position;
                 editUserEditTextRole.setError(null);
+                DataListRole selected = (DataListRole) parent.getAdapter().getItem(position);
+                int cariID =  selected.getId();
+                Toast.makeText(context,"idnya ini bos: "+cariID,Toast.LENGTH_LONG).show();
             }
         });
         editUserEditTextRole.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Value Role get one
+
             }
 
             @Override
@@ -95,14 +109,17 @@ public class EditUserActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if(editUserEditTextRole.getText().toString().length()!=0){
+                    String keyword = editUserEditTextRole.getText().toString().trim();
+                    getRole(keyword);
+                }
             }
         });
         editUserButtonSave =  (Button) findViewById(R.id.editUserButtonSave);
         editUserButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // editValidation();
+                editValidation(id1);
             }
         });
         editUserButtonCancel =  (Button) findViewById(R.id.editUserButtonCancel);
@@ -112,26 +129,44 @@ public class EditUserActivity extends Activity {
                 finish();
             }
         });
-        id = getIntent().getIntExtra("id",0);
-        getOneUserAPI();
+        id1 = getIntent().getIntExtra("id",0);
+        getOneUserAPI(id1);
     }
-    private void getRole(){
+
+    private  void getOneUserAPI(final int id){
+     apiServices = APIUtilities.getAPIServices();
+     apiServices.getOneUser(id).enqueue(new Callback<ModelUserGetOne>() {
+         @Override
+         public void onResponse(Call<ModelUserGetOne> call, Response<ModelUserGetOne> response) {
+             if(response.code()==200){
+                 Data data = response.body().getData();
+                 editUserEditTextRole.setText(data.getRole().getName());
+                 editUserEditTexUsername.setText(data.getUsername());
+                editUserEditTexPassword.setText(data.getPassword());
+                editUserEditTexRetypePassword.setText(data.getPassword());
+             }else{
+                 Toast.makeText(context,"Get Role Gagal", Toast.LENGTH_SHORT).show();
+             }
+         }
+
+         @Override
+         public void onFailure(Call<ModelUserGetOne> call, Throwable t) {
+             Toast.makeText(context,"Get Role Gagal", Toast.LENGTH_SHORT).show();
+         }
+     });
+    }
+
+    private void getRole(String keyword){
+        String contenType = Constanta.CONTENT_TYPE_API;
+        String token = SessionManager.getToken(context);
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListRole().enqueue(new Callback<ModelRole>() {
+        apiServices.getListRole( token, keyword).enqueue(new Callback<ModelRole>() {
             @Override
             public void onResponse(Call<ModelRole> call, Response<ModelRole> response) {
-                List<DataListRole> tmp = response.body().getDataList();
-
                 if(response.code()==200){
-                    for(int i=0; i<tmp.size(); i++){
-                        DataListRole data = tmp.get(i);
-                        dataListRoles.add(data);
-                        listRole.add(data.getName());
-                        System.out.println(dataListRoles);
-                    }
-
-                }else{
-                    Toast.makeText(context, "Gagal Mendapatkan List Role"+response.message(), Toast.LENGTH_LONG).show();
+                    List<DataListRole> tmp = response.body().getDataList();
+                    dataListRoles =  response.body().getDataList();
+                    tampilkadData();
                 }
             }
 
@@ -141,10 +176,13 @@ public class EditUserActivity extends Activity {
             }
         });
     }
-    private  void getOneUserAPI(){
-     apiServices = APIUtilities.getAPIServices();
+    private void tampilkadData(){
+        adapter  =  new KArrayAdapter<>(context, android.R.layout.simple_list_item_1, dataListRoles);
+        editUserEditTextRole.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
-    private  void saveValidation(){
+
+    private  void editValidation(final int position){
         if(editUserEditTextRole.getText().toString().trim().length()==0){
             Toast.makeText(context,  "Role field still empty !", Toast.LENGTH_SHORT).show();
         }else if(editUserEditTexUsername.getText().toString().trim().length()==0){
@@ -159,17 +197,45 @@ public class EditUserActivity extends Activity {
             final String pas = editUserEditTexPassword.getText().toString();
             final String repas = editUserEditTexRetypePassword.getText().toString();
             if(pas.equalsIgnoreCase(repas)){
-                saveDataNotification();
+                panggilEditAPI(position);
             }else{
                 Toast.makeText(context, "Pasword tidak sama!", Toast.LENGTH_SHORT).show();
             }
         }
     }
-    private void saveDataNotification(){
+    private void panggilEditAPI(final  int position){
+        User data = new User();
+        String contentType = Constanta.CONTENT_TYPE_API;
+        String token =  SessionManager.getToken(context);
+        data.setUsername(editUserEditTexUsername.getText().toString());
+        data.setPassword(editUserEditTexPassword.getText().toString());
+        data.setMRoleId(dataListRoles.get(position).getId().toString());
+
+        apiServices.editUser(contentType,token, data)
+                .enqueue(new Callback<ModelUser>() {
+                    @Override
+                    public void onResponse(Call<ModelUser> call, Response<ModelUser> response) {
+                        if(response.code()==200){
+                            String message = response.body().getMessage();
+                            if(message!=null){
+                                saveDataNotification(message);
+                            }else {
+                                saveDataNotification("Message Gagal Diambil");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelUser> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+    private void saveDataNotification(String message){
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Testimony Successfully updated !")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -179,5 +245,13 @@ public class EditUserActivity extends Activity {
                 })
                 .setCancelable(false)
                 .show();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id==android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

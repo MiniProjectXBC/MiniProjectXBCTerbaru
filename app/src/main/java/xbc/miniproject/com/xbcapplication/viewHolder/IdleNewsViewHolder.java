@@ -12,17 +12,29 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.EditIdleNewsActivity;
 import xbc.miniproject.com.xbcapplication.R;
 import xbc.miniproject.com.xbcapplication.ShareIdleNewsActivity;
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
+import xbc.miniproject.com.xbcapplication.model.idleNews.ModelIdleNews;
+import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
+import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class IdleNewsViewHolder extends RecyclerView.ViewHolder {
     TextView listIdleNewsTextViewTitle,
             listIdleNewsTextViewCategory;
 
     ImageView listIdleNewsButtonAction;
+
+    RequestAPIServices apiServices;
+
+    int id;
 
     public IdleNewsViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -85,8 +97,9 @@ public class IdleNewsViewHolder extends RecyclerView.ViewHolder {
                 .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DeleteSuccessNotification(context);
+//                        DeleteSuccessNotification(context);
                         dialog.dismiss();
+                        DeleteIdleNewsAPI(idleNewsList, position, context);
                     }
                 })
                 .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -98,11 +111,37 @@ public class IdleNewsViewHolder extends RecyclerView.ViewHolder {
                 .setCancelable(false).show();
     }
 
-    private void DeleteSuccessNotification(final Context context) {
+    private void DeleteIdleNewsAPI(final IdleNewsList idleNewsList, final int position, final Context context){
+        apiServices = APIUtilities.getAPIServices();
+        id = idleNewsList.getId();
+
+        apiServices.deleteIdleNews("application/json", SessionManager.getToken(context), id)
+                .enqueue(new Callback<ModelIdleNews>() {
+                    @Override
+                    public void onResponse(Call<ModelIdleNews> call, Response<ModelIdleNews> response) {
+                        if (response.code() == 200){
+                            String message = response.body().getMessage();
+                            if (message != null){
+                                DeleteSuccessNotification(context, message);
+                            }
+                            else {
+                                DeleteSuccessNotification(context, "Message Gagal Diambil");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelIdleNews> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void DeleteSuccessNotification(final Context context, String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Testimony Successfully Deleted!")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -116,12 +155,13 @@ public class IdleNewsViewHolder extends RecyclerView.ViewHolder {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("Warning!")
-                .setMessage("Apakah Anda Yakin Publish "+ idleNewsList.getTitle()+"?")
+                .setMessage("Apakah Anda Yakin Akan Publish "+ idleNewsList.getTitle()+"?")
                 .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PublishSuccessNotification(context);
+                        //
                         dialog.dismiss();
+                        PublishIdleNewsAPI(idleNewsList, position, context);
                     }
                 })
                 .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -130,22 +170,46 @@ public class IdleNewsViewHolder extends RecyclerView.ViewHolder {
                         dialog.dismiss();
                     }
                 })
-                .setCancelable(false)
-                .show();
+                .setCancelable(false).show();
     }
 
-    private void PublishSuccessNotification(final Context context) {
+    private void PublishIdleNewsAPI(final IdleNewsList idleNewsList, final int position, final Context context) {
+            apiServices = APIUtilities.getAPIServices();
+            id = idleNewsList.getId();
+
+            apiServices.publishIdleNews("application/json", SessionManager.getToken(context), id)
+                    .enqueue(new Callback<ModelIdleNews>() {
+                        @Override
+                        public void onResponse(Call<ModelIdleNews> call, Response<ModelIdleNews> response) {
+                            if (response.code()==200){
+                                String message = response.body().getMessage();
+                                if (message != null){
+                                    PublishSuccessNotification(context, message);
+                                }
+                                else {
+                                    PublishSuccessNotification(context, "Message Gagal Diambil");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ModelIdleNews> call, Throwable t) {
+                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+    }
+
+    private void PublishSuccessNotification(final Context context, String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Testimony Successfully Published!")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setCancelable(false)
-                .show();
+                .setCancelable(false).show();
     }
 }

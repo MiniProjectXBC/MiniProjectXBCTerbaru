@@ -12,34 +12,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.R;
 import xbc.miniproject.com.xbcapplication.adapter.ClassListAdapter;
-import xbc.miniproject.com.xbcapplication.dummyModel.ClassModel;
-import xbc.miniproject.com.xbcapplication.model.kelas.Batch;
 import xbc.miniproject.com.xbcapplication.model.kelas.DataList;
 import xbc.miniproject.com.xbcapplication.model.kelas.ModelClass;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class ClassFragment extends Fragment {
     private EditText classEditTextSearch;
+    private ImageView classButtonSearch;
     private RecyclerView classRecyclerViewList;
-
     private List<DataList> listClass = new ArrayList<>();
     private ClassListAdapter classListAdapter;
-
     private RequestAPIServices apiServices;
-
     public ClassFragment() {
 
     }
@@ -48,8 +46,6 @@ public class ClassFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_class, container, false);
-
-        getDataFromAPI();
 
         classRecyclerViewList = (RecyclerView) view.findViewById(R.id.classRecyclerViewList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false);
@@ -73,27 +69,42 @@ public class ClassFragment extends Fragment {
                 if (classEditTextSearch.getText().toString().trim().length() == 0){
                     classRecyclerViewList.setVisibility(View.INVISIBLE);
                 }
-                else {
-                    classRecyclerViewList.setVisibility(View.VISIBLE);
-                    filter(editable.toString());
+//
+//                else {
+//                    classRecyclerViewList.setVisibility(View.VISIBLE);
+//                    filter(editable.toString());
+//                }
+            }
+        });
+//        tampilkanListClass();
+//
+//        return view;
+        classButtonSearch = (ImageView) view.findViewById(R.id.classButtonSearch);
+        classButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(classEditTextSearch.getText().toString().trim().length() == 0){
+                    Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
+                }else{
+                    getDataFromAPI(classEditTextSearch.getText().toString().trim());
                 }
             }
         });
-        tampilkanListClass();
-
         return view;
     }
 
-    private void getDataFromAPI(){
+    private void getDataFromAPI(String keyword){
+        String contentType = Constanta.CONTENT_TYPE_API;
+        String token = SessionManager.getToken(getContext());
+
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListClass().enqueue(new Callback<ModelClass>() {
+        apiServices.getListClass(contentType, token, keyword).enqueue(new Callback<ModelClass>() {
             @Override
             public void onResponse(Call<ModelClass> call, Response<ModelClass> response) {
                 if(response.code() == 200){
-                    List<DataList> tmp = response.body().getDataList();
-                    for (int i = 0; i<tmp.size(); i++){
-                        DataList data = tmp.get(i);
-                        listClass.add(data);
+                    if(response.body().getDataList().size()>0){
+                        classRecyclerViewList.setVisibility(View.VISIBLE);
+                        tampilkanListClass(response.body().getDataList());
                     }
                 } else {
                     Toast.makeText(getContext(),"Gagal Mendapatkan List Class: " + response.code() + " msg: " + response.message(), Toast.LENGTH_SHORT).show();
@@ -121,12 +132,10 @@ public class ClassFragment extends Fragment {
         classListAdapter.filterList(filteredList);
     }
 
-    private void tampilkanListClass() {
-//        addDummyList();
-        if (classListAdapter == null) {
-            classListAdapter = new ClassListAdapter(getContext(), listClass);
-            classRecyclerViewList.setAdapter(classListAdapter);
-        }
+    private void tampilkanListClass(List<DataList> dataLists){
+        classListAdapter = new ClassListAdapter(getContext(), dataLists);
+        classRecyclerViewList.setAdapter(classListAdapter);
+        classListAdapter.notifyDataSetChanged();
     }
 
 //    private void addDummyList() {

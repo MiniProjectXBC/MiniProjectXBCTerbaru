@@ -1,12 +1,18 @@
 
 package xbc.miniproject.com.xbcapplication.model.user;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ModelUser {
+import java.util.List;
 
+public class ModelUser {
+    @SerializedName("role")
+    @Expose
+    private Role role;
+    @SerializedName("data")
+    @Expose
+    private User data;
     @SerializedName("dataList")
     @Expose
     private List<DataList> dataList = null;
@@ -14,6 +20,24 @@ public class ModelUser {
     @Expose
     private String message;
 
+    public Role getRole(){
+        return role;
+    }
+
+    public void setDataListRole(Role role) {
+        this.role = role;
+    }
+    public User getData(){
+        return data;
+    }
+
+
+
+
+
+    public void setDataList(User data) {
+        this.data = data;
+    }
     public List<DataList> getDataList() {
         return dataList;
     }

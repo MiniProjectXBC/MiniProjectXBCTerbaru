@@ -3,9 +3,8 @@ package xbc.miniproject.com.xbcapplication;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +25,7 @@ public class LoginActivity extends Activity {
     private EditText inputUsername, inputPassword;
     private Button button;
 
-    RequestAPIServices apiServices;
+    private RequestAPIServices apiServices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +54,6 @@ public class LoginActivity extends Activity {
             Toast.makeText(context, getResources().getString(R.string.passwordEmpty), Toast.LENGTH_SHORT).show();
         } else {
             goLoginApi(username, password);
-//            Intent intent = new Intent(context, HomeActivity.class);
-//            startActivity(intent);
-//            finish();
         }
     }
 
@@ -70,7 +66,7 @@ public class LoginActivity extends Activity {
         apiServices = APIUtilities.getAPIServices();
         apiServices.goLogin(contentType, requestBody).enqueue(new Callback<ModelLoginMessage>() {
             @Override
-            public void onResponse(Call<ModelLoginMessage> call, Response<ModelLoginMessage> response) {
+            public void onResponse(@NonNull Call<ModelLoginMessage> call, @NonNull Response<ModelLoginMessage> response) {
                 if (response.code() == 200) {
                     if (response.body().getGeneratedToken() != null) {
                         SessionManager.saveLoginData(context,
@@ -83,15 +79,15 @@ public class LoginActivity extends Activity {
                         finish();
                     }
                 } else {
-//                    Toast.makeText(context, "Login User Gagal : " + response.code(), Toast.LENGTH_SHORT).show();
                     Toast.makeText(context, "Login User Gagal : Pastikan username & password yang anda masukkan benar", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ModelLoginMessage> call, Throwable t) {
+            public void onFailure(@NonNull Call<ModelLoginMessage> call, @NonNull Throwable t) {
                 Toast.makeText(context, "Login User onFailure : " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
+    

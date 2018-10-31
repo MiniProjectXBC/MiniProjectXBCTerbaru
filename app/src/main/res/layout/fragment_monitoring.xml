@@ -11,25 +11,27 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/monitoringEditTextSearch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_weight="5"
+                android:layout_marginRight="10dp"
                 android:inputType="text"
-                android:hint="Search by Name"
-                android:layout_marginRight="20dp"/>
+                android:hint="Search by Name" />
 
-            <Button
+            <ImageView
+                android:layout_gravity="center_vertical"
                 android:id="@+id/monitoringButtonInsert"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/baseline_add_black_24"
-                android:layout_weight="1"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button_login"
+                android:src="@android:drawable/ic_menu_add" />
 
         </LinearLayout>
 
@@ -38,10 +40,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginTop="20dp"
+            android:background="@drawable/custom_head_linear_table"
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="14sp"
+                android:textSize="13sp"
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
@@ -49,7 +55,10 @@
                 android:text="NAME"/>
 
             <TextView
-                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="13sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
@@ -57,10 +66,13 @@
                 android:text="IDLE DATE"/>
 
             <TextView
+                android:textColor="@color/white"
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
                 android:textSize="13sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="7"
                 android:textStyle="bold"
                 android:text="PLACEMENT DATE"/>
 
@@ -78,7 +90,6 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="10dp"
             android:id="@+id/monitoringRecyclerViewList"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

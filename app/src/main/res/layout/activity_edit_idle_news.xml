@@ -25,13 +25,13 @@
                 android:inputType="text"
                 android:hint="Title"/>
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/editIdleNewsEditTextCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:inputType="text"
-                android:hint="Category"/>
+                android:hint="Category (autocomplete)"/>
 
             <EditText
                 android:id="@+id/editIdleNewsEditTextContent"

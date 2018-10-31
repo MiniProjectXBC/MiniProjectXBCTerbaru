@@ -6,36 +6,37 @@
     <group>
         <item
             android:id="@+id/menuBiodata"
-            android:icon="@android:drawable/ic_menu_share"
+            android:icon="@drawable/ef_ic_arrow_forward"
             android:iconTint="@color/black"
             android:title="Biodata" />
     </group>
 
     <group>
-        <item android:id="@+id/menuTrainer"
-            android:icon="@android:drawable/ic_menu_share"
+        <item
+            android:id="@+id/menuTrainer"
+            android:icon="@drawable/ef_ic_arrow_forward"
             android:iconTint="@color/black"
-            android:title="Trainer"
-            />
+            android:title="Trainer" />
     </group>
 
     <group>
-        <item android:id="@+id/menuTechnology"
-            android:icon="@android:drawable/ic_menu_share"
+        <item
+            android:id="@+id/menuTechnology"
+            android:icon="@drawable/ef_ic_arrow_forward"
             android:iconTint="@color/black"
-            android:title="Technology"/>
+            android:title="Technology" />
     </group>
     <item android:title="Bootcamp">
         <menu>
             <item
                 android:id="@+id/menuBatch"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Batch"/>
 
             <item
                 android:id="@+id/menuClass"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Class" />
         </menu>
@@ -44,19 +45,19 @@
         <menu>
             <item
                 android:id="@+id/menuFiltering"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Filtering"/>
 
             <item
                 android:id="@+id/menuMiniProject"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Mini Project" />
 
             <item
                 android:id="@+id/menuCustom"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Custom" />
         </menu>
@@ -65,19 +66,19 @@
         <menu>
             <item
                 android:id="@+id/menuFeedback"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Feedback"/>
 
             <item
                 android:id="@+id/menuIdleNews"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="idle News" />
 
             <item
                 android:id="@+id/menuKataIdle"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Kata Idle" />
         </menu>
@@ -86,12 +87,12 @@
         <menu>
             <item
                 android:id="@+id/menuMonitoring"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Monitoring"/>
             <item
                 android:id="@+id/menuAssignment"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="Assignment" />
         </menu>
@@ -100,13 +101,9 @@
         <menu>
             <item
                 android:id="@+id/menuUser"
-                android:icon="@android:drawable/ic_menu_share"
+                android:icon="@drawable/ef_ic_arrow_forward"
                 android:iconTint="@color/black"
                 android:title="User"/>
         </menu>
     </item>
-
-
-
-
 </menu>

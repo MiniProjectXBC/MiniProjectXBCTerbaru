@@ -1,10 +1,17 @@
 
 package xbc.miniproject.com.xbcapplication.model.monitoring;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MonitoringDataList {
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class MonitoringDataList implements Comparable<MonitoringDataList> {
 
     @SerializedName("id")
     @Expose
@@ -95,4 +102,19 @@ public class MonitoringDataList {
         this.notes = notes;
     }
 
+    @Override
+    public int compareTo(@NonNull MonitoringDataList monitoringDataList) {
+        Date date1 = null;
+        Date date2 = null;
+
+        DateFormat sourceFormat = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            date1 = sourceFormat.parse(this.idleDate);
+            date2 = sourceFormat.parse(monitoringDataList.idleDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date1.compareTo(date2);
+    }
 }

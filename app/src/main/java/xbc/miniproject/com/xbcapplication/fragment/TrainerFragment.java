@@ -1,5 +1,6 @@
 package xbc.miniproject.com.xbcapplication.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,23 +23,20 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xbc.miniproject.com.xbcapplication.AddTechnologyActivity;
 import xbc.miniproject.com.xbcapplication.AddTrainerActivity;
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.adapter.TechnologyListAdapter;
 import xbc.miniproject.com.xbcapplication.adapter.TrainerListAdapter;
-import xbc.miniproject.com.xbcapplication.dummyModel.TechnologyModel;
-import xbc.miniproject.com.xbcapplication.dummyModel.TrainerModel;
-import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
 import xbc.miniproject.com.xbcapplication.model.trainer.DataListTrainer;
 import xbc.miniproject.com.xbcapplication.model.trainer.ModelTrainer;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class TrainerFragment extends Fragment {
 
     private EditText trainerEditTextSearch;
-    private Button trainerButtonInsert;
+    private Button trainerButtonSearch, trainerButtonInsert;
     private RecyclerView trainerRecyclerViewList;
     private List<DataListTrainer> trainerModelList =  new ArrayList<>();
     private TrainerListAdapter trainerListAdapter;
@@ -51,62 +48,72 @@ public class TrainerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_trainer_layout, container, false);
-        getDataFromAPI();
-
-        trainerRecyclerViewList = (RecyclerView)view.findViewById(R.id.trainerRecyclerViewList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
-                LinearLayout.VERTICAL,
-                false);
-        trainerRecyclerViewList.setLayoutManager(layoutManager);
-
-        trainerEditTextSearch =(EditText) view.findViewById(R.id.trainerEditTextSearch);
-        trainerRecyclerViewList.setVisibility(view.INVISIBLE);
-        trainerEditTextSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(trainerEditTextSearch.getText().toString().trim().length()==0){
-                    trainerRecyclerViewList.setVisibility(view.INVISIBLE);
-                }else{
-                    trainerRecyclerViewList.setVisibility(view.VISIBLE);
-                    filter(s.toString());
-                }
-            }
-        });
         trainerButtonInsert = (Button) view.findViewById(R.id.trainerButtonInsert);
         trainerButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddTrainerActivity.class);
+                Intent intent = new Intent(getContext(),AddTrainerActivity.class);
                 startActivity(intent);
             }
         });
 
 
-        tampilkanListTrainer();
+
+
+        trainerRecyclerViewList = (RecyclerView) view.findViewById(R.id.trainerRecyclerViewList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        trainerRecyclerViewList.setLayoutManager(layoutManager);
+
+        trainerEditTextSearch = (EditText) view.findViewById(R.id.trainerEditTextSearch);
+        trainerEditTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (trainerEditTextSearch.getText().toString().trim().length() == 0){
+
+                } else{
+                    String keyword = trainerEditTextSearch.getText().toString().trim();
+                    trainerModelList = new ArrayList<>();
+                    getDataFromAPI(keyword);
+                }
+
+            }
+        });
+
+
         return  view;
     }
 
-    private void getDataFromAPI() {
+    private void getDataFromAPI(String keyword) {
+        final ProgressDialog loading = LoadingClass.loadingAnimationAndText(getContext(),
+                "Sedang Memuat Data . . .");
+        loading.show();
+
+
+        String contentTypes = "application/json";
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListTrainer().enqueue(new Callback<ModelTrainer>() {
+        apiServices.getListTrainer(SessionManager.getToken(getContext()),keyword).enqueue(new Callback<ModelTrainer>() {
             @Override
             public void onResponse(Call<ModelTrainer> call, Response<ModelTrainer> response) {
+                loading.dismiss();
                 if (response.code() == 200){
                     List<DataListTrainer> tmp = response.body().getDataList();
                     for (int i = 0; i<tmp.size();i++){
                         DataListTrainer data = tmp.get(i);
                         trainerModelList.add(data);
                     }
+                    trainerRecyclerViewList.setVisibility(View.VISIBLE);
+                    tampilkanListTrainer();
                 } else{
                     Toast.makeText(getContext(), "Gagal Mendapatkan List Trainer: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
                 }
@@ -114,8 +121,8 @@ public class TrainerFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ModelTrainer> call, Throwable t) {
-                Toast.makeText(getContext(), "List Trainer onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
+                loading.dismiss();
+                 }
         });
     }
 
@@ -138,6 +145,17 @@ public class TrainerFragment extends Fragment {
         }
     }
 
-
+    @Override
+    public void onResume() {
+        clearSearch();
+        super.onResume();
     }
+
+    public void clearSearch(){
+        trainerEditTextSearch.setText("");
+        trainerRecyclerViewList.setVisibility(View.INVISIBLE);
+    }
+
+
+}
 

@@ -28,6 +28,7 @@ import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class BiodataViewHolder extends RecyclerView.ViewHolder {
     TextView listBiodataTextViewName,
@@ -94,8 +95,7 @@ public class BiodataViewHolder extends RecyclerView.ViewHolder {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //DeactiveSuccessNotification(context);
-                        deactiveBiodataAPI(biodataModel,position,context);
-                        dialog.dismiss();
+                        deactiveBiodataAPI(biodataModel,position,context,dialog);
                     }
                 })
                 .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -108,18 +108,19 @@ public class BiodataViewHolder extends RecyclerView.ViewHolder {
                 .show();
     }
 
-    private void deactiveBiodataAPI(BiodataList biodataModel, int position, final Context context) {
+    private void deactiveBiodataAPI(BiodataList biodataModel, int position, final Context context, final DialogInterface dialog) {
         apiServices = APIUtilities.getAPIServices();
         id = biodataModel.getId();
 
         apiServices.deactivateBiodata(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_DEACTIVATED_BIODATA,id)
+                SessionManager.getToken(context),id)
                 .enqueue(new Callback<ModelBiodata>() {
                     @Override
                     public void onResponse(Call<ModelBiodata> call, Response<ModelBiodata> response) {
                         if (response.code() == 200){
                             String message = response.body().getMessage();
                             if (message!=null){
+                                dialog.dismiss();
                                 DeactiveSuccessNotification(context,message);
                             } else{
                                 DeactiveSuccessNotification(context,"Message Gagal Dinonaktifkan");

@@ -1,6 +1,5 @@
 package xbc.miniproject.com.xbcapplication.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,8 +12,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -27,15 +26,17 @@ import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.AddUserActivity;
 import xbc.miniproject.com.xbcapplication.R;
 import xbc.miniproject.com.xbcapplication.adapter.UserListAdapter;
-import xbc.miniproject.com.xbcapplication.dummyModel.UserModel;
 import xbc.miniproject.com.xbcapplication.model.user.DataList;
 import xbc.miniproject.com.xbcapplication.model.user.ModelUser;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class UserFragment extends Fragment{
     private EditText userEditTextSearch;
-    private Button userButtonInsert;
+    private ImageView userButtonInsert;
+    private  ImageView userButtonSearch;
     private RecyclerView userRecyclerViewList;
     private List<DataList> userModelList =  new ArrayList<>();
     private UserListAdapter userListAdapter;
@@ -47,8 +48,6 @@ public class UserFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_user, container, false);
-
-        getDataFromApi();
         userRecyclerViewList = (RecyclerView)view.findViewById(R.id.userRecyclerViewList);
         RecyclerView.LayoutManager layoutManager =  new LinearLayoutManager(getContext(),
                 LinearLayout.VERTICAL,
@@ -70,14 +69,21 @@ public class UserFragment extends Fragment{
             @Override
             public void afterTextChanged(Editable s) {
                 if(userEditTextSearch.getText().toString().trim().length()==0){
-                    userRecyclerViewList.setVisibility(view.INVISIBLE);
+                    Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
+                    userRecyclerViewList.setVisibility(View.INVISIBLE);
                 }else{
-                    userRecyclerViewList.setVisibility(view.VISIBLE);
-                    filter(s.toString());
+                    getDataFromApi(userEditTextSearch.getText().toString().trim());
                 }
             }
         });
-        userButtonInsert = (Button) view.findViewById(R.id.userButtonInsert);
+        userButtonSearch =  (ImageView) view.findViewById(R.id.userButtonSearch);
+        userButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        userButtonInsert = (ImageView) view.findViewById(R.id.userButtonInsert);
         userButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,20 +91,27 @@ public class UserFragment extends Fragment{
                 startActivity(intent);
             }
         });
-        tampilkanListUser();
         return view;
     }
-    private void getDataFromApi(){
+    private void getDataFromApi(String keyword){
+        String contentType = Constanta.CONTENT_TYPE_API;
+        String token = SessionManager.getToken(getContext());
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListUsser().enqueue(new Callback<ModelUser>() {
+        apiServices.getListUsser(contentType, token, keyword).enqueue(new Callback<ModelUser>() {
             @Override
             public void onResponse(Call<ModelUser> call, Response<ModelUser> response) {
                 if(response.code()==200){
-                    List<DataList> tmp = response.body().getDataList();
-                    for(int i=0; i<tmp.size(); i++){
-                        DataList data = tmp.get(i);
-                        userModelList.add(data);
+                    if(response.body().getDataList().size()>0){
+                        userRecyclerViewList.setVisibility(View.VISIBLE);
+                        tampilkanListUser(response.body().getDataList());
+                    }else{
+                        Toast.makeText(getContext(), "Keyword tidak tersedia", Toast.LENGTH_SHORT).show();
                     }
+//                    List<DataList> tmp = response.body().getDataList();
+//                    for(int i=0; i<tmp.size(); i++){
+//                        DataList data = tmp.get(i);
+//                        userModelList.add(data);
+//                    }
                 }else {
                     Toast.makeText(getContext(), "Gagal Mendapatkan List User : "+ response.code()+"msg: "+response.message(), Toast.LENGTH_SHORT).show();
                 }
@@ -110,23 +123,33 @@ public class UserFragment extends Fragment{
             }
         });
     }
-    public void filter(String text){
-        ArrayList<DataList> filteredList = new ArrayList<>();
+//    public void filter(String text){
+//        ArrayList<DataList> filteredList = new ArrayList<>();
+//
+//        for(DataList item: userModelList){
+//            if(item.getUsername().toLowerCase().contains(text.toLowerCase())){
+//                filteredList.add(item);
+//            }
+//        }
+//        userListAdapter.filterList(filteredList);
+//    }
+//
+//    public void filter(){
+//        ArrayList<DataList> filteredList = new ArrayList<>();
+//
+//        for(DataList item: userModelList){
+//            if(userEditTextSearch.getText()!=null){
+//                filteredList.add(item);
+//            }
+//        }
+//        userListAdapter.filterList(filteredList);
+//    }
 
-        for(DataList item: userModelList){
-            if(item.getUsername().toLowerCase().contains(text.toLowerCase())){
-                filteredList.add(item);
-            }
-        }
-        userListAdapter.filterList(filteredList);
-    }
-
-    public void tampilkanListUser(){
-
-        if(userListAdapter==null){
-            userListAdapter =  new UserListAdapter(getContext(), userModelList);
+    public void tampilkanListUser(List<DataList> dataLists){
+            userListAdapter =  new UserListAdapter(getContext(), dataLists);
             userRecyclerViewList.setAdapter(userListAdapter);
-        }
+            userListAdapter.notifyDataSetChanged();
+
     }
 //    public void addDummyList(){
 //        int index=1;
