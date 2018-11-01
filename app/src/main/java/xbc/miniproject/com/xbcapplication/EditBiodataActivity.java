@@ -83,7 +83,7 @@ public class EditBiodataActivity extends Activity {
             }
         });
 
-        id = getIntent().getIntExtra("idAutoComplete",0);
+        id = getIntent().getIntExtra("id",0);
         getOneBiodataAPI(id);
 
 
