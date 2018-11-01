@@ -108,9 +108,21 @@ public class EditBatchActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                isNameSelected = false;
-                editBatchEditTextTechnology.setError("Name must from the list!");
-                listBatch = new ArrayList<>();
+                if(editBatchEditTextTechnology.getText().toString().trim().length() == 0){
+                    editBatchEditTextTechnology.setError(null);
+                } else{
+                    isNameSelected = false;
+                    editBatchEditTextTechnology.setError("Role must from the list!");
+                }
+                if(editBatchEditTextTrainer.getText().toString().trim().length() == 0){
+                    editBatchEditTextTrainer.setError(null);
+                } else{
+                    isNameSelected2 = false;
+                    editBatchEditTextTrainer.setError("Role must from the list!");
+                }
+//                isNameSelected = false;
+//                editBatchEditTextTechnology.setError("Name must from the list!");
+//                listBatch = new ArrayList<>();
             }
 
             @Override
@@ -358,7 +370,11 @@ public class EditBatchActivity extends Activity {
             Toast.makeText(context, "Room Field still empty!", Toast.LENGTH_SHORT).show();
         } else if (editBatchEditTextNotes.getText().toString().trim().length() == 0) {
             Toast.makeText(context, "Notes Field still empty!", Toast.LENGTH_SHORT).show();
-        } else{
+        } else if(isNameSelected == false) {
+            Toast.makeText(context,  "Role must from the list !", Toast.LENGTH_SHORT).show();
+        }else if(isNameSelected2 == false) {
+            Toast.makeText(context,  "Role must from the list !", Toast.LENGTH_SHORT).show();
+        }else{
 //            SaveSuccessNotification();
             callAPICreateBatch(editBatchEditTextTechnology.getText().toString(),
                     editBatchEditTextTrainer.getText().toString(),
