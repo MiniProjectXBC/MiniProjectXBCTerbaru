@@ -61,6 +61,8 @@ public class FeedbackFragment extends Fragment  {
     KArrayAdapter<DataListAutocompleteFeedback> adapter;
     int idAutoComplete;
 
+    private List<DataListAutocompleteFeedback> dataListAutocompleteFeedbacks= new ArrayList<>();
+
     private List<DataListQuestionFeedback> dataListQuestionFeedbacks = new ArrayList<>();
 
 
@@ -117,7 +119,7 @@ public class FeedbackFragment extends Fragment  {
 
 
         feedbackTextName = (AutoCompleteTextView) view.findViewById(R.id.feedbackTextName);
-        tampil_auto_complete();
+
         feedbackTextName.setThreshold(1);
 
 
@@ -142,10 +144,10 @@ public class FeedbackFragment extends Fragment  {
 
 
 
-//                DataListAutocompleteFeedback selected = (DataListAutocompleteFeedback) parent.getAdapter().getItem(position);
-//                int aidi = selected.getId();
-//                int idAutoComplete = selected.getId();
-//                Toast.makeText(getContext(),"idnya ini: "+aidi,Toast.LENGTH_LONG).show();
+                DataListAutocompleteFeedback selected = (DataListAutocompleteFeedback) parent.getAdapter().getItem(position);
+                int aidi = selected.getId();
+                 idAutoComplete = selected.getId();
+                Toast.makeText(getContext(),"idnya ini: "+aidi,Toast.LENGTH_LONG).show();
 
 
 
@@ -178,6 +180,7 @@ public class FeedbackFragment extends Fragment  {
                 if (feedbackTextName.getText().toString().trim().length() != 0) {
                     feedbackRecyclerView.setVisibility(View.GONE);
                     String keyword = feedbackTextName.getText().toString().trim();
+                    tampil_auto_complete(keyword);
 
                 }
             }
@@ -191,24 +194,28 @@ public class FeedbackFragment extends Fragment  {
 
     }
 
-    public void tampil_auto_complete(){
+    public void tampil_auto_complete(String keyword){
         apiServices = APIUtilities.getAPIServices();
-        apiServices.roleautocomplete(SessionManager.getToken(getContext()), "g").enqueue(new Callback<ModelAutocompleteFeedback>() {
+        apiServices.roleautocomplete(SessionManager.getToken(getContext()), keyword).enqueue(new Callback<ModelAutocompleteFeedback>() {
             @Override
             public void onResponse(Call<ModelAutocompleteFeedback> call, Response<ModelAutocompleteFeedback> response) {
                 if (response.code() == 200){
-                    if (response.body().getMessage() != null){
-                        List<String> str = new ArrayList<String>();
-                        for (DataListAutocompleteFeedback s : response.body().getDataList()){
-                            System.out.println(Arrays.toString(response.body().getDataList().toArray()));
-                            str.add(s.getId().toString());
-                        }
-                       ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),android.R.layout.select_dialog_item, str.toArray(new String[0]));
-                        feedbackTextName.setThreshold(1);
-                        feedbackTextName.setAdapter(adapter);
 
-
-                    }
+                    dataListAutocompleteFeedbacks = response.body().getDataList();
+                    System.out.println(Arrays.toString(dataListAutocompleteFeedbacks.toArray()));
+                    getAutoCompletAdapter();
+//                    if (response.body().getMessage() != null){
+//                        List<String> str = new ArrayList<String>();
+//                        for (DataListAutocompleteFeedback s : response.body().getDataList()){
+//                            System.out.println(Arrays.toString(response.body().getDataList().toArray()));
+//                            str.add(s.getId().toString());
+//                        }
+//                       ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),android.R.layout.select_dialog_item, str.toArray(new String[0]));
+//                        feedbackTextName.setThreshold(1);
+//                        feedbackTextName.setAdapter(adapter);
+//
+//
+//                    }
                 }
 
             }
@@ -223,7 +230,7 @@ public class FeedbackFragment extends Fragment  {
 
     private void getAutoCompletAdapter() {
         adapter = new KArrayAdapter<>
-                (getContext(), android.R.layout.simple_list_item_1, feedbackModelList);
+                (getContext(), android.R.layout.simple_list_item_1, dataListAutocompleteFeedbacks);
         feedbackTextName.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -243,7 +250,7 @@ public class FeedbackFragment extends Fragment  {
             String id = feedbackTextName.getText().toString();
             String[] questionId = Constanta.ARRAY_ID;
             String[] answer = Constanta.ARRAY_FEEDBACK;
-            saveFeedback(id, questionId, answer);
+            saveFeedback(idAutoComplete+"", questionId, answer);
 
             //saveSuccesNotification();
 
@@ -351,71 +358,9 @@ public class FeedbackFragment extends Fragment  {
 
 
 
-//    public void tampilkanListQuestion() {
-//        //addDummyList();
-//        if (feedbackListAdapter == null) {
-//            feedbackListAdapter = new FeedbackListAdapter(getContext(), feedbackModelList);
-//            feedbackRecyclerView.setAdapter(feedbackListAdapter);
-//        }
-//        getListQuestionFeedback();
-//    }
-//
-//    public void filter(String text) {
-//        ArrayList<FeedbackModel> filteredList = new ArrayList<>();
-//
-//        for (FeedbackModel item : feedbackModelList) {
-//            if (item.getTest().toLowerCase().contains(text.toLowerCase())) {
-//                filteredList.add(item);
-//            }
-//
-//        }
-//        feedbackListAdapter.filterList(filteredList);
-//    }
 
 
 
 
 
-//    public void getListQuestionFeedback(){
-//        apiServices = APIUtilities.getAPIServices();
-//        apiServices.getListQuestionFeedback().enqueue(new Callback<ModelQuestionFeedback>() {
-//            @Override
-//            public void onResponse(Call<ModelQuestionFeedback> call, Response<ModelQuestionFeedback> response) {
-//                if (response.code() == 200){
-//                    List<DataListQuestionFeedback> tmp = response.body().getDataList();
-//                    for (int i = 0; i<tmp.size();i++){
-//                        DataListQuestionFeedback data = tmp.get(i);
-//                        dataListQuestionFeedbacks.add(data);
-//                    }
-//                } else{
-//                    Toast.makeText(getContext(), "Gagal Mendapatkan List Question: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ModelQuestionFeedback> call, Throwable t) {
-//                Toast.makeText(getContext(), "List Question onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-//
-//    }
-
-//    public void addDummyList() {
-//        int index = 1;
-//        for (int i = 0; i < 5; i++) {
-//            FeedbackModel data = new FeedbackModel();
-//            data.setTest("Android");
-//            data.setQuestion("Dummy Name" + index);
-//            feedbackModelList.add(data);
-//            index++;
-//        }
-//        for (int i = 0; i < 3; i++) {
-//            FeedbackModel data = new FeedbackModel();
-//            data.setTest("Java");
-//            data.setQuestion("Dummy Name" + index);
-//            feedbackModelList.add(data);
-//            index++;
-//        }
-//
-//    }
 }

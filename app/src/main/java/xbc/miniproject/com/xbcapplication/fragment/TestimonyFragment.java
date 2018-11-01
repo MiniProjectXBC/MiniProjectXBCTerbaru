@@ -112,7 +112,7 @@ public class TestimonyFragment extends Fragment {
                     testimonyRecyclerViewList.setVisibility(View.VISIBLE);
                     tampilkanListTestimony();
                 } else{
-                    Toast.makeText(getContext(), "Gagal Mendapatkan List Trainer: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Gagal Mendapatkan List Testimony: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
                 }
             }
 
