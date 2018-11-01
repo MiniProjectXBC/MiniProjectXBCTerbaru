@@ -51,7 +51,7 @@ public class AddIdleNewsActivity extends Activity {
 
     RequestAPIServices apiServices;
 
-    int idAutocomplete;
+    int idAutoComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class AddIdleNewsActivity extends Activity {
                 addIdleNewsEditTextCategory.setError(null);
 
                 DataList selected = (DataList) adapterView.getAdapter().getItem(i);
-                idAutocomplete = selected.getId();
+                idAutoComplete = selected.getId();
 //                Toast.makeText(context,"idnya ini bos: "+aidi,Toast.LENGTH_LONG).show();
             }
         });
@@ -172,14 +172,14 @@ public class AddIdleNewsActivity extends Activity {
             Toast.makeText(context, "Category Field Must From the List!", Toast.LENGTH_SHORT).show();
         } else {
 //            SaveSuccessNotification();
-            callAPICreateIdleNews(idAutocomplete+"", addIdleNewsEditTextTitle.getText().toString(), addIdleNewsEditTextCategory.getText().toString(), addIdleNewsEditTextContent.getText().toString());
+            callAPICreateIdleNews(idAutoComplete +"", addIdleNewsEditTextTitle.getText().toString(), addIdleNewsEditTextCategory.getText().toString(), addIdleNewsEditTextContent.getText().toString());
         }
     }
 
     private void callAPICreateIdleNews(String idAutocomplete, String title, String category, String content) {
 
         String contentType = "application/json";
-        String json = APIUtilities.generateIdleNewsMap(idAutocomplete, title, category, content);
+        String json = APIUtilities.generateAddIdleNewsMap(idAutocomplete, title, category, content);
         RequestBody bodyRequest = RequestBody.create(APIUtilities.mediaType(), json);
         apiServices = APIUtilities.getAPIServices();
 

@@ -39,6 +39,8 @@ public class DoneAssignmentActivity extends Activity {
 
     RequestAPIServices apiServices;
 
+    int idData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +92,7 @@ public class DoneAssignmentActivity extends Activity {
                 finish();
             }
         });
+        
     }
 
     private void updateLabel() {

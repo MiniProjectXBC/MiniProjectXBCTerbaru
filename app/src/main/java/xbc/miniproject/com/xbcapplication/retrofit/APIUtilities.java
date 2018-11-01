@@ -33,8 +33,8 @@ public class APIUtilities {
         return json;
     }
 
-    //generate get idleNews MAP params
-    public static String generateIdleNewsMap(String id, String title, String category, String content) {
+    //generate get add IdleNews MAP params
+    public static String generateAddIdleNewsMap(String id, String title, String category, String content) {
         Map<String, Object> map = new HashMap<>();
         if (title != null) map.put("title", title);
         if (content != null) map.put("content", content);
@@ -52,18 +52,60 @@ public class APIUtilities {
         return json;
     }
 
-    //generated get assignment MAP param
-    public static String generateAssignmentMap (String name, String title, String startDate, String endDate, String description){
+    //generate get edit IdleNews MAP params
+    public static String generateEditIdleNewsMap(String idData, String idAutoComplete, String title, String category, String content) {
+        Map<String, Object> map = new HashMap<>();
+        if (idData != null) map.put("id", idData);
+        if (title != null) map.put("title", title);
+        if (content != null) map.put("content", content);
+
+        if (category != null) {
+            Map<String, String> unitObj = new HashMap<>();
+            unitObj.put("id", idAutoComplete);
+            map.put("category", unitObj);
+        }
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.serializeNulls().create();
+        String json = gson.toJson(map);
+
+        return json;
+    }
+
+    //generated get add assignment MAP param
+    public static String generateAddAssignmentMap (String idAutoComplete, String biodata, String title, String startDate, String endDate, String description){
         Map<String, Object> map = new HashMap<>();
         if (title != null) map.put("title", title);
-        if (description != null) map.put("content", description);
+        if (description != null) map.put("description", description);
         if (startDate != null) map.put("startDate", startDate);
         if (endDate != null) map.put("endDate", endDate);
 
-        if (name != null) {
+        if (biodata != null) {
             Map<String, String> unitObj = new HashMap<>();
-            unitObj.put("name", name);
-            map.put("name", unitObj);
+            unitObj.put("id", idAutoComplete);
+            map.put("biodata", unitObj);
+        }
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.serializeNulls().create();
+        String json = gson.toJson(map);
+
+        return json;
+    }
+
+    //generated get edit assignment MAP param
+    public static String generateEditAssignmentMap (String idData, String idAutoComplete, String id, String title, String startDate, String endDate, String description){
+        Map<String, Object> map = new HashMap<>();
+        if (idData != null) map.put("id", idData);
+        if (title != null) map.put("title", title);
+        if (description != null) map.put("description", description);
+        if (startDate != null) map.put("startDate", startDate);
+        if (endDate != null) map.put("endDate", endDate);
+
+        if (id != null) {
+            Map<String, String> unitObj = new HashMap<>();
+            unitObj.put("id", idAutoComplete);
+            map.put("biodata", unitObj);
         }
 
         GsonBuilder builder = new GsonBuilder();

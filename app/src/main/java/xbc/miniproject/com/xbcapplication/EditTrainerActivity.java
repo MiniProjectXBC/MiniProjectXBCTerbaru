@@ -59,7 +59,7 @@ public class EditTrainerActivity extends Activity {
                 finish();
             }
         });
-        int id = getIntent().getIntExtra("id",0);
+        int id = getIntent().getIntExtra("idAutoComplete",0);
         getOneTrainerAPI(id);
 
     }

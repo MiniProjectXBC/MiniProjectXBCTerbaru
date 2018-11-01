@@ -55,7 +55,7 @@ public class EditTestimonyActivity extends Activity {
             }
         });
 
-        int id = getIntent().getIntExtra("id",0);
+        int id = getIntent().getIntExtra("idAutoComplete",0);
         getOneTestimonyAPI(id);
     }
 
