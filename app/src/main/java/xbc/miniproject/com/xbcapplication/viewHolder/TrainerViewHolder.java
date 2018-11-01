@@ -50,6 +50,7 @@ public class TrainerViewHolder extends RecyclerView.ViewHolder {
                             case R.id.trainerMenuEdit:
                                 //Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: "+position,Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, EditTrainerActivity.class);
+                                intent.putExtra("id",trainerModel.getId());
                                 ((Activity)context).startActivity(intent);
                                 return true;
                             case R.id.trainerMenuDeactivate:

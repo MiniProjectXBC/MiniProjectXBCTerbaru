@@ -63,9 +63,11 @@ public class AddTrainerActivity extends Activity {
     private void inputValidation(){
         if(addTrainerEditTextName.getText().toString().trim().length()==0){
             Toast.makeText(context,"Name Field still empty!",Toast.LENGTH_SHORT).show();
-        }else if (addTrainerEditTexNote.getText().toString().trim().length()==0){
-            Toast.makeText(context,"Note Field still empty!",Toast.LENGTH_SHORT).show();
-        }else{
+        }
+//        else if (addTrainerEditTexNote.getText().toString().trim().length()==0){
+//            Toast.makeText(context,"Note Field still empty!",Toast.LENGTH_SHORT).show();
+//        }
+        else{
             callAPICreateTrainer();
 
 

@@ -29,7 +29,7 @@ public class EditTestimonyActivity extends Activity {
     private Button editTestimonyButtonSave,
             editTestimonyButtonCancel;
     private RequestAPIServices apiServices;
-    int id;
+    int id, idData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +56,7 @@ public class EditTestimonyActivity extends Activity {
         });
 
         int id = getIntent().getIntExtra("id",0);
+        id=getIntent().getIntExtra("id",0);
         getOneTestimonyAPI(id);
     }
 
@@ -67,6 +68,8 @@ public class EditTestimonyActivity extends Activity {
             public void onResponse(Call<ModelTestimony> call, Response<ModelTestimony> response) {
                 if (response.code() == 200){
                     Testimony data = response.body().getData();
+                    idData =data.getId();
+
                     editTestimonyEditTextTitle.setText(data.getTitle());
                     editTestimonyEditTexContent.setText(data.getContent().toString());
                 } else{
@@ -100,7 +103,7 @@ public class EditTestimonyActivity extends Activity {
         apiServices = APIUtilities.getAPIServices();
 
         Testimony data = new Testimony();
-        data.setId(id);
+        data.setId(idData);
         data.setTitle(editTestimonyEditTextTitle.getText().toString());
         data.setContent(editTestimonyEditTexContent.getText().toString());
 

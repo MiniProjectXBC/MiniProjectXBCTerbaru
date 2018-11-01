@@ -243,9 +243,9 @@ public class FeedbackFragment extends Fragment  {
             Toast.makeText(getActivity(), "Question Field still empty!", Toast.LENGTH_SHORT).show();
         }
 
-        else if (FeedbackViewHolder.customListFeedback.getText().toString().trim().length() == 0){
-            Toast.makeText(getActivity(), "Notes Field still empty!", Toast.LENGTH_SHORT).show();
-        }
+//        else if (FeedbackViewHolder.customListFeedback.getText().toString().trim().length() == 0){
+//            Toast.makeText(getActivity(), "Notes Field still empty!", Toast.LENGTH_SHORT).show();
+//        }
         else {
             String id = feedbackTextName.getText().toString();
             String[] questionId = Constanta.ARRAY_ID;

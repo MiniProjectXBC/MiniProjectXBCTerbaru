@@ -19,6 +19,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.EditTestimonyActivity;
 import xbc.miniproject.com.xbcapplication.R;
+import xbc.miniproject.com.xbcapplication.dummyModel.TestimonyModel;
 import xbc.miniproject.com.xbcapplication.model.testimony.DataListTestimony;
 import xbc.miniproject.com.xbcapplication.model.testimony.ModelTestimony;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
@@ -50,6 +51,7 @@ public class TestimonyViewHolder extends RecyclerView.ViewHolder {
                             case  R.id.testimonyMenuEdit:
                                 //Toast.makeText(context,"Anda menekan button edit"+position, Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, EditTestimonyActivity.class);
+                                intent.putExtra("id", testimonyModel.getId());
                                 ((Activity)context).startActivity(intent);
                                 return true;
                             case R.id.testimonyMenuDelete:
