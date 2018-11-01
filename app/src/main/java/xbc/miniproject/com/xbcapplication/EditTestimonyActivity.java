@@ -70,7 +70,7 @@ public class EditTestimonyActivity extends Activity {
                     editTestimonyEditTextTitle.setText(data.getTitle());
                     editTestimonyEditTexContent.setText(data.getContent().toString());
                 } else{
-                    Toast.makeText(context, "Gagal Mendapatkan Testimony Trainer: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Gagal Mendapatkan Testimony: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
                 }
             }
 
