@@ -157,6 +157,7 @@ public class EditIdleMonitoringActivity extends Activity {
 
         int aidi = getIntent().getIntExtra("id", 0);
         idMonitoring = aidi+"";
+        System.out.println(idMonitoring);
         getOneFromAPI(idMonitoring);
 
     }
