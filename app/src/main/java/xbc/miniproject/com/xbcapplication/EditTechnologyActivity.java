@@ -33,6 +33,7 @@ public class EditTechnologyActivity extends Activity {
             editTechnologyButtonCancel;
     private RequestAPIServices apiServices;
     int id;
+    int id1;
     List<DataList> listTechnology = new ArrayList<DataList>();
 
     @Override
@@ -64,6 +65,7 @@ public class EditTechnologyActivity extends Activity {
         getOneTechnologyAPI(id);
     }
     private void getOneTechnologyAPI(int id){
+        id1=id;
         apiServices = APIUtilities.getAPIServices();
         apiServices.getOneTechnology(id).enqueue(new Callback<ModelTechnology>() {
             @Override
@@ -89,17 +91,18 @@ public class EditTechnologyActivity extends Activity {
         }else if(editTechnologyEditTexNote.getText().toString().trim().length()==0){
             Toast.makeText(context,"Note Field still empty!",Toast.LENGTH_SHORT).show();
         }else{
-            inputEditTechnologyAPI();
+            inputEditTechnologyAPI(id);
             //hanya pesan
             //saveSuccessfullyNotification();
             Toast.makeText(context,"Testimony successfully updated!",Toast.LENGTH_SHORT).show();
         }
     }
-    private void inputEditTechnologyAPI(){
+    private void inputEditTechnologyAPI(int id){
         apiServices =  APIUtilities.getAPIServices();
 
         Technology data = new Technology();
-        data.setId(id);
+        System.out.println(id+"");
+        data.setId(id+"");
         data.setName(editTechnologyEditTextName.getText().toString());
         data.setNotes(editTechnologyEditTexNote.getText().toString());
 

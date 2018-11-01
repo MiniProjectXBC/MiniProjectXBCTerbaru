@@ -34,15 +34,15 @@ public class APIUtilities {
     }
 
     //generate get idleNews MAP params
-    public static String generateIdleNewsMap(String title, String category, String content) {
+    public static String generateIdleNewsMap(String id, String title, String category, String content) {
         Map<String, Object> map = new HashMap<>();
         if (title != null) map.put("title", title);
         if (content != null) map.put("content", content);
 
         if (category != null) {
             Map<String, String> unitObj = new HashMap<>();
-            unitObj.put("name", category);
-            map.put("name", unitObj);
+            unitObj.put("id", id);
+            map.put("category", unitObj);
         }
 
         GsonBuilder builder = new GsonBuilder();

@@ -123,9 +123,9 @@ public class MonitoringFragment extends Fragment {
                     for (int i = 0; i<tmp.size();i++) {
                         MonitoringDataList data = tmp.get(i);
                         //Code untuk testing apakah sorting berdasarkan Idle Date berhasil
-//                        if (i == 1){
-//                            data.setIdleDate("04-01-2018");
-//                        }
+                        if (i == 1){
+                            data.setIdleDate("04-01-2018");
+                        }
                         listMonitoring.add(data);
                     }
 
