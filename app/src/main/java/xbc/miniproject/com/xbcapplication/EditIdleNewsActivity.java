@@ -50,14 +50,15 @@ public class EditIdleNewsActivity extends Activity {
 
     RequestAPIServices apiServices;
 
-    int idAutocomplete;
+    String idData;
+    int idAutoComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_idle_news);
 
-        String title, category, content;
+        String id,title, category, content;
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -85,7 +86,7 @@ public class EditIdleNewsActivity extends Activity {
                 editIdleNewsEditTextCategory.setError(null);
 
                 DataList selected = (DataList) adapterView.getAdapter().getItem(i);
-                idAutocomplete = selected.getId();
+                idAutoComplete = selected.getId();
 //                Toast.makeText(context,"idnya ini bos: "+aidi,Toast.LENGTH_LONG).show();
             }
         });
@@ -134,6 +135,7 @@ public class EditIdleNewsActivity extends Activity {
 //            content = null;
         }
         else {
+            idData=  data.getString("id");
             title = data.getString("title");
             category = data.getString("category");
 //            content = data.getString("content");
@@ -185,14 +187,14 @@ public class EditIdleNewsActivity extends Activity {
             editIdleNewsEditTextCategory.setText("");
             Toast.makeText(context, "Category Field Must From the List!", Toast.LENGTH_SHORT).show();
         } else {
-            inputEditIdleNewsAPI(idAutocomplete+"", editIdleNewsEditTextTitle.getText().toString(), editIdleNewsEditTextCategory.getText().toString(), editIdleNewsEditTextContent.getText().toString());
+            inputEditIdleNewsAPI(idData +"", idAutoComplete+"", editIdleNewsEditTextTitle.getText().toString(), editIdleNewsEditTextCategory.getText().toString(), editIdleNewsEditTextContent.getText().toString());
         }
     }
 
-    private void inputEditIdleNewsAPI(String idAutocomplete, String title, String category, String content) {
+    private void inputEditIdleNewsAPI(String idData, String idAutoComplete, String title, String category, String content) {
 
         String contentType = "application/json";
-        String json = APIUtilities.generateIdleNewsMap(idAutocomplete, title, category, content);
+        String json = APIUtilities.generateEditIdleNewsMap(idData, idAutoComplete, title, category, content);
         RequestBody bodyRequest = RequestBody.create(APIUtilities.mediaType(), json);
         apiServices = APIUtilities.getAPIServices();
 

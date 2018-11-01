@@ -21,6 +21,7 @@ import xbc.miniproject.com.xbcapplication.model.biodata.Biodata;
 import xbc.miniproject.com.xbcapplication.model.biodata.BiodataList;
 import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
 
+import xbc.miniproject.com.xbcapplication.model.biodata.autoComplete.ModelBiodataAutoComplete;
 import xbc.miniproject.com.xbcapplication.model.feedback.autoComplete.ModelAutocompleteFeedback;
 import xbc.miniproject.com.xbcapplication.model.feedback.getQuestion.ModelQuestionFeedback;
 import xbc.miniproject.com.xbcapplication.model.feedback.postCreate.ModelCreateFeedback;
@@ -34,6 +35,7 @@ import xbc.miniproject.com.xbcapplication.model.feedback.getQuestion.ModelQuesti
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.idleNews.autoComplete.ModelAutoCompleteIdleNews;
+import xbc.miniproject.com.xbcapplication.model.idleNews.shareIdleNews.ModelShareIdleNews;
 import xbc.miniproject.com.xbcapplication.model.login.ModelLoginInput;
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.login.ModelLoginMessage;
@@ -81,6 +83,21 @@ public interface RequestAPIServices {
     @GET("/xbc-ws/api/biodata/id/{id}")
     Call<ModelBiodata> getOneBiodata(@Header("Authorization") String auth,
                                      @Path("id") int id);
+
+    //Koneksi API Get Auto Complete add
+    @GET("/xbc-ws/api/biodata/key/{keyword}")
+    Call<ModelBiodataAutoComplete> getAutoCompleteBatchBiodata(@Header("Authorization") String authorization,
+                                                               @Path("keyword") String keyword);
+
+    //Koneksi API Get Auto Complete add
+    @GET("/xbc-ws/api/biodata/id/{keyword}")
+    Call<ModelBatchTechnologyAutoComplete> getAutoCompleteBatchTechnologyList(@Header("Authorization") String authorization,
+                                                          @Path("keyword") String keyword);
+
+    //Koneksi API Get Auto Complete add
+    @GET("/xbc-ws/api/technology/key/{keyword}")
+    Call<ModelBatchTechnologyAutoComplete> getAutoCompleteBatchTechnologyList2(@Header("Authorization") String authorization,
+                                                                              @Path("keyword") String keyword);
 
     //PUT edit
     @PUT("/xbc-ws/api/biodata/update")
@@ -298,17 +315,14 @@ public interface RequestAPIServices {
     @POST ("/xbc-ws/api/idlenews/share-to-email")
     Call<ModelIdleNews> shareNewIdleNews(@Header("Content-Type") String contentType,
                                          @Header("Authorization") String authorization,
-                                         @Body IdleNewsList data);
+                                         @Body ModelShareIdleNews data);
 
     //Koneksi API Get Auto Complete Trainer
     @GET("/xbc-ws/api/trainer/key/{keyword}")
     Call<ModelBatchTrainerAutoComplete> getAutoCompleteBatchTrainerList(@Header("Authorization") String authorization,
                                                                         @Path("keyword") String keyword);
 
-    //Koneksi API Get Auto Complete Batch Technology
-    @GET("/xbc-ws/api/technology/key/{keyword}")
-    Call<ModelBatchTechnologyAutoComplete> getAutoCompleteBatchTechnologyList(@Header("Authorization") String authorization,
-                                                                              @Path("keyword") String keyword);
+
 
     //konek API di menu Batch
     //GET Search
@@ -322,6 +336,11 @@ public interface RequestAPIServices {
     Call<ModelBatch> createNewBatch(@Header("Content-Type") String contentType,
                                     @Body RequestBody data);
 
+    //POST CREATE
+    @POST("/xbc-ws/api/class/participant/add/1")
+    Call<ModelBatch> createNewBatchAddParticipant(@Header("Content-Type") String contentType,
+                                    @Body RequestBody data);
+
 
     //GET get_one
     @Headers("Authorization: JCZXSHTUOIW5PAAGXIYZFTTX43KGRGJGFKL8DLMPJUMNFRIYOSTZUSL2157WV2MKY8CNNJDP8SAYN1KHHGBHV0B2W1UFPCR4APQKYEW6HJVFM98F4KY5T0QVWRGZXRTP")
@@ -332,6 +351,11 @@ public interface RequestAPIServices {
     @GET("/xbc-ws/api/batch/id/{id}")
     Call<ModelBatchAutoComplete> getOneBatch(@Header("Authorization") String authorization,
                                              @Path("id") String keyword);
+
+//    //Koneksi API get One Batch Edit
+//    @GET("/xbc-ws/api/batch/id/{id}")
+//    Call<ModelBatch> getOneBatch2(@Header("Authorization") String authorization,
+//                                             @Path("id") String keyword);
 
     //PUT EDIT
     @PUT("xbc-ws/api/batch/update")

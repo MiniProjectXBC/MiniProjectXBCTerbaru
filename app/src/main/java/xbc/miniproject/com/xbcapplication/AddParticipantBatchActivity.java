@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.RequestBody;
@@ -25,6 +26,8 @@ import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.model.batch.ModelBatch;
 import xbc.miniproject.com.xbcapplication.model.batch.autoCompleteTechnology.DataList;
 import xbc.miniproject.com.xbcapplication.model.batch.autoCompleteTechnology.ModelBatchTechnologyAutoComplete;
+import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
+import xbc.miniproject.com.xbcapplication.model.biodata.autoComplete.ModelBiodataAutoComplete;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
@@ -36,17 +39,21 @@ public class AddParticipantBatchActivity extends Activity {
     private AutoCompleteTextView addParticipantBatchEditTextName;
 
     private Button addParticipantBatchButtonSave, addParticipantBatchButtonCancel;
-    KArrayAdapter<DataList> adapter;
-    private List<DataList> listBatch = new ArrayList<>();
+    KArrayAdapter<xbc.miniproject.com.xbcapplication.model.biodata.autoComplete.DataList> adapter;
+    private List<xbc.miniproject.com.xbcapplication.model.biodata.autoComplete.DataList> listBatch = new ArrayList<>();
 
     private RequestAPIServices apiServices;
 
     private boolean isNameSelected;
     String idBiodata;
+    String idBatch;
+    int id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        idBatch = getIntent().getIntExtra("id", 0)+"";
         setContentView(R.layout.activity_add_participant_batch);
 
         ActionBar actionBar = getActionBar();
@@ -61,7 +68,7 @@ public class AddParticipantBatchActivity extends Activity {
                 isNameSelected = true;
                 addParticipantBatchEditTextName.setError(null);
 
-                DataList selected = (DataList) parent.getAdapter().getItem(position);
+                xbc.miniproject.com.xbcapplication.model.biodata.autoComplete.DataList selected = (xbc.miniproject.com.xbcapplication.model.biodata.autoComplete.DataList) parent.getAdapter().getItem(position);
                 int ff = selected.getId();
                 idBiodata = ff + "";
                 Toast.makeText(context, "idnya ini cuy" + ff, Toast.LENGTH_LONG).show();
@@ -108,18 +115,19 @@ public class AddParticipantBatchActivity extends Activity {
 
     private void getAutoCompleteAPI(String keyword){
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getAutoCompleteBatchTechnologyList(SessionManager.getToken(context), keyword)
-                .enqueue(new Callback<ModelBatchTechnologyAutoComplete>() {
+        apiServices.getAutoCompleteBatchBiodata(SessionManager.getToken(context), keyword)
+                .enqueue(new Callback<ModelBiodataAutoComplete>() {
                     @Override
-                    public void onResponse(Call<ModelBatchTechnologyAutoComplete> call, Response<ModelBatchTechnologyAutoComplete> response3) {
+                    public void onResponse(Call<ModelBiodataAutoComplete> call, Response<ModelBiodataAutoComplete> response3) {
                         if(response3.code() == 200) {
                             listBatch = response3.body().getDataList();
+                            System.out.println(Arrays.toString(listBatch.toArray()));
                             getAutoCompleteAdapter();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<ModelBatchTechnologyAutoComplete> call, Throwable t) {
+                    public void onFailure(Call<ModelBiodataAutoComplete> call, Throwable t) {
 
                     }
                 });
@@ -134,6 +142,8 @@ public class AddParticipantBatchActivity extends Activity {
     public void editValidation(){
         if(addParticipantBatchEditTextName.getText().toString().trim().length()==0){
             Toast.makeText(context,"Participant Field still empty!",Toast.LENGTH_SHORT).show();
+        }else if(isNameSelected == false) {
+            Toast.makeText(context,  "Role must from the list !", Toast.LENGTH_SHORT).show();
         }else{
 //            saveSuccessfullyNotification();
             CallAPIAddParticipant(addParticipantBatchEditTextName.getText().toString());
@@ -144,11 +154,11 @@ public class AddParticipantBatchActivity extends Activity {
 
         String contenType = Constanta.CONTENT_TYPE_API;
         String token = SessionManager.getToken(context);
-        String JSON = APIUtilities.generateBatchAddParticipant(idBiodata);
+        String JSON = APIUtilities.generateBatchAddParticipant (idBatch, idBiodata);
         RequestBody requestBody = RequestBody.create(APIUtilities.mediaType(), JSON);
         apiServices = APIUtilities.getAPIServices();
 
-        apiServices.createNewBatch(contenType, requestBody)
+        apiServices.createNewBatchAddParticipant(contenType, requestBody)
                 .enqueue(new Callback<ModelBatch>() {
                     @Override
                     public void onResponse(Call<ModelBatch> call, Response<ModelBatch> response) {

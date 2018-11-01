@@ -56,12 +56,15 @@ public class EditAssignmnetActivity extends Activity {
     private List<DataList> listAssignment = new ArrayList<>();
     RequestAPIServices apiServices;
 
+    String idData;
+    int idAutoComplete;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_assignmnet);
 
-        String name, title, start, end, description;
+        String id, name, title, start, end, description;
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -111,7 +114,7 @@ public class EditAssignmnetActivity extends Activity {
                 editAssignmentEditTextName.setError(null);
 
                 DataList selected = (DataList) adapterView.getAdapter().getItem(i);
-                int aidi = selected.getId();
+                idAutoComplete = selected.getId();
 
             }
         });
@@ -188,6 +191,7 @@ public class EditAssignmnetActivity extends Activity {
             description = null;
         }
         else {
+            idData=  data.getString("id");
             name = data.getString("name");
             title = data.getString("title");
             start = data.getString("startDate");
@@ -265,13 +269,13 @@ public class EditAssignmnetActivity extends Activity {
             Toast.makeText(context, "End Date Must greater than or equal to the Start Date!", Toast.LENGTH_SHORT).show();
         } else{
 //            SaveSuccessNotification();
-            inputEditAssignmentAPI(editAssignmentEditTextName.getText().toString(), editAssignmentEditTextTitle.getText().toString(), editAssignmentEditTextStartDate.getText().toString(), editAssignmentEditTextEndDate.getText().toString(), editAssignmentEditTextDescription.getText().toString());
+            inputEditAssignmentAPI(idData+"", idAutoComplete+"", editAssignmentEditTextName.getText().toString(), editAssignmentEditTextTitle.getText().toString(), editAssignmentEditTextStartDate.getText().toString(), editAssignmentEditTextEndDate.getText().toString(), editAssignmentEditTextDescription.getText().toString());
         }
     }
 
-    private void inputEditAssignmentAPI(String name, String title, String startDate, String endDate, String description){
+    private void inputEditAssignmentAPI(String idData, String idAutoComplete, String name, String title, String startDate, String endDate, String description){
         String contentType = "application/json";
-        String json = APIUtilities.generateAssignmentMap(name, title, startDate, endDate, description);
+        String json = APIUtilities.generateEditAssignmentMap(idData, idAutoComplete, name, title, startDate, endDate, description);
         RequestBody bodyRequest = RequestBody.create(APIUtilities.mediaType(), json);
         apiServices = APIUtilities.getAPIServices();
 

@@ -64,6 +64,7 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
                             case R.id.assignmentMenuEdit:
                                 //Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: " + position, Toast.LENGTH_SHORT).show();
                                 Intent intent1 = new Intent(context, EditAssignmnetActivity.class);
+                                intent1.putExtra("id", assignmentList.getId().toString());
                                 intent1.putExtra("name", assignmentList.getBiodata().getName().toString());
 //                                intent1.putExtra("title", assignmentList.getTitle().toString());
                                 intent1.putExtra("startDate", assignmentList.getStartDate().toString());

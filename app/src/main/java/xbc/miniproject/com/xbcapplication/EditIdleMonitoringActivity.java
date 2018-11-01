@@ -155,7 +155,7 @@ public class EditIdleMonitoringActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Edit Idle");
 
-        int aidi = getIntent().getIntExtra("id", 0);
+        int aidi = getIntent().getIntExtra("idAutoComplete", 0);
         idMonitoring = aidi+"";
         System.out.println(idMonitoring);
         getOneFromAPI(idMonitoring);

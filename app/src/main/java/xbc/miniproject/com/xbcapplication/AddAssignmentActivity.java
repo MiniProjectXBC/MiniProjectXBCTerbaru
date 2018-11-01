@@ -55,6 +55,8 @@ public class AddAssignmentActivity extends Activity {
     private List<DataList> listAssignment = new ArrayList<>();
     RequestAPIServices apiServices;
 
+    int idAutoComplete;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +110,7 @@ public class AddAssignmentActivity extends Activity {
                 addAssignmentEditTextName.setError(null);
 
                 DataList selected = (DataList) adapterView.getAdapter().getItem(i);
-                int aidi = selected.getId();
+                idAutoComplete = selected.getId();
 
             }
         });
@@ -175,6 +177,10 @@ public class AddAssignmentActivity extends Activity {
                 finish();
             }
         });
+
+//        int id = getIntent().getIntExtra("idAutoComplete", 0);
+//        idAutoComplete = id+"";
+//        getAutoCompleteAPI(idAutoComplete);
     }
 
     private void updateStartDate() {
@@ -241,13 +247,13 @@ public class AddAssignmentActivity extends Activity {
             Toast.makeText(context, "End Date Must greater than or equal to the Start Date!", Toast.LENGTH_SHORT).show();
         } else {
 //            SaveSuccessNotification();
-            callAPICreateAssignmnet(addAssignmentEditTextName.getText().toString(), addAssignmentEditTextTitle.getText().toString(), addAssignmentEditTextStartDate.getText().toString(), addAssignmentEditTextEndDate.getText().toString(), addAssignmentEditTextDescription.getText().toString());
+            callAPICreateAssignmnet(idAutoComplete+"", addAssignmentEditTextName.getText().toString(), addAssignmentEditTextTitle.getText().toString(), addAssignmentEditTextStartDate.getText().toString(), addAssignmentEditTextEndDate.getText().toString(), addAssignmentEditTextDescription.getText().toString());
         }
     }
 
-    private void callAPICreateAssignmnet(String name, String title, String startDate, String endDate, String description){
+    private void callAPICreateAssignmnet(String idAutoComplete, String biodata, String title, String startDate, String endDate, String description){
         String contentType = "application/json";
-        String json = APIUtilities.generateAssignmentMap(name, title, startDate, endDate, description);
+        String json = APIUtilities.generateAddAssignmentMap(idAutoComplete, biodata, title, startDate, endDate, description);
         RequestBody bodyRequest = RequestBody.create(APIUtilities.mediaType(), json);
         apiServices = APIUtilities.getAPIServices();
 
