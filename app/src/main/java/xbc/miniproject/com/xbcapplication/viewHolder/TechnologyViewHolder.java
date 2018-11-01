@@ -49,7 +49,7 @@ public class TechnologyViewHolder extends RecyclerView.ViewHolder{
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.technologyMenuEdit:
-                                Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: "+position,Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: "+position,Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, EditTechnologyActivity.class);
                                 ((Activity)context).startActivity(intent);
                                 return true;

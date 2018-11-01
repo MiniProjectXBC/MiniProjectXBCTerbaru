@@ -36,7 +36,6 @@ import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 public class UserFragment extends Fragment{
     private EditText userEditTextSearch;
     private ImageView userButtonInsert;
-    private  ImageView userButtonSearch;
     private RecyclerView userRecyclerViewList;
     private List<DataList> userModelList =  new ArrayList<>();
     private UserListAdapter userListAdapter;
@@ -69,20 +68,14 @@ public class UserFragment extends Fragment{
             @Override
             public void afterTextChanged(Editable s) {
                 if(userEditTextSearch.getText().toString().trim().length()==0){
-                    Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
                     userRecyclerViewList.setVisibility(View.INVISIBLE);
                 }else{
                     getDataFromApi(userEditTextSearch.getText().toString().trim());
                 }
             }
         });
-        userButtonSearch =  (ImageView) view.findViewById(R.id.userButtonSearch);
-        userButtonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
         userButtonInsert = (ImageView) view.findViewById(R.id.userButtonInsert);
         userButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override

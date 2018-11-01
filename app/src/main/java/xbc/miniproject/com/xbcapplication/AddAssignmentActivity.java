@@ -7,29 +7,53 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import xbc.miniproject.com.xbcapplication.model.assignment.ModelAssignment;
+import xbc.miniproject.com.xbcapplication.model.assignment.autoComplete.DataList;
+import xbc.miniproject.com.xbcapplication.model.assignment.autoComplete.ModelAutoCompleteAssignment;
+import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
+import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.KArrayAdapter;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AddAssignmentActivity extends Activity {
     private Context context = this;
 
-    private EditText addAssignmentEditTextName,
-            addAssignmentEditTextTitle,
+    private EditText addAssignmentEditTextTitle,
             addAssignmentEditTextStartDate,
             addAssignmentEditTextEndDate,
             addAssignmentEditTextDescription;
 
+    private AutoCompleteTextView addAssignmentEditTextName;
+
     private Button addAssignmentButtonSave,
             addAssignmentButtonCancel;
     private Calendar calendar;
+
+    private boolean isNameSelected;
+    KArrayAdapter<DataList> adapter;
+    private List<DataList> listAssignment = new ArrayList<>();
+    RequestAPIServices apiServices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +88,52 @@ public class AddAssignmentActivity extends Activity {
             }
         };
 
-        addAssignmentEditTextName = (EditText) findViewById(R.id.addAssignmentEditTextName);
         addAssignmentEditTextTitle = (EditText) findViewById(R.id.addAssignmentEditTextTitle);
         addAssignmentEditTextDescription = (EditText) findViewById(R.id.addAssignmentEditTextDescription);
+
+        addAssignmentEditTextName = (AutoCompleteTextView) findViewById(R.id.addAssignmentEditTextName);
+        addAssignmentEditTextName.setThreshold(1);
+
+        addAssignmentEditTextName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        addAssignmentEditTextName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                isNameSelected = true;
+                addAssignmentEditTextName.setError(null);
+
+                DataList selected = (DataList) adapterView.getAdapter().getItem(i);
+                int aidi = selected.getId();
+
+            }
+        });
+
+        addAssignmentEditTextName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                isNameSelected = false;
+                addAssignmentEditTextName.setError("Name must from the list!");
+                listAssignment = new ArrayList<>();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (addAssignmentEditTextName.getText().toString().trim().length() != 0);
+                String keyword = addAssignmentEditTextName.getText().toString().trim();
+                getAutoCompleteAPI(keyword);
+            }
+        });
+
 
         addAssignmentEditTextStartDate = (EditText) findViewById(R.id.addAssignmentEditTextStartDate);
         addAssignmentEditTextStartDate.setFocusable(false);
@@ -124,6 +191,32 @@ public class AddAssignmentActivity extends Activity {
         addAssignmentEditTextEndDate.setText(sdf.format(calendar.getTime()));
     }
 
+    private void getAutoCompleteAPI(String keyword){
+        apiServices = APIUtilities.getAPIServices();
+        apiServices.assignmentAutoComplete("application/json", SessionManager.getToken(context), keyword)
+                .enqueue(new Callback<ModelAutoCompleteAssignment>() {
+                    @Override
+                    public void onResponse(Call<ModelAutoCompleteAssignment> call, Response<ModelAutoCompleteAssignment> response) {
+                        if (response.code() == 200){
+                            List<DataList> tmp = response.body().getDataList();
+                            listAssignment = response.body().getDataList();
+                            getAutoCompletAdapter();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelAutoCompleteAssignment> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void getAutoCompletAdapter(){
+        adapter = new KArrayAdapter<>(context, android.R.layout.simple_list_item_1, listAssignment);
+        addAssignmentEditTextName.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
     private void inputValidation() {
 
         String startDateText = addAssignmentEditTextStartDate.getText().toString();
@@ -147,15 +240,44 @@ public class AddAssignmentActivity extends Activity {
         } else if (tempCalStart.after(tempCalEnd)) {
             Toast.makeText(context, "End Date Must greater than or equal to the Start Date!", Toast.LENGTH_SHORT).show();
         } else {
-            SaveSuccessNotification();
+//            SaveSuccessNotification();
+            callAPICreateAssignmnet(addAssignmentEditTextName.getText().toString(), addAssignmentEditTextTitle.getText().toString(), addAssignmentEditTextStartDate.getText().toString(), addAssignmentEditTextEndDate.getText().toString(), addAssignmentEditTextDescription.getText().toString());
         }
     }
 
-    private void SaveSuccessNotification() {
+    private void callAPICreateAssignmnet(String name, String title, String startDate, String endDate, String description){
+        String contentType = "application/json";
+        String json = APIUtilities.generateAssignmentMap(name, title, startDate, endDate, description);
+        RequestBody bodyRequest = RequestBody.create(APIUtilities.mediaType(), json);
+        apiServices = APIUtilities.getAPIServices();
+
+        apiServices.createNewAssignment("application/json", bodyRequest)
+                .enqueue(new Callback<ModelAssignment>() {
+                    @Override
+                    public void onResponse(Call<ModelAssignment> call, Response<ModelAssignment> response) {
+                        if (response.code() == 201){
+                            String message = response.body().getMessage();
+                            if (message != null){
+                                SaveSuccessNotification(context, message);
+                            }
+                            else {
+                                Toast.makeText(context,"Message Gagal Diambil", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelAssignment> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void SaveSuccessNotification(final Context context, String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage("Testimony Successfully Added!")
+                .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

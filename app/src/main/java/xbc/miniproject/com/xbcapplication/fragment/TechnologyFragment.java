@@ -37,7 +37,6 @@ public class TechnologyFragment extends Fragment {
    // private Context context;
     private EditText technologyEditTextSearch;
     private ImageView technologyButtonInsert;
-    private ImageView technologyButtonSearch;
     private RecyclerView technologyRecyclerViewList;
     private List<DataList> technologyModelList =  new ArrayList<>();
     private TechnologyListAdapter technologyListAdapter;
@@ -70,22 +69,15 @@ public class TechnologyFragment extends Fragment {
 
          @Override
          public void afterTextChanged(Editable s) {
-            if(technologyEditTextSearch.getText().toString().trim().length()==0){
-                technologyRecyclerViewList.setVisibility(view.INVISIBLE);
-            }
-         }
-     });
-     technologyButtonSearch = (ImageView) view.findViewById(R.id.technologyButtonSearch);
-     technologyButtonSearch.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
              if(technologyEditTextSearch.getText().toString().trim().length()==0){
-                 Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
+                 //Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
+                 technologyRecyclerViewList.setVisibility(View.INVISIBLE);
              }else{
                  getDataFromApi(technologyEditTextSearch.getText().toString().trim());
              }
          }
      });
+
      technologyButtonInsert = (ImageView) view.findViewById(R.id.technologyButtonInsert);
      technologyButtonInsert.setOnClickListener(new View.OnClickListener() {
          @Override

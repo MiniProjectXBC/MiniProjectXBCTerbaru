@@ -43,13 +43,15 @@
                     android:id="@+id/addTechnologyButtonSave"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/custom_button_add"
+                    android:textColor="@color/white"
+                    android:background="@drawable/custom_button_login"
                     android:text="Save"/>
 
                 <Button
                     android:id="@+id/addTechnologyButtonCancel"
                     android:layout_width="100dp"
-                    android:background="@drawable/custom_button_add"
+                    android:background="@drawable/custom_button_login"
+                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
                     android:text="Cancel"/>
 
