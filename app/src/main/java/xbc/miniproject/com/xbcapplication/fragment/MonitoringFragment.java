@@ -85,7 +85,9 @@ public class MonitoringFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (monitoringEditTextSearch.getText().toString().trim().length() == 0) {
+                    monitoringRecyclerViewList.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -96,7 +98,6 @@ public class MonitoringFragment extends Fragment {
                 } else{
                     monitoringRecyclerViewList.setVisibility(View.VISIBLE);
                     String keyword = monitoringEditTextSearch.getText().toString().trim();
-                    listMonitoring = new ArrayList<>();
                     getDataFromAPI(keyword);
                 }
             }
@@ -117,6 +118,7 @@ public class MonitoringFragment extends Fragment {
             public void onResponse(Call<ModelMonitoring> call, Response<ModelMonitoring> response) {
                 loading.dismiss();
                 if (response.code() == 200){
+                    listMonitoring = new ArrayList<>();
                     List<MonitoringDataList> tmp = response.body().getMonitoringDataList();
                     for (int i = 0; i<tmp.size();i++) {
                         MonitoringDataList data = tmp.get(i);
@@ -126,7 +128,13 @@ public class MonitoringFragment extends Fragment {
 //                        }
                         listMonitoring.add(data);
                     }
-                    monitoringRecyclerViewList.setVisibility(View.VISIBLE);
+
+                    if (monitoringEditTextSearch.getText().toString().trim().length() == 0) {
+                        monitoringRecyclerViewList.setVisibility(View.INVISIBLE);
+                    } else{
+                        monitoringRecyclerViewList.setVisibility(View.VISIBLE);
+                    }
+
                     Collections.sort(listMonitoring,Collections.<MonitoringDataList>reverseOrder());
                     tampilkanListMonitoring();
                 } else{

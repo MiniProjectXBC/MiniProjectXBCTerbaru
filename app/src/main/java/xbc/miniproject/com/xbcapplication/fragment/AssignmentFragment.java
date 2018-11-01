@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,12 +60,42 @@ public class AssignmentFragment extends Fragment {
             }
         });
 
-        assignmentButtonSearch = (ImageView) view.findViewById(R.id.assignmentButtonSearch);
-        assignmentButtonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (assignmentEditTextSearch.getText().toString().trim().length() == 0){
+//        assignmentButtonSearch = (ImageView) view.findViewById(R.id.assignmentButtonSearch);
+//        assignmentButtonSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (assignmentEditTextSearch.getText().toString().trim().length() == 0){
+//
+//                }
+//                else {
+//                    String keyword = assignmentEditTextSearch.getText().toString().trim();
+//                    listAssignment = new ArrayList<>();
+//                    getDataFromAPI(keyword);
+//                }
+//            }
+//        });
 
+        assignmentRecyclerViewList = (RecyclerView) view.findViewById(R.id.assignmentRecyclerViewList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        assignmentRecyclerViewList.setLayoutManager(layoutManager);
+
+        assignmentEditTextSearch = (EditText) view.findViewById(R.id.assignmentEditTextSearch);
+        assignmentRecyclerViewList.setVisibility(View.INVISIBLE);
+        assignmentEditTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (assignmentEditTextSearch.getText().toString().trim().length() == 0){
                 }
                 else {
                     String keyword = assignmentEditTextSearch.getText().toString().trim();
@@ -72,35 +104,6 @@ public class AssignmentFragment extends Fragment {
                 }
             }
         });
-
-        assignmentRecyclerViewList = (RecyclerView) view.findViewById(R.id.assignmentRecyclerViewList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false);
-        assignmentRecyclerViewList.setLayoutManager(layoutManager);
-
-        assignmentEditTextSearch = (EditText) view.findViewById(R.id.assignmentEditTextSearch);
-//        assignmentRecyclerViewList.setVisibility(View.INVISIBLE);
-//        assignmentEditTextSearch.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                if (assignmentEditTextSearch.getText().toString().trim().length() == 0){
-//                    assignmentRecyclerViewList.setVisibility(View.INVISIBLE);
-//                } else{
-//                    assignmentRecyclerViewList.setVisibility(View.VISIBLE);
-//                    filter(editable.toString());
-//                }
-//            }
-//        });
 //        tampilkanListAssignment();
 
         return view;

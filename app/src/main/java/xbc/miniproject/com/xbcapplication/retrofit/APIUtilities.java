@@ -52,6 +52,27 @@ public class APIUtilities {
         return json;
     }
 
+    //generated get assignment MAP param
+    public static String generateAssignmentMap (String name, String title, String startDate, String endDate, String description){
+        Map<String, Object> map = new HashMap<>();
+        if (title != null) map.put("title", title);
+        if (description != null) map.put("content", description);
+        if (startDate != null) map.put("startDate", startDate);
+        if (endDate != null) map.put("endDate", endDate);
+
+        if (name != null) {
+            Map<String, String> unitObj = new HashMap<>();
+            unitObj.put("name", name);
+            map.put("name", unitObj);
+        }
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.serializeNulls().create();
+        String json = gson.toJson(map);
+
+        return json;
+    }
+
     //Generate Monitoring Request Body
     public static String generateMonitoring(String id, String idleDate, String lastProject, String idleReason){
         Map<String,Object> map = new HashMap<>();

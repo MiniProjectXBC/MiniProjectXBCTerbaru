@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,28 +58,29 @@ public class IdleNewsFragment extends Fragment {
         idleNewsRecyclerViewList.setLayoutManager(layoutManager);
 
         idleNewsEditTextSearch = (EditText) view.findViewById(R.id.idleNewsEditTextSearch);
-//        idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
-//        idleNewsEditTextSearch.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                if (idleNewsEditTextSearch.getText().toString().trim().length() == 0) {
-//                    idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
-//                } else {
-//                    idleNewsRecyclerViewList.setVisibility(View.VISIBLE);
-//                    filter(editable.toString());
-//                }
-//            }
-//        });
+        idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
+        idleNewsEditTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (idleNewsEditTextSearch.getText().toString().trim().length() == 0){
+                }
+                else {
+                    String keyword = idleNewsEditTextSearch.getText().toString().trim();
+                    listIdleNews = new ArrayList<>();
+                    getDataFromAPI(keyword);
+                }
+            }
+        });
 
         idleNewsButtonInsert = (ImageView) view.findViewById(R.id.idleNewsButtonInsert);
         idleNewsButtonInsert.setOnClickListener(new View.OnClickListener() {
@@ -88,20 +91,20 @@ public class IdleNewsFragment extends Fragment {
             }
         });
 
-        idleNewsButtonSearch = (ImageView) view.findViewById(R.id.idleNewsButtonSearch);
-        idleNewsButtonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (idleNewsEditTextSearch.getText().toString().trim().length() == 0){
-
-                }
-                else {
-                    String keyword = idleNewsEditTextSearch.getText().toString().trim();
-                    listIdleNews = new ArrayList<>();
-                    getDataFromAPI(keyword);
-                }
-            }
-        });
+//        idleNewsButtonSearch = (ImageView) view.findViewById(R.id.idleNewsButtonSearch);
+//        idleNewsButtonSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (idleNewsEditTextSearch.getText().toString().trim().length() == 0){
+//
+//                }
+//                else {
+//                    String keyword = idleNewsEditTextSearch.getText().toString().trim();
+//                    listIdleNews = new ArrayList<>();
+//                    getDataFromAPI(keyword);
+//                }
+//            }
+//        });
 
 //        tampilkanListIdleNews();
 

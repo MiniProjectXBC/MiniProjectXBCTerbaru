@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:inputType="text"
-                android:hint="Name"/>
+                android:hint="Name (autocomplete)"/>
 
             <EditText
                 android:id="@+id/addAssignmentEditTextTitle"
