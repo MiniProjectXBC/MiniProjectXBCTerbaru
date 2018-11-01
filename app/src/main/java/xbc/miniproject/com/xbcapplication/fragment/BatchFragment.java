@@ -76,9 +76,14 @@ public class BatchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(batchEditTextSearch.getText().toString().trim().length() == 0) {
-                    batchRecyclerViewList.setVisibility(View.INVISIBLE);
+                if(batchEditTextSearch.getText().toString().trim().length()==0){
+                    Toast.makeText(getContext(),"Empty Keyword !", Toast.LENGTH_SHORT).show();
+                }else {
+                    getDataFromAPI(batchEditTextSearch.getText().toString().trim());
                 }
+//                if(batchEditTextSearch.getText().toString().trim().length() == 0) {
+//                    batchRecyclerViewList.setVisibility(View.INVISIBLE);
+//                }
             }
         });
 
@@ -86,11 +91,7 @@ public class BatchFragment extends Fragment {
         bathcButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(batchEditTextSearch.getText().toString().trim().length()==0){
-                    Toast.makeText(getContext(),"Empty Keyword !", Toast.LENGTH_SHORT).show();
-                }else {
-                    getDataFromAPI(batchEditTextSearch.getText().toString().trim());
-                }
+
             }
         });
 

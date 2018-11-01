@@ -1,15 +1,16 @@
 
 package xbc.miniproject.com.xbcapplication.model.biodata.autoComplete;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Example {
+public class ModelBiodataAutoComplete {
 
     @SerializedName("dataList")
     @Expose
-    private List<DataList> dataList = null;
+    private List<DataList> dataList = new ArrayList<>();
     @SerializedName("message")
     @Expose
     private String message;

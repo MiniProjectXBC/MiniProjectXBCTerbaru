@@ -29,7 +29,7 @@ public class EditTrainerActivity extends Activity {
     private Button editTrainerButtonSave,
             editTrainerButtonCancel;
     RequestAPIServices apiServices;
-    int id;
+    int id, idData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,10 @@ public class EditTrainerActivity extends Activity {
                 finish();
             }
         });
-        int id = getIntent().getIntExtra("idAutoComplete",0);
+
+
+        int id = getIntent().getIntExtra("id",0);
+        id=getIntent().getIntExtra("id",0);
         getOneTrainerAPI(id);
 
     }
@@ -71,6 +74,9 @@ public class EditTrainerActivity extends Activity {
             public void onResponse(Call<ModelTrainer> call, Response<ModelTrainer> response) {
                 if (response.code() == 200){
                     Trainer data = response.body().getData();
+                     idData =data.getId();
+
+
                     editTrainerEditTextName.setText(data.getName());
                     editTrainerEditTexNote.setText(data.getNotes().toString());
                 } else{
@@ -88,9 +94,11 @@ public class EditTrainerActivity extends Activity {
     public void editValidation(){
         if(editTrainerEditTextName.getText().toString().trim().length()==0){
             Toast.makeText(context,"Name Field still empty!",Toast.LENGTH_SHORT).show();
-        }else if(editTrainerEditTexNote.getText().toString().trim().length()==0){
-            Toast.makeText(context,"Note Field still empty!",Toast.LENGTH_SHORT).show();
-        }else{
+        }
+//        else if(editTrainerEditTexNote.getText().toString().trim().length()==0){
+//            Toast.makeText(context,"Note Field still empty!",Toast.LENGTH_SHORT).show();
+//        }
+        else{
             //hanya pesan
             callAPIEditTrainer();
         }
@@ -100,7 +108,7 @@ public class EditTrainerActivity extends Activity {
         apiServices = APIUtilities.getAPIServices();
 
         Trainer data = new Trainer();
-        data.setId(id);
+        data.setId(idData);
         data.setName(editTrainerEditTextName.getText().toString());
         data.setNotes(editTrainerEditTexNote.getText().toString());
 
@@ -133,7 +141,7 @@ public class EditTrainerActivity extends Activity {
         final AlertDialog.Builder builder;
         builder =  new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage(message+"!")
+                .setMessage("Trainer Successfully Updated !")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

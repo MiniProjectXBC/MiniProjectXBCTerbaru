@@ -92,7 +92,7 @@ public class DoneAssignmentActivity extends Activity {
                 finish();
             }
         });
-        
+
     }
 
     private void updateLabel() {

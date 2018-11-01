@@ -64,6 +64,8 @@ public class EditBatchActivity extends Activity {
     String idBiodata;
     String idBiodata2;
 
+    int id;
+
     String spinner;
 
     KArrayAdapter<DataList> adapter;
@@ -268,7 +270,7 @@ public class EditBatchActivity extends Activity {
                 finish();
             }
         });
-
+        id = getIntent().getIntExtra("id", 0);
         getOneFromAPI(idBatch);
     }
 
@@ -277,7 +279,7 @@ public class EditBatchActivity extends Activity {
         String contentType = "application/json";
         String tokenAuthorization = SessionManager.getToken(context);
 
-        apiServices.getOneBatch(tokenAuthorization,idBatch)
+        apiServices.getOneBatch(tokenAuthorization, id+"")
                 .enqueue(new Callback<ModelBatchAutoComplete>() {
                     @Override
                     public void onResponse(Call<ModelBatchAutoComplete> call, Response<ModelBatchAutoComplete> response) {
@@ -306,7 +308,7 @@ public class EditBatchActivity extends Activity {
 
     private void getAutoCompleteAPI(String keyword){
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getAutoCompleteBatchTechnologyList(SessionManager.getToken(context), keyword).enqueue(new Callback<ModelBatchTechnologyAutoComplete>() {
+        apiServices.getAutoCompleteBatchTechnologyList2(SessionManager.getToken(context), keyword).enqueue(new Callback<ModelBatchTechnologyAutoComplete>() {
             @Override
             public void onResponse(Call<ModelBatchTechnologyAutoComplete> call, Response<ModelBatchTechnologyAutoComplete> response) {
                 if(response.code() == 200){
@@ -368,9 +370,11 @@ public class EditBatchActivity extends Activity {
             Toast.makeText(context, "Period to Field still empty!", Toast.LENGTH_SHORT).show();
         } else if (editBatchEditTextRoom.getText().toString().trim().length() == 0) {
             Toast.makeText(context, "Room Field still empty!", Toast.LENGTH_SHORT).show();
-        } else if (editBatchEditTextNotes.getText().toString().trim().length() == 0) {
-            Toast.makeText(context, "Notes Field still empty!", Toast.LENGTH_SHORT).show();
-        } else if(isNameSelected == false) {
+        }
+//        if (editBatchEditTextNotes.getText().toString().trim().length() == 0) {
+//            Toast.makeText(context, "Notes Field still empty!", Toast.LENGTH_SHORT).show();
+//        }
+        else if(isNameSelected == false) {
             Toast.makeText(context,  "Role must from the list !", Toast.LENGTH_SHORT).show();
         }else if(isNameSelected2 == false) {
             Toast.makeText(context,  "Role must from the list !", Toast.LENGTH_SHORT).show();
