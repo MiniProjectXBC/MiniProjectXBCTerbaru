@@ -51,6 +51,7 @@ public class TechnologyViewHolder extends RecyclerView.ViewHolder{
                             case R.id.technologyMenuEdit:
                                 //Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: "+position,Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, EditTechnologyActivity.class);
+                                intent.putExtra("id", dataList.getId());
                                 ((Activity)context).startActivity(intent);
                                 return true;
                             case R.id.tchnologyMenuDeactivate:
