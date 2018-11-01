@@ -82,8 +82,8 @@ public class BiodataFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().length() == 0){
-                    if (s.toString().length()==0) {
+                if (s.toString().length() == 0) {
+                    if (s.toString().length() == 0) {
                         biodataRecyclerViewList.setVisibility(View.INVISIBLE);
                     }
                 } else {
@@ -98,7 +98,7 @@ public class BiodataFragment extends Fragment {
         biodataButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(),AddBiodataActivity.class);
+                Intent intent = new Intent(getContext(), AddBiodataActivity.class);
                 startActivity(intent);
             }
         });
@@ -109,25 +109,25 @@ public class BiodataFragment extends Fragment {
     private void getDataFromAPI(String keyword) {
         loading.show();
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListBiodata(SessionManager.getToken(getContext()),keyword).enqueue(new Callback<ModelBiodata>() {
+        apiServices.getListBiodata(SessionManager.getToken(getContext()), keyword).enqueue(new Callback<ModelBiodata>() {
             @Override
             public void onResponse(Call<ModelBiodata> call, Response<ModelBiodata> response) {
                 loading.dismiss();
-                if (response.code() == 200){
+                if (response.code() == 200) {
                     listBiodata = new ArrayList<>();
                     List<BiodataList> tmp = response.body().getDataList();
-                    for (int i = 0; i<tmp.size();i++){
+                    for (int i = 0; i < tmp.size(); i++) {
                         BiodataList data = tmp.get(i);
                         listBiodata.add(data);
                     }
                     if (biodataEditTextSearch.getText().toString().trim().length() == 0) {
                         biodataRecyclerViewList.setVisibility(View.INVISIBLE);
-                    } else{
+                    } else {
                         biodataRecyclerViewList.setVisibility(View.VISIBLE);
                     }
 
                     tampilkanListBiodata();
-                } else{
+                } else {
                     Toast.makeText(getContext(), "Gagal Mendapatkan List Biodata: " + response.code() + " msg: " + response.message(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -165,7 +165,7 @@ public class BiodataFragment extends Fragment {
         super.onResume();
     }
 
-    public void clearSearch(){
+    public void clearSearch() {
         biodataEditTextSearch.setText("");
         biodataRecyclerViewList.setVisibility(View.INVISIBLE);
 

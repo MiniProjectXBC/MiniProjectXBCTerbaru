@@ -128,11 +128,13 @@ public class MonitoringFragment extends Fragment {
 //                        }
                         listMonitoring.add(data);
                     }
+
                     if (monitoringEditTextSearch.getText().toString().trim().length() == 0) {
                         monitoringRecyclerViewList.setVisibility(View.INVISIBLE);
                     } else{
                         monitoringRecyclerViewList.setVisibility(View.VISIBLE);
                     }
+
                     Collections.sort(listMonitoring,Collections.<MonitoringDataList>reverseOrder());
                     tampilkanListMonitoring();
                 } else{
