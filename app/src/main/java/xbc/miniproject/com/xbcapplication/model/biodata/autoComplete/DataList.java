@@ -13,6 +13,12 @@ public class DataList {
     @Expose
     private Integer id;
 
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public String getName() {
         return name;
     }

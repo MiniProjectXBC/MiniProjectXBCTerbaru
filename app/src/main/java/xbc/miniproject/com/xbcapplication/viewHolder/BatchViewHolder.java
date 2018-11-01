@@ -51,11 +51,13 @@ public class BatchViewHolder extends RecyclerView.ViewHolder {
                             case R.id.batchMenuEdit:
                                 //Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: "+position,Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, EditBatchActivity.class);
+                                intent.putExtra("id", batchModel.getId());
                                 ((Activity)context).startActivity(intent);
                                 return true;
                             case R.id.batchMenuAddParticipant:
                                 //Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: "+position,Toast.LENGTH_SHORT).show();
                                 Intent intent2 = new Intent(context, AddParticipantBatchActivity.class);
+                                intent2.putExtra("id", batchModel.getId());
                                 ((Activity)context).startActivity(intent2);
                                 return true;
                             default:

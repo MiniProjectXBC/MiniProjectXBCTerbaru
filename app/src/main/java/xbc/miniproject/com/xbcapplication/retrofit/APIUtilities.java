@@ -169,14 +169,22 @@ public class APIUtilities {
         return json;
     }
 
-    //generate Create Batch AddParticipant
-    public static String generateBatchAddParticipant (String technology){
-        Map<String, Object> map = new HashMap<>();
-        if(technology!=null){
-            Map <String, String> unitObj =  new HashMap<>();
-            unitObj.put("id", technology);
 
-            map.put("technology", unitObj);
+
+    //generate Create Batch AddParticipant
+    public static String generateBatchAddParticipant (String Batch, String Biodata){
+        Map<String, Object> map = new HashMap<>();
+        if(Batch!=null){
+            Map <String, String> unitObj =  new HashMap<>();
+            unitObj.put("id", Batch);
+
+            map.put("batch", unitObj);
+        }
+        if(Biodata!=null){
+            Map <String, String> unitObj =  new HashMap<>();
+            unitObj.put("id", Biodata);
+
+            map.put("biodata", unitObj);
         }
 
         GsonBuilder builder = new GsonBuilder();
