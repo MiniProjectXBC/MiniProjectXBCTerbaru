@@ -254,7 +254,7 @@ public class AddBatchActivity extends Activity {
 
     private void getAutoCompleteAPI(String keyword){
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getAutoCompleteBatchTechnologyList(SessionManager.getToken(context), keyword)
+        apiServices.getAutoCompleteBatchTechnologyList2(SessionManager.getToken(context), keyword)
                 .enqueue(new Callback<ModelBatchTechnologyAutoComplete>() {
             @Override
             public void onResponse(Call<ModelBatchTechnologyAutoComplete> call, Response<ModelBatchTechnologyAutoComplete> response) {

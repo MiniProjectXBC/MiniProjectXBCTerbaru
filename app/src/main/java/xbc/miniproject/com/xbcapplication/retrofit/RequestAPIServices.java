@@ -92,12 +92,12 @@ public interface RequestAPIServices {
     //Koneksi API Get Auto Complete add
     @GET("/xbc-ws/api/biodata/id/{keyword}")
     Call<ModelBatchTechnologyAutoComplete> getAutoCompleteBatchTechnologyList(@Header("Authorization") String authorization,
-                                                          @Path("keyword") String keyword);
+                                                                              @Path("keyword") String keyword);
 
     //Koneksi API Get Auto Complete add
     @GET("/xbc-ws/api/technology/key/{keyword}")
     Call<ModelBatchTechnologyAutoComplete> getAutoCompleteBatchTechnologyList2(@Header("Authorization") String authorization,
-                                                                              @Path("keyword") String keyword);
+                                                                               @Path("keyword") String keyword);
 
     //PUT edit
     @PUT("/xbc-ws/api/biodata/update")
@@ -136,20 +136,20 @@ public interface RequestAPIServices {
     //Koneksi API Edit Monitoring
     @PUT("/xbc-ws/api/monitoring/update")
     Call<ModelMonitoringGetOne> editMonitoring(@Header("Content-Type") String contentType,
-                                                 @Header("Authorization") String authorization,
-                                                 @Body RequestBody data);
+                                               @Header("Authorization") String authorization,
+                                               @Body RequestBody data);
 
     //Koneksi API Edit Placement Monitoring
     @PUT("/xbc-ws/api/monitoring/placement")
     Call<ModelMonitoringGetOne> addPlacementMonitoring(@Header("Content-Type") String contentType,
-                                               @Header("Authorization") String authorization,
-                                               @Body RequestBody data);
+                                                       @Header("Authorization") String authorization,
+                                                       @Body RequestBody data);
 
     //Koneksi API delete monitoring
     @DELETE("/xbc-ws/api/monitoring/delete/{id}")
     Call<ModelMonitoringGetOne> deleteMonitoring(@Header("Content-Type") String contentType,
-                                                       @Header("Authorization") String authorization,
-                                                       @Path("id") String id);
+                                                 @Header("Authorization") String authorization,
+                                                 @Path("id") String id);
 
 
     //Koneksi API di menu User
@@ -159,21 +159,17 @@ public interface RequestAPIServices {
     Call<ModelUser> getListUsser();
 
 
-
-
-
     //koneksi API di menu Role
     //Get Role
     @GET("/xbc-ws/api/role/key/{keyword}")
     Call<ModelRole> getListRole(@Header("Authorization") String authorization,
-                                @Path ("keyword") String keyword);
+                                @Path("keyword") String keyword);
 
     //koneksi API di menu trainer
     //get search
     @Headers("Authorization: JCZXSHTUOIW5PAAGXIYZFTTX43KGRGJGFKL8DLMPJUMNFRIYOSTZUSL2157WV2MKY8CNNJDP8SAYN1KHHGBHV0B2W1UFPCR4APQKYEW6HJVFM98F4KY5T0QVWRGZXRTP")
     @GET("xbc-ws/api/trainer/name/123")
     Call<ModelTrainer> getListTrainer();
-
 
 
     //Koneksi api di menu testimony
@@ -222,6 +218,10 @@ public interface RequestAPIServices {
             @Header("Authorization") String tokenAuthorization,
             @Path("keyword") String keyword);
 
+    @GET("xbc-ws/api/role/key/{keyword}")
+    Call<ModelAutocompleteFeedback> roleautocomplete(@Header("Authorization")String authorization,
+                                                     @Path("keyword") String keyword);
+
     //get question
     @Headers("Authorization: JCZXSHTUOIW5PAAGXIYZFTTX43KGRGJGFKL8DLMPJUMNFRIYOSTZUSL2157WV2MKY8CNNJDP8SAYN1KHHGBHV0B2W1UFPCR4APQKYEW6HJVFM98F4KY5T0QVWRGZXRTP")
     @GET("xbc-ws/api/technology/name/{keyword}")
@@ -231,9 +231,10 @@ public interface RequestAPIServices {
 
     //Koneksi API di menu Assignmnet
     //GET Search
-    @Headers("Authorization: JCZXSHTUOIW5PAAGXIYZFTTX43KGRGJGFKL8DLMPJUMNFRIYOSTZUSL2157WV2MKY8CNNJDP8SAYN1KHHGBHV0B2W1UFPCR4APQKYEW6HJVFM98F4KY5T0QVWRGZXRTP")
-    @GET("xbc-ws/api/assignment/biodataname/a")
-    Call<ModelAssignment> getListAssignment();
+//    @Headers("Authorization: JCZXSHTUOIW5PAAGXIYZFTTX43KGRGJGFKL8DLMPJUMNFRIYOSTZUSL2157WV2MKY8CNNJDP8SAYN1KHHGBHV0B2W1UFPCR4APQKYEW6HJVFM98F4KY5T0QVWRGZXRTP")
+    @GET("xbc-ws/api/assignment/biodataname/{keyword}")
+    Call<ModelAssignment> getListAssignment(@Header("Authorization") String authorization,
+                                            @Path("keyword") String keyword);
 
     //POST Create
     @POST("/xbc-ws/api/assignment/create")
@@ -244,7 +245,7 @@ public interface RequestAPIServices {
     @PUT("/xbc-ws/api/assignment/update")
     Call<ModelAssignment> editAssigment(@Header("Content-Type") String contentType,
                                         @Header("Authorization") String authorization,
-                                        @Body RequestBody  data);
+                                        @Body RequestBody data);
 
     //DEL delete assignment
     @DELETE("/xbc-ws/api/assignment/delete/{id}")
@@ -291,7 +292,7 @@ public interface RequestAPIServices {
     @PUT("/xbc-ws/api/idlenews/update")
     Call<ModelIdleNews> editIdleNews(@Header("Content-Type") String contentType,
                                      @Header("Authorization") String authorization,
-                                     @Body RequestBody  data);
+                                     @Body RequestBody data);
 
     //GET AutoComplete
     @GET("/xbc-ws/api/idlenews/key/{keyword}")
@@ -300,19 +301,19 @@ public interface RequestAPIServices {
                                                          @Path("keyword") String keyword);
 
     //Delete Idle News
-    @DELETE ("/xbc-ws/api/idlenews/delete/{id}")
+    @DELETE("/xbc-ws/api/idlenews/delete/{id}")
     Call<ModelIdleNews> deleteIdleNews(@Header("Content-Type") String contentType,
                                        @Header("Authorization") String authorization,
                                        @Path("id") int id);
 
     //PUT Publish
-    @PUT ("/xbc-ws/api/idlenews/publish/{id}")
+    @PUT("/xbc-ws/api/idlenews/publish/{id}")
     Call<ModelIdleNews> publishIdleNews(@Header("Content-Type") String contentType,
                                         @Header("Authorization") String authorization,
                                         @Path("id") int id);
 
     //POST Share to email
-    @POST ("/xbc-ws/api/idlenews/share-to-email")
+    @POST("/xbc-ws/api/idlenews/share-to-email")
     Call<ModelIdleNews> shareNewIdleNews(@Header("Content-Type") String contentType,
                                          @Header("Authorization") String authorization,
                                          @Body ModelShareIdleNews data);
@@ -321,7 +322,6 @@ public interface RequestAPIServices {
     @GET("/xbc-ws/api/trainer/key/{keyword}")
     Call<ModelBatchTrainerAutoComplete> getAutoCompleteBatchTrainerList(@Header("Authorization") String authorization,
                                                                         @Path("keyword") String keyword);
-
 
 
     //konek API di menu Batch
@@ -337,9 +337,10 @@ public interface RequestAPIServices {
                                     @Body RequestBody data);
 
     //POST CREATE
-    @POST("/xbc-ws/api/class/participant/add/1")
+    @POST("/xbc-ws/api/class/participant/add/{id}")
     Call<ModelBatch> createNewBatchAddParticipant(@Header("Content-Type") String contentType,
-                                    @Body RequestBody data);
+                                                  @Path("id") String id,
+                                                  @Body RequestBody data);
 
 
     //GET get_one
@@ -374,7 +375,7 @@ public interface RequestAPIServices {
     @DELETE("/xbc-ws/api/class/participant/delete/{id}")
     Call<ModelClass> deleteClass(@Header("Content-Type") String contentType,
                                  @Header("Authorization") String authorization,
-                                 @Path ("id") int id);
+                                 @Path("id") int id);
 
     //Koneksi API di menu Technology
     //Get DataListGetOne Technology
@@ -407,7 +408,7 @@ public interface RequestAPIServices {
     @PUT("/xbc-ws/api/technology/deactivate/{id}")
     Call<ModelTechnology> deactiveTechnology(@Header("Content-Type") String contentType,
                                              @Header("Authorization") String authorization,
-                                             @Path ("id") int id);
+                                             @Path("id") int id);
 
     //Koneksi API di menu User
     //Get DataListGetOne User (Search)
@@ -445,13 +446,13 @@ public interface RequestAPIServices {
     //get autocomplete
     //@Headers("Authorization: MOGLK40NEYLUFKIORVFAFE5OCO60T4R140VTW35L9T72LRSRWKJIZXWTCD1HQKPZURKJPNYHIX0SO6SX672HASCKVAHPV6VHRXOKVV7KEQVZNETUBXRXM7CEKR5ZQJDA")
     @GET("xbc-ws/api/test/key/{keyword}")
-    Call<ModelAutocompleteFeedback> testautocomplete(@Header("Authorization")String authorization,
+    Call<ModelAutocompleteFeedback> testautocomplete(@Header("Authorization") String authorization,
                                                      @Path("keyword") String keyword);
 
     //get question
     @Headers("Authorization: JCZXSHTUOIW5PAAGXIYZFTTX43KGRGJGFKL8DLMPJUMNFRIYOSTZUSL2157WV2MKY8CNNJDP8SAYN1KHHGBHV0B2W1UFPCR4APQKYEW6HJVFM98F4KY5T0QVWRGZXRTP")
     @GET("xbc-ws/api/technology/name/123")
-    Call<ModelQuestionFeedback>  getListQuestionFeedback();
+    Call<ModelQuestionFeedback> getListQuestionFeedback();
 
     //post create feedback
     @POST("xbc-ws/api/feedback/create")
@@ -507,9 +508,9 @@ public interface RequestAPIServices {
 
     //PUT edit
     @PUT("/xbc-ws/api/trainer/update")
-    Call<ModelTrainer> editTrainer (@Header("Content-Type") String contentType,
-                                    @Header("Authorization") String authorization,
-                                    @Body Trainer data);
+    Call<ModelTrainer> editTrainer(@Header("Content-Type") String contentType,
+                                   @Header("Authorization") String authorization,
+                                   @Body Trainer data);
 
     //PUT Deactivate
     @PUT("/xbc-ws/api/trainer/deactivate/{id}")

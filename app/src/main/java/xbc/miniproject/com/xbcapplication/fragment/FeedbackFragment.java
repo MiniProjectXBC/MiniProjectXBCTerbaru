@@ -2,6 +2,7 @@ package xbc.miniproject.com.xbcapplication.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +31,8 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xbc.miniproject.com.xbcapplication.AddBiodataActivity;
+import xbc.miniproject.com.xbcapplication.HomeActivity;
 import xbc.miniproject.com.xbcapplication.R;
 import xbc.miniproject.com.xbcapplication.adapter.FeedbackListAdapter;
 import xbc.miniproject.com.xbcapplication.dummyModel.FeedbackModel;
@@ -38,6 +41,7 @@ import xbc.miniproject.com.xbcapplication.model.feedback.autoComplete.ModelAutoc
 import xbc.miniproject.com.xbcapplication.model.feedback.getQuestion.DataListQuestionFeedback;
 import xbc.miniproject.com.xbcapplication.model.feedback.getQuestion.ModelQuestionFeedback;
 import xbc.miniproject.com.xbcapplication.model.feedback.postCreate.Example;
+import xbc.miniproject.com.xbcapplication.model.feedback.postCreate.Feedback;
 import xbc.miniproject.com.xbcapplication.model.feedback.postCreate.ModelCreateFeedback;
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.idleNews.ModelIdleNews;
@@ -54,8 +58,9 @@ public class FeedbackFragment extends Fragment  {
     private RecyclerView feedbackRecyclerView;
     private AutoCompleteTextView feedbackTextName;
 
-     Button feedbackButtonSave, feedbackButtonCancel;
+    Button feedbackButtonSave, feedbackButtonCancel;
     private FeedbackListAdapter feedbackListAdapter;
+
 
     private RequestAPIServices apiServices;
     KArrayAdapter<DataListAutocompleteFeedback> adapter;
@@ -64,6 +69,7 @@ public class FeedbackFragment extends Fragment  {
     private List<DataListAutocompleteFeedback> dataListAutocompleteFeedbacks= new ArrayList<>();
 
     private List<DataListQuestionFeedback> dataListQuestionFeedbacks = new ArrayList<>();
+    private List<Feedback> dataListAnswer = new ArrayList<>();
 
 
 
@@ -108,10 +114,13 @@ public class FeedbackFragment extends Fragment  {
         feedbackButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
-                feedbackRecyclerView.setVisibility(View.GONE);
-                feedbackTextName.setText("");
-                feedbackTextName.setError(null);
+                //getActivity().finish();
+
+                Intent intent = new Intent(getContext(), HomeActivity.class);
+                startActivity(intent);
+//                feedbackRecyclerView.setVisibility(View.GONE);
+//                feedbackTextName.setText("");
+//                feedbackTextName.setError(null);
             }
         });
 
@@ -146,7 +155,7 @@ public class FeedbackFragment extends Fragment  {
 
                 DataListAutocompleteFeedback selected = (DataListAutocompleteFeedback) parent.getAdapter().getItem(position);
                 int aidi = selected.getId();
-                 idAutoComplete = selected.getId();
+                idAutoComplete = selected.getId();
                 Toast.makeText(getContext(),"idnya ini: "+aidi,Toast.LENGTH_LONG).show();
 
 
@@ -196,7 +205,7 @@ public class FeedbackFragment extends Fragment  {
 
     public void tampil_auto_complete(String keyword){
         apiServices = APIUtilities.getAPIServices();
-        apiServices.roleautocomplete(Constanta.CONTENT_TYPE_API,SessionManager.getToken(getContext()), keyword).enqueue(new Callback<ModelAutocompleteFeedback>() {
+        apiServices.roleautocomplete(SessionManager.getToken(getContext()), keyword).enqueue(new Callback<ModelAutocompleteFeedback>() {
             @Override
             public void onResponse(Call<ModelAutocompleteFeedback> call, Response<ModelAutocompleteFeedback> response) {
                 if (response.code() == 200){
@@ -302,6 +311,7 @@ public class FeedbackFragment extends Fragment  {
                 })
                 .setCancelable(false)
                 .show();
+        listKosong();
     }
 
 
@@ -320,6 +330,16 @@ public class FeedbackFragment extends Fragment  {
                         dataListQuestionFeedbacks.add(data);
                     }
 
+
+                    for (int i =0 ; i<tmp.size(); i++){
+                        Feedback feedback = new Feedback();
+                        feedback.setQuestionId(""+i);
+                        feedback.setAnswer("");
+                        dataListAnswer.add(feedback);
+                    }
+
+
+
                     showAdapter();
                 } else {
                     Toast.makeText(getContext(),"Gagal Mendapatkan List Question: " + response.code() + " msg: " + response.message(), Toast.LENGTH_SHORT).show();
@@ -337,9 +357,14 @@ public class FeedbackFragment extends Fragment  {
 
     private void showAdapter() {
         if (feedbackListAdapter == null) {
-            feedbackListAdapter = new FeedbackListAdapter(getContext(), dataListQuestionFeedbacks);
+            feedbackListAdapter = new FeedbackListAdapter(getContext(), dataListQuestionFeedbacks, dataListAnswer);
             feedbackRecyclerView.setAdapter(feedbackListAdapter);
         }
+    }
+
+    private void listKosong(){
+        feedbackTextName.setText("");
+        feedbackListAdapter.clearAdapter();
     }
 
     public void filter(String text) {
@@ -353,6 +378,9 @@ public class FeedbackFragment extends Fragment  {
         }
         feedbackListAdapter.filterList(filteredList);
     }
+
+
+
 
 
 

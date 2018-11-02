@@ -97,7 +97,7 @@ public class AddPlacementMonitoringActivity extends Activity {
             }
         });
 
-        int aidi = getIntent().getIntExtra("idAutoComplete", 0);
+        int aidi = getIntent().getIntExtra("id", 0);
         idMonitoring = aidi + "";
         getOneFromAPI(idMonitoring);
     }
