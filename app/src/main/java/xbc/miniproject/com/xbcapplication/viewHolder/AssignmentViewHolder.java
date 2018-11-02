@@ -83,6 +83,7 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
                             case R.id.assignmentMenuDone:
 //                                Toast.makeText(context, "Anda Menekan Action Done pada Posisi: " + position, Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, DoneAssignmentActivity.class);
+                                intent.putExtra("id", assignmentList.getId().toString());
                                 context.startActivity(intent);
                                 return true;
                             default:

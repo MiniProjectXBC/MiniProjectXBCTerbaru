@@ -226,12 +226,12 @@ public class EditIdleNewsActivity extends Activity {
         builder.setTitle("NOTIFICATION !")
                 .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                finish();
-            }
-        })
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        finish();
+                    }
+                })
                 .setCancelable(false).show();
     }
     @Override

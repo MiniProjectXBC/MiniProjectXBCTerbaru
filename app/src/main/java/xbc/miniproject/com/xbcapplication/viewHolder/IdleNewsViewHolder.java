@@ -176,29 +176,29 @@ public class IdleNewsViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void PublishIdleNewsAPI(final IdleNewsList idleNewsList, final int position, final Context context) {
-            apiServices = APIUtilities.getAPIServices();
-            id = idleNewsList.getId();
+        apiServices = APIUtilities.getAPIServices();
+        id = idleNewsList.getId();
 
-            apiServices.publishIdleNews("application/json", SessionManager.getToken(context), id)
-                    .enqueue(new Callback<ModelIdleNews>() {
-                        @Override
-                        public void onResponse(Call<ModelIdleNews> call, Response<ModelIdleNews> response) {
-                            if (response.code()==200){
-                                String message = response.body().getMessage();
-                                if (message != null){
-                                    PublishSuccessNotification(context, message);
-                                }
-                                else {
-                                    PublishSuccessNotification(context, "Message Gagal Diambil");
-                                }
+        apiServices.publishIdleNews("application/json", SessionManager.getToken(context), id)
+                .enqueue(new Callback<ModelIdleNews>() {
+                    @Override
+                    public void onResponse(Call<ModelIdleNews> call, Response<ModelIdleNews> response) {
+                        if (response.code()==200){
+                            String message = response.body().getMessage();
+                            if (message != null){
+                                PublishSuccessNotification(context, message);
+                            }
+                            else {
+                                PublishSuccessNotification(context, "Message Gagal Diambil");
                             }
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<ModelIdleNews> call, Throwable t) {
-                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    @Override
+                    public void onFailure(Call<ModelIdleNews> call, Throwable t) {
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void PublishSuccessNotification(final Context context, String message) {

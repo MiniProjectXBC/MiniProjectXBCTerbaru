@@ -39,7 +39,7 @@ public class DoneAssignmentActivity extends Activity {
 
     RequestAPIServices apiServices;
 
-    int idData;
+    String idData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +93,15 @@ public class DoneAssignmentActivity extends Activity {
             }
         });
 
+        Bundle data = getIntent().getExtras();
+        if (data == null){
+            idData = null;
+        }
+        else {
+            idData= data.getString("id");
+
+        }
+
     }
 
     private void updateLabel() {
@@ -134,6 +143,7 @@ public class DoneAssignmentActivity extends Activity {
     private void DoneAssignmentAPI(){
         apiServices = APIUtilities.getAPIServices();
         AssignmentList data = new AssignmentList();
+        data.setId(Integer.parseInt(idData+""));
         data.setRealizationDate(doneAssignmentEditTextRealDate.getText().toString());
         data.setNotes(doneAssignmentEditTextNote.getText().toString());
 

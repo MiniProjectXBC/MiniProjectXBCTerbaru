@@ -137,22 +137,22 @@ public class AddIdleNewsActivity extends Activity {
         apiServices = APIUtilities.getAPIServices();
         apiServices.idleNewsAutoComplete("application/json",SessionManager.getToken(context), keyword)
                 .enqueue(new Callback<ModelAutoCompleteIdleNews>() {
-            @Override
-            public void onResponse(Call<ModelAutoCompleteIdleNews> call, Response<ModelAutoCompleteIdleNews> response) {
-                if (response.code() == 200) {
+                    @Override
+                    public void onResponse(Call<ModelAutoCompleteIdleNews> call, Response<ModelAutoCompleteIdleNews> response) {
+                        if (response.code() == 200) {
 //                    loading.dismiss();
-                    List<DataList> tmp = response.body().getDataList();
-                    listIdleNews = response.body().getDataList();
-                    getAutoCompletAdapter();
-                }
-            }
+                            List<DataList> tmp = response.body().getDataList();
+                            listIdleNews = response.body().getDataList();
+                            getAutoCompletAdapter();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<ModelAutoCompleteIdleNews> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<ModelAutoCompleteIdleNews> call, Throwable t) {
 //                loading.dismiss();
 
-            }
-        });
+                    }
+                });
     }
 
     private void getAutoCompletAdapter() {
@@ -211,12 +211,12 @@ public class AddIdleNewsActivity extends Activity {
         builder.setTitle("NOTIFICATION !")
                 .setMessage(message+"!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                finish();
-            }
-        })
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        finish();
+                    }
+                })
                 .setCancelable(false).show();
     }
     @Override

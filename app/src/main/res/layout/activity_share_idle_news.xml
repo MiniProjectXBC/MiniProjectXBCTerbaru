@@ -39,12 +39,16 @@
                 <Button
                     android:id="@+id/shareIdleNewsButtonSend"
                     android:layout_width="100dp"
+                    android:background="@drawable/custom_input_login"
+                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
                     android:text="Send"/>
 
                 <Button
                     android:id="@+id/shareIdleNewsButtonCancel"
                     android:layout_width="100dp"
+                    android:background="@drawable/custom_input_login"
+                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
                     android:text="Cancel"/>
 

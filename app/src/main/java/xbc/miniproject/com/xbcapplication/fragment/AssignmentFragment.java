@@ -96,6 +96,9 @@ public class AssignmentFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (assignmentEditTextSearch.getText().toString().trim().length() == 0){
+                    String keyword = assignmentEditTextSearch.getText().toString().trim();
+                    listAssignment = new ArrayList<>();
+                    assignmentRecyclerViewList.setVisibility(View.INVISIBLE);
                 }
                 else {
                     String keyword = assignmentEditTextSearch.getText().toString().trim();
@@ -110,6 +113,7 @@ public class AssignmentFragment extends Fragment {
     }
 
     public void getDataFromAPI(String keyword){
+
         final ProgressDialog loading = LoadingClass.loadingAnimationAndText(getContext(),
                 "Sedang Memuat Data . . .");
         loading.show();
@@ -120,6 +124,7 @@ public class AssignmentFragment extends Fragment {
             public void onResponse(Call<ModelAssignment> call, Response<ModelAssignment> response) {
                 loading.dismiss();
                 if (response.code() == 200){
+                    listAssignment = new ArrayList<>();
                     List<AssignmentList> tmp = response.body().getAssignmentList();
                     for (int i=0; i<tmp.size(); i++){
                         AssignmentList data = tmp.get(i);

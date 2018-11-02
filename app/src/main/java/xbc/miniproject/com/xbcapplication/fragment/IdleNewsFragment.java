@@ -73,6 +73,9 @@ public class IdleNewsFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (idleNewsEditTextSearch.getText().toString().trim().length() == 0){
+                    String keyword = idleNewsEditTextSearch.getText().toString().trim();
+                    listIdleNews = new ArrayList<>();
+                    idleNewsRecyclerViewList.setVisibility(View.INVISIBLE);
                 }
                 else {
                     String keyword = idleNewsEditTextSearch.getText().toString().trim();

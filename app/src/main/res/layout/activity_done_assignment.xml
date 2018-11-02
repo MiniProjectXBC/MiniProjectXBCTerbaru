@@ -54,12 +54,16 @@
         <Button
             android:id="@+id/doneAssignmentButtonSave"
             android:layout_width="100dp"
+            android:background="@drawable/custom_input_login"
+            android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:text="Save"/>
 
         <Button
             android:id="@+id/doneAssignmentButtonCancel"
             android:layout_width="100dp"
+            android:background="@drawable/custom_input_login"
+            android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:text="Cancel"/>
 
