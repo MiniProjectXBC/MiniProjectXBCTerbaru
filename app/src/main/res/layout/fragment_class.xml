@@ -22,15 +22,7 @@
                 android:layout_weight="4"
                 android:inputType="text"
                 android:hint="Searh by Batch"/>
-            <ImageView
-                android:layout_gravity="center_vertical"
-                android:id="@+id/classButtonSearch"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/custom_button_login"
-                android:src="@android:drawable/ic_menu_search" />
+
 
         </LinearLayout>
 
@@ -48,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:textColor="@color/white"
+                android:padding="5dp"
                 android:textStyle="bold"
                 android:text="BATCH"/>
 
@@ -57,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:textColor="@color/white"
+                android:padding="5dp"
                 android:textStyle="bold"
                 android:text="NAME"/>
 

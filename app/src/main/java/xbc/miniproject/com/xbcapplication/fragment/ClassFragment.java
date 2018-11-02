@@ -33,7 +33,6 @@ import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class ClassFragment extends Fragment {
     private EditText classEditTextSearch;
-    private ImageView classButtonSearch;
     private RecyclerView classRecyclerViewList;
     private List<DataList> listClass = new ArrayList<>();
     private ClassListAdapter classListAdapter;
@@ -61,14 +60,25 @@ public class ClassFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                if (classEditTextSearch.getText().toString().trim().length() == 0) {
+                    classRecyclerViewList.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (classEditTextSearch.getText().toString().trim().length() == 0){
-                    classRecyclerViewList.setVisibility(View.INVISIBLE);
+                if (editable.toString().length() == 0) {
+                    if (editable.toString().length() == 0) {
+                        classRecyclerViewList.setVisibility(View.INVISIBLE);
+                    }
+                } else {
+                    classRecyclerViewList.setVisibility(View.VISIBLE);
+                    //String keyword = biodataEditTextSearch.getText().toString().trim();
+                    getDataFromAPI(editable.toString());
                 }
+//                if (classEditTextSearch.getText().toString().trim().length() == 0){
+//                    classRecyclerViewList.setVisibility(View.INVISIBLE);
+//                }
 //
 //                else {
 //                    classRecyclerViewList.setVisibility(View.VISIBLE);
@@ -79,17 +89,7 @@ public class ClassFragment extends Fragment {
 //        tampilkanListClass();
 //
 //        return view;
-        classButtonSearch = (ImageView) view.findViewById(R.id.classButtonSearch);
-        classButtonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(classEditTextSearch.getText().toString().trim().length() == 0){
-                    Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
-                }else{
-                    getDataFromAPI(classEditTextSearch.getText().toString().trim());
-                }
-            }
-        });
+
         return view;
     }
 
