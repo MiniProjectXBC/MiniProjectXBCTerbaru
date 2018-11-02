@@ -3,6 +3,7 @@ package xbc.miniproject.com.xbcapplication;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ public class EditTechnologyActivity extends Activity {
             editTechnologyButtonCancel;
     private RequestAPIServices apiServices;
     int id;
-    int id1;
+    String idData;
     List<DataList> listTechnology = new ArrayList<DataList>();
 
     @Override
@@ -61,17 +62,17 @@ public class EditTechnologyActivity extends Activity {
                 finish();
             }
         });
-        id= getIntent().getIntExtra("idAutoComplete", 0);
+        id= getIntent().getIntExtra("id", 0);
         getOneTechnologyAPI(id);
     }
     private void getOneTechnologyAPI(int id){
-        id1=id;
         apiServices = APIUtilities.getAPIServices();
         apiServices.getOneTechnology(id).enqueue(new Callback<ModelTechnology>() {
             @Override
             public void onResponse(Call<ModelTechnology> call, Response<ModelTechnology> response) {
                 if(response.code()==200){
                     Technology data = response.body().getData();
+                    idData = data.getId();
                     editTechnologyEditTextName.setText(data.getName());
                     editTechnologyEditTexNote.setText(data.getNotes());
                 }else {
@@ -94,15 +95,15 @@ public class EditTechnologyActivity extends Activity {
             inputEditTechnologyAPI(id);
             //hanya pesan
             //saveSuccessfullyNotification();
-            Toast.makeText(context,"Testimony successfully updated!",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context,"Testimony successfully updated!",Toast.LENGTH_SHORT).show();
         }
     }
     private void inputEditTechnologyAPI(int id){
         apiServices =  APIUtilities.getAPIServices();
 
         Technology data = new Technology();
-        System.out.println(id+"");
-        data.setId(id+"");
+//        System.out.println(id+"");
+        data.setId(idData);
         data.setName(editTechnologyEditTextName.getText().toString());
         data.setNotes(editTechnologyEditTexNote.getText().toString());
 

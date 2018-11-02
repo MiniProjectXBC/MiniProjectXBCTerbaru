@@ -1,5 +1,6 @@
 package xbc.miniproject.com.xbcapplication.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import xbc.miniproject.com.xbcapplication.model.user.ModelUser;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
 import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class UserFragment extends Fragment{
@@ -40,6 +43,7 @@ public class UserFragment extends Fragment{
     private List<DataList> userModelList =  new ArrayList<>();
     private UserListAdapter userListAdapter;
     private RequestAPIServices apiServices;
+    private ProgressDialog loading;
     public UserFragment() {
     }
 
@@ -53,6 +57,7 @@ public class UserFragment extends Fragment{
                 false);
         userRecyclerViewList.setLayoutManager(layoutManager);
         userEditTextSearch = (EditText) view.findViewById(R.id.userEditTextSearch);
+        loading = LoadingClass.loadingAnimationAndText(getContext(), "Loading ..");
         userRecyclerViewList.setVisibility(view.INVISIBLE);
         userEditTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,7 +67,10 @@ public class UserFragment extends Fragment{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if(userEditTextSearch.getText().toString().trim().length()==0){
+                    //Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
+                    userRecyclerViewList.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -87,6 +95,7 @@ public class UserFragment extends Fragment{
         return view;
     }
     private void getDataFromApi(String keyword){
+        loading.show();
         String contentType = Constanta.CONTENT_TYPE_API;
         String token = SessionManager.getToken(getContext());
         apiServices = APIUtilities.getAPIServices();
@@ -94,17 +103,18 @@ public class UserFragment extends Fragment{
             @Override
             public void onResponse(Call<ModelUser> call, Response<ModelUser> response) {
                 if(response.code()==200){
+                    loading.dismiss();
                     if(response.body().getDataList().size()>0){
                         userRecyclerViewList.setVisibility(View.VISIBLE);
                         tampilkanListUser(response.body().getDataList());
                     }else{
                         Toast.makeText(getContext(), "Keyword tidak tersedia", Toast.LENGTH_SHORT).show();
                     }
-//                    List<DataList> tmp = response.body().getDataList();
-//                    for(int i=0; i<tmp.size(); i++){
-//                        DataList data = tmp.get(i);
-//                        userModelList.add(data);
-//                    }
+                    if(userEditTextSearch.getText().toString().trim().length()==0){
+                        //Toast.makeText(getContext(), "Empty Keyword !", Toast.LENGTH_SHORT).show();
+                        userRecyclerViewList.setVisibility(View.INVISIBLE);
+                    }
+
                 }else {
                     Toast.makeText(getContext(), "Gagal Mendapatkan List User : "+ response.code()+"msg: "+response.message(), Toast.LENGTH_SHORT).show();
                 }

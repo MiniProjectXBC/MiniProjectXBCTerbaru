@@ -1,5 +1,6 @@
 package xbc.miniproject.com.xbcapplication.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +32,7 @@ import xbc.miniproject.com.xbcapplication.model.technology.ModelTechnology;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
 import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class TechnologyFragment extends Fragment {
@@ -41,6 +43,7 @@ public class TechnologyFragment extends Fragment {
     private List<DataList> technologyModelList =  new ArrayList<>();
     private TechnologyListAdapter technologyListAdapter;
     private RequestAPIServices apiServices;
+    private ProgressDialog loading;
     public TechnologyFragment() {
     }
 
@@ -55,6 +58,7 @@ public class TechnologyFragment extends Fragment {
              false);
      technologyRecyclerViewList.setLayoutManager(layoutManager);
      technologyEditTextSearch =(EditText) view.findViewById(R.id.technologyEditTextSearch);
+     loading = LoadingClass.loadingAnimationAndText(getContext(), "Loadnig ...");
      technologyRecyclerViewList.setVisibility(view.INVISIBLE);
      technologyEditTextSearch.addTextChangedListener(new TextWatcher() {
          @Override
@@ -64,7 +68,9 @@ public class TechnologyFragment extends Fragment {
 
          @Override
          public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            if(technologyEditTextSearch.getText().toString().trim().length()==0){
+                technologyRecyclerViewList.setVisibility(View.INVISIBLE);
+            }
          }
 
          @Override
@@ -89,6 +95,7 @@ public class TechnologyFragment extends Fragment {
         return  view;
     }
     private void getDataFromApi(String keyword){
+        loading.show();
         String contentType = Constanta.CONTENT_TYPE_API;
         String token = SessionManager.getToken(getContext());
 
@@ -98,8 +105,12 @@ public class TechnologyFragment extends Fragment {
             public void onResponse(Call<ModelTechnology> call, Response<ModelTechnology> response) {
                 if(response.code()==200){
                     if(response.body().getDataList().size()>0){
+                        loading.dismiss();
                         technologyRecyclerViewList.setVisibility(View.VISIBLE);
                         tampilkanListTechnology(response.body().getDataList());
+                    }
+                    if(technologyEditTextSearch.getText().toString().trim().length()==0){
+                        technologyRecyclerViewList.setVisibility(View.INVISIBLE);
                     }
                 }else{
                     Toast.makeText(getContext(), "Gagal Mendapatkan List Technology :"+response.code()+"msg: "+response.message(), Toast.LENGTH_SHORT).show();

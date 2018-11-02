@@ -42,9 +42,11 @@ public class AddUserActivity extends Activity {
     private Button addUserButtonSave;
     private Button addUserButtonCancel;
     private KArrayAdapter<DataListRole> adapter;
+    private ArrayList<String> listUsername = new ArrayList<String>();
     private List<DataListRole> dataListRoles =  new ArrayList<>();
     private boolean isRoleSelected;
     private RequestAPIServices apiServices;
+    private boolean isRegistered;
     int id1;
     private static final Pattern CEK_PASSWORD =
             Pattern.compile("^"+
@@ -68,6 +70,7 @@ public class AddUserActivity extends Activity {
         addUserEditTexRetypePassword = (EditText) findViewById(R.id.addUserEditTexRetypePassword);
         addUserEditTextRole =  (AutoCompleteTextView) findViewById(R.id.addUserEditTextRole);
 
+        isRegistered = false;
         addUserEditTextRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +86,6 @@ public class AddUserActivity extends Activity {
                 addUserEditTextRole.setError(null);
                 DataListRole selected =  (DataListRole) parent.getAdapter().getItem(position);
                 int cariId= selected.getId();
-                Toast.makeText(context,"idnya ini bos: "+cariId,Toast.LENGTH_LONG).show();
             }
         });
         addUserEditTextRole.addTextChangedListener(new TextWatcher() {
@@ -152,25 +154,37 @@ public class AddUserActivity extends Activity {
             Toast.makeText(context,"Role field still empty !", Toast.LENGTH_SHORT).show();
         }else if(addUserEditTexUsername.getText().toString().trim().length()==0){
             Toast.makeText(context,"Username field still empty !", Toast.LENGTH_SHORT).show();
+        }else if(addUserEditTexUsername.getText().toString().trim().length()<8){
+            Toast.makeText(context, "Username kurang dari 8 !", Toast.LENGTH_SHORT).show();
         }else if(addUserEditTexPassword.getText().toString().trim().length()==0){
             Toast.makeText(context, "Password field still empty !", Toast.LENGTH_SHORT).show();
         }else if(addUserEditTexRetypePassword.getText().toString().trim().length()== 0){
             Toast.makeText(context, "Please Retype password !", Toast.LENGTH_SHORT).show();
-        }else if(isRoleSelected ==false){
+        }else if(isRoleSelected == false){
             Toast.makeText(context, "Role Must from the list!", Toast.LENGTH_SHORT).show();
         }else if(!CEK_PASSWORD.matcher(addUserEditTexPassword.getText().toString().trim()).matches()){
-            Toast.makeText(context, "Password Harus Ada kombinasi Huruf dan Angka", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Password Kombinasi Huruf dan Angka", Toast.LENGTH_SHORT).show();
         }else{
             final String pas = addUserEditTexPassword.getText().toString();
             final String repas = addUserEditTexRetypePassword.getText().toString();
             if(pas.equalsIgnoreCase(repas)){
-//                panggilValidasiChar(addUserEditTexPassword.getText().toString().trim());
-                panggilAPI(position);
+               // panggilValidasiUsername(addUserEditTexPassword.getText().toString().trim());
+              //  if(isRegistered ==true){
+                 //   Toast.makeText(context, "username sudah ada!", Toast.LENGTH_SHORT).show();
+               // }else{
+                    panggilAPI(position);
+               // }
             }else{
                 Toast.makeText(context, "Password Tidak Sama!", Toast.LENGTH_SHORT).show();
             }
         }
     }
+//    public void panggilValidasiUsername(String username){
+//        apiServices = APIUtilities.getAPIServices();
+//        apiServices.getListUsser().
+//        isRegistered = false;
+//
+//    }
 
 //    public void panggilValidasiChar(String data){
 //        if(!CEK_PASSWORD.matcher(data).matches()){

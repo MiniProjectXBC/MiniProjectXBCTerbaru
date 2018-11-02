@@ -129,7 +129,7 @@ public class EditUserActivity extends Activity {
                 finish();
             }
         });
-        id1 = getIntent().getIntExtra("idAutoComplete",0);
+        id1 = getIntent().getIntExtra("id",0);
         getOneUserAPI(id1);
     }
 
