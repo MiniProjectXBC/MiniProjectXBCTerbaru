@@ -28,6 +28,7 @@ import xbc.miniproject.com.xbcapplication.R;
 import xbc.miniproject.com.xbcapplication.adapter.BatchListAdapter;
 import xbc.miniproject.com.xbcapplication.model.batch.DataList;
 import xbc.miniproject.com.xbcapplication.model.batch.ModelBatch;
+import xbc.miniproject.com.xbcapplication.model.monitoring.search.Biodata;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
@@ -35,7 +36,7 @@ import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class BatchFragment extends Fragment {
     private EditText batchEditTextSearch;
-    private ImageView bathcButtonSearch, batchButtonInsert;
+    private ImageView batchButtonInsert;
     private RecyclerView batchRecyclerViewList;
 
     private List<DataList> listBatch = new ArrayList<>();
@@ -71,27 +72,25 @@ public class BatchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if(batchEditTextSearch.getText().toString().trim().length() == 0){
+                    batchRecyclerViewList.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(batchEditTextSearch.getText().toString().trim().length()==0){
-                    Toast.makeText(getContext(),"Empty Keyword !", Toast.LENGTH_SHORT).show();
-                }else {
+                if(s.toString().length() == 0) {
+                    if (s.toString().length() == 0) {
+                        batchRecyclerViewList.setVisibility(View.INVISIBLE);
+                    }
+                }
+//                if(batchEditTextSearch.getText().toString().trim().length()==0){
+//                    Toast.makeText(getContext(),"Empty Keyword !", Toast.LENGTH_SHORT).show();
+//                }
+                else {
+                    batchRecyclerViewList.setVisibility(View.VISIBLE);
                     getDataFromAPI(batchEditTextSearch.getText().toString().trim());
                 }
-//                if(batchEditTextSearch.getText().toString().trim().length() == 0) {
-//                    batchRecyclerViewList.setVisibility(View.INVISIBLE);
-//                }
-            }
-        });
-
-        bathcButtonSearch = (ImageView) view.findViewById(R.id.bathcButtonSearch);
-        bathcButtonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 
@@ -116,15 +115,21 @@ public class BatchFragment extends Fragment {
             @Override
             public void onResponse(Call<ModelBatch> call, Response<ModelBatch> response) {
                 if (response.code() == 200){
+                    listBatch = new ArrayList<>();
+//                    List<DataList> tmp = response.body().getDataList();
+//                    for (int i = 0; i < tmp.size();i++){
+//                        DataList data = tmp.get(i);
+//                        listBatch.add(data);
+//                    }
                     if(response.body().getDataList().size()>0){
                         batchRecyclerViewList.setVisibility(View.VISIBLE);
-                        tampilkanListBatch(response.body().getDataList());
                     }
+                    tampilkanListBatch(response.body().getDataList());
+
                 } else{
                     Toast.makeText(getContext(), "Gagal Mendapatkan List Batch: " + response.code() + " msg: " + response.message(), Toast.LENGTH_SHORT).show();
                  }
             }
-
             @Override
             public void onFailure(Call<ModelBatch> call, Throwable t) {
                 Toast.makeText(getContext(), "List Batch onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
@@ -151,7 +156,18 @@ public class BatchFragment extends Fragment {
         batchListAdapter.notifyDataSetChanged();
     }
 
-//    private void addDummyList() {
+//    @Override
+//    public void onResume() {
+//        clearSearch();
+//        super.onResume();
+//    }
+//
+//    public void clearSearch(){
+//        batchEditTextSearch.setText("");
+//        batchRecyclerViewList.setVisibility(View.INVISIBLE);
+//    }
+
+    //    private void addDummyList() {
 //        int index = 1;
 //        for (int i = 0; i < 5; i++) {
 //            BatchModel data = new BatchModel();
