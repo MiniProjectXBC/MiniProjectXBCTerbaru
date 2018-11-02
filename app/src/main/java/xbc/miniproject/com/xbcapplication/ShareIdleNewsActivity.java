@@ -17,6 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.idleNews.ModelIdleNews;
+import xbc.miniproject.com.xbcapplication.model.idleNews.shareIdleNews.ModelShareIdleNews;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.SessionManager;
@@ -92,8 +93,8 @@ public class ShareIdleNewsActivity extends Activity {
 
     private void ShareIdleNewsAPI() {
         apiServices = APIUtilities.getAPIServices();
-        IdleNewsList data = new IdleNewsList();
-        data.setPublish(shareIdleNewsEditTextEmail.getText().toString());
+        ModelShareIdleNews data = new ModelShareIdleNews();
+        data.setEmail(shareIdleNewsEditTextEmail.getText().toString());
 
         apiServices.shareNewIdleNews("application/json", SessionManager.getToken(context), data)
                 .enqueue(new Callback<ModelIdleNews>() {
@@ -126,6 +127,7 @@ public class ShareIdleNewsActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        finish();
                     }
                 })
                 .setCancelable(false).show();

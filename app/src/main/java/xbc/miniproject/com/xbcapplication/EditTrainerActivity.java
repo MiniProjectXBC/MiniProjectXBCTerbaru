@@ -59,6 +59,8 @@ public class EditTrainerActivity extends Activity {
                 finish();
             }
         });
+
+
         int id = getIntent().getIntExtra("id",0);
         id=getIntent().getIntExtra("id",0);
         getOneTrainerAPI(id);

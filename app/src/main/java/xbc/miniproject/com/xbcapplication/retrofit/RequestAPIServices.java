@@ -35,6 +35,7 @@ import xbc.miniproject.com.xbcapplication.model.feedback.getQuestion.ModelQuesti
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.idleNews.autoComplete.ModelAutoCompleteIdleNews;
+import xbc.miniproject.com.xbcapplication.model.idleNews.shareIdleNews.ModelShareIdleNews;
 import xbc.miniproject.com.xbcapplication.model.login.ModelLoginInput;
 import xbc.miniproject.com.xbcapplication.model.idleNews.IdleNewsList;
 import xbc.miniproject.com.xbcapplication.model.login.ModelLoginMessage;
@@ -314,7 +315,7 @@ public interface RequestAPIServices {
     @POST ("/xbc-ws/api/idlenews/share-to-email")
     Call<ModelIdleNews> shareNewIdleNews(@Header("Content-Type") String contentType,
                                          @Header("Authorization") String authorization,
-                                         @Body IdleNewsList data);
+                                         @Body ModelShareIdleNews data);
 
     //Koneksi API Get Auto Complete Trainer
     @GET("/xbc-ws/api/trainer/key/{keyword}")

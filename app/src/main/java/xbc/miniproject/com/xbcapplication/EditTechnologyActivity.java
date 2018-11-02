@@ -61,7 +61,7 @@ public class EditTechnologyActivity extends Activity {
                 finish();
             }
         });
-        id= getIntent().getIntExtra("id", 0);
+        id= getIntent().getIntExtra("idAutoComplete", 0);
         getOneTechnologyAPI(id);
     }
     private void getOneTechnologyAPI(int id){
