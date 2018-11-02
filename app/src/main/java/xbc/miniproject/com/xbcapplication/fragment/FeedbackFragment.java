@@ -196,7 +196,7 @@ public class FeedbackFragment extends Fragment  {
 
     public void tampil_auto_complete(String keyword){
         apiServices = APIUtilities.getAPIServices();
-        apiServices.roleautocomplete(SessionManager.getToken(getContext()), keyword).enqueue(new Callback<ModelAutocompleteFeedback>() {
+        apiServices.roleautocomplete(Constanta.CONTENT_TYPE_API,SessionManager.getToken(getContext()), keyword).enqueue(new Callback<ModelAutocompleteFeedback>() {
             @Override
             public void onResponse(Call<ModelAutocompleteFeedback> call, Response<ModelAutocompleteFeedback> response) {
                 if (response.code() == 200){
