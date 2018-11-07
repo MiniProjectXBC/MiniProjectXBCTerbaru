@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.BiodataModel;
 import xbc.miniproject.com.xbcapplication.model.biodata.BiodataList;
 import xbc.miniproject.com.xbcapplication.viewHolder.BiodataViewHolder;
 

@@ -29,8 +29,6 @@ import xbc.miniproject.com.xbcapplication.AddIdleMonitoringActivity;
 import xbc.miniproject.com.xbcapplication.R;
 import xbc.miniproject.com.xbcapplication.adapter.BiodataListAdapter;
 import xbc.miniproject.com.xbcapplication.adapter.MonitoringListAdapter;
-import xbc.miniproject.com.xbcapplication.dummyModel.BiodataModel;
-import xbc.miniproject.com.xbcapplication.dummyModel.MonitoringModel;
 import xbc.miniproject.com.xbcapplication.model.biodata.BiodataList;
 import xbc.miniproject.com.xbcapplication.model.monitoring.ModelMonitoring;
 import xbc.miniproject.com.xbcapplication.model.monitoring.MonitoringData;
