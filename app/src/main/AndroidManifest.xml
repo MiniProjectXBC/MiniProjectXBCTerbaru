@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="xbc.miniproject.com.xbcapplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,9 +11,11 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher_new"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
             android:name=".SplashScreenActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,32 +25,78 @@
         </activity>
         <activity
             android:name=".HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme" />
-        <activity android:name=".AddBiodataActivity" />
-        <activity android:name=".AddTechnologyActivity" />
-        <activity android:name=".AddTrainerActivity" />
-        <activity android:name=".EditBiodataActivity" />
-        <activity android:name=".EditTechnologyActivity" />
-        <activity android:name=".EditIdleNewsActivity" />
-        <activity android:name=".ShareIdleNewsActivity" />
-        <activity android:name=".AddIdleNewsActivity" />
-        <activity android:name=".AddBatchActivity" />
-        <activity android:name=".AddTestimonyActivity" />
-        <activity android:name=".EditIdleMonitoringActivity" />
-        <activity android:name=".EditTestimonyActivity" />
-        <activity android:name=".AddIdleMonitoringActivity" />
-        <activity android:name=".AddPlacementMonitoringActivity" />
-        <activity android:name=".AddAssignmentActivity" />
-        <activity android:name=".EditAssignmnetActivity" />
-        <activity android:name=".DoneAssignmentActivity" />
-        <activity android:name=".AddUserActivity" />
-        <activity android:name=".EditTrainerActivity" />
-        <activity android:name=".EditUserActivity" />
-        <activity android:name=".EditBatchActivity" />
-        <activity android:name=".AddParticipantBatchActivity" />
+        <activity
+            android:name=".AddBiodataActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddTechnologyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddTrainerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditBiodataActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditTechnologyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditIdleNewsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ShareIdleNewsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddIdleNewsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddBatchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddTestimonyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditIdleMonitoringActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditTestimonyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddIdleMonitoringActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddPlacementMonitoringActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddAssignmentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditAssignmnetActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoneAssignmentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddUserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditTrainerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditUserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditBatchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddParticipantBatchActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

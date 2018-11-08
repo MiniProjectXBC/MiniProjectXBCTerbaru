@@ -136,7 +136,7 @@ public class EditUserActivity extends Activity {
 
     private  void getOneUserAPI(final int id){
      apiServices = APIUtilities.getAPIServices();
-     apiServices.getOneUser(id).enqueue(new Callback<ModelUserGetOne>() {
+     apiServices.getOneUser(SessionManager.getToken(context),id).enqueue(new Callback<ModelUserGetOne>() {
          @Override
          public void onResponse(Call<ModelUserGetOne> call, Response<ModelUserGetOne> response) {
              if(response.code()==200){

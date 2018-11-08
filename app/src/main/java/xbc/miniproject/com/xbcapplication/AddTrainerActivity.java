@@ -19,6 +19,7 @@ import xbc.miniproject.com.xbcapplication.model.trainer.DataListTrainer;
 import xbc.miniproject.com.xbcapplication.model.trainer.ModelTrainer;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AddTrainerActivity extends Activity {
 
@@ -81,7 +82,7 @@ public class AddTrainerActivity extends Activity {
         data.setName(addTrainerEditTextName.getText().toString());
         data.setNotes(addTrainerEditTexNote.getText().toString());
 
-        apiServices.createNewTrainer("application/json", data)
+        apiServices.createNewTrainer("application/json",SessionManager.getToken(context), data)
                 .enqueue(new Callback<ModelTrainer>() {
                     @Override
                     public void onResponse(Call<ModelTrainer> call, Response<ModelTrainer> response) {

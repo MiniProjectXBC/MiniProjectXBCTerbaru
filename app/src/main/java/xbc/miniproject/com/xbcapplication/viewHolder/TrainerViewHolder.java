@@ -24,6 +24,7 @@ import xbc.miniproject.com.xbcapplication.model.trainer.ModelTrainer;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class TrainerViewHolder extends RecyclerView.ViewHolder {
     private TextView listTrainerName;
@@ -97,7 +98,7 @@ public class TrainerViewHolder extends RecyclerView.ViewHolder {
         id = trainerModel.getId();
 
         apiServices.deactivateTrainer(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_DEACTIVATED_TRAINER,id)
+                SessionManager.getToken(context),id)
                 .enqueue(new Callback<ModelTrainer>() {
                     @Override
                     public void onResponse(Call<ModelTrainer> call, Response<ModelTrainer> response) {

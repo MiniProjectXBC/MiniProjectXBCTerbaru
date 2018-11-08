@@ -76,7 +76,7 @@ public class AddTechnologyActivity extends Activity {
         data.setName(addTechnologyEditTextName.getText().toString());
         data.setNotes(addTechnologyEditTexNote.getText().toString());
 
-        apiServices.createNewTechnology("application/json", data)
+        apiServices.createNewTechnology("application/json",SessionManager.getToken(context), data)
                 .enqueue(new Callback<ModelTechnology>() {
                     @Override
                     public void onResponse(Call<ModelTechnology> call, Response<ModelTechnology> response) {

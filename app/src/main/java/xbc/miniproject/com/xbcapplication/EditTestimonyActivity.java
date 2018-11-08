@@ -63,7 +63,7 @@ public class EditTestimonyActivity extends Activity {
 
     private void getOneTestimonyAPI(int id) {
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getOneTestimony(id).enqueue(new Callback<ModelTestimony>() {
+        apiServices.getOneTestimony(SessionManager.getToken(context),id).enqueue(new Callback<ModelTestimony>() {
             @Override
             public void onResponse(Call<ModelTestimony> call, Response<ModelTestimony> response) {
                 if (response.code() == 200){

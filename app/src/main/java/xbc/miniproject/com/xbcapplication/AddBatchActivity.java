@@ -91,7 +91,7 @@ public class AddBatchActivity extends Activity {
                 xbc.miniproject.com.xbcapplication.model.batch.autoCompleteTechnology.DataList selected = (xbc.miniproject.com.xbcapplication.model.batch.autoCompleteTechnology.DataList) parent.getAdapter().getItem(position);
                 int gg = selected.getId();
                 idBiodata = gg+"";
-                Toast.makeText(context,"idnya ini cuy: "+gg,Toast.LENGTH_LONG).show();
+//                Toast.makeText(context,"idnya ini cuy: "+gg,Toast.LENGTH_LONG).show();
             }
         });
         addBatchEditTextTechnology.addTextChangedListener(new TextWatcher() {
@@ -354,7 +354,7 @@ public class AddBatchActivity extends Activity {
 //        data.setNotes(addBatchEditTextNotes.getText().toString());
 
 
-        apiServices.createNewBatch(contenType, requestBody)
+        apiServices.createNewBatch(contenType, SessionManager.getToken(context), requestBody)
                 .enqueue(new Callback<ModelBatch>() {
                     @Override
                     public void onResponse(Call<ModelBatch> call, Response<ModelBatch> response) {

@@ -19,6 +19,7 @@ import xbc.miniproject.com.xbcapplication.model.testimony.DataListTestimony;
 import xbc.miniproject.com.xbcapplication.model.testimony.ModelTestimony;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AddTestimonyActivity extends Activity {
     private Context context = this;
@@ -65,7 +66,7 @@ public class AddTestimonyActivity extends Activity {
         data.setTitle(addTestimonyEditTexTitle.getText().toString());
         data.setContent(addTestimonyEditTexContent.getText().toString());
 
-        apiServices.createNewTestimony("application/json", data)
+        apiServices.createNewTestimony(SessionManager.getToken(context),"application/json", data)
                 .enqueue(new Callback<ModelTestimony>() {
                     @Override
                     public void onResponse(Call<ModelTestimony> call, Response<ModelTestimony> response) {

@@ -257,7 +257,7 @@ public class AddAssignmentActivity extends Activity {
         RequestBody bodyRequest = RequestBody.create(APIUtilities.mediaType(), json);
         apiServices = APIUtilities.getAPIServices();
 
-        apiServices.createNewAssignment("application/json", bodyRequest)
+        apiServices.createNewAssignment(SessionManager.getToken(context),"application/json", bodyRequest)
                 .enqueue(new Callback<ModelAssignment>() {
                     @Override
                     public void onResponse(Call<ModelAssignment> call, Response<ModelAssignment> response) {

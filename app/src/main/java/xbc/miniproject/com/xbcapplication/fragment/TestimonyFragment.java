@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class TestimonyFragment extends Fragment {
     private EditText testimonyEditTextSearch;
-    private Button testimonyButtonSearch, testimonyButtonInsert;
+    private Button testimonyButtonSearch;
+    private ImageView testimonyButtonInsert;
     private RecyclerView testimonyRecyclerViewList;
     private List<DataListTestimony> testimonyModelList =  new ArrayList<>();
     private TestimonyListAdapter testimonyListAdapter;
@@ -47,7 +49,7 @@ public class TestimonyFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view =  inflater.inflate(R.layout.fragment_testimony,container,false);
-        testimonyButtonInsert = (Button) view.findViewById(R.id.testimonyButtonInsert);
+        testimonyButtonInsert = (ImageView) view.findViewById(R.id.testimonyButtonInsert);
         testimonyButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

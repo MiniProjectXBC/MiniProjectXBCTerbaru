@@ -39,7 +39,7 @@ import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class BiodataFragment extends Fragment {
     public EditText biodataEditTextSearch;
-    private ImageView biodataButtonInsert, biodataButtonSearch;
+    private ImageView biodataButtonInsert;
     private RecyclerView biodataRecyclerViewList;
 
     private List<BiodataList> listBiodata = new ArrayList<>();
@@ -87,7 +87,6 @@ public class BiodataFragment extends Fragment {
                     }
                 } else {
                     biodataRecyclerViewList.setVisibility(View.VISIBLE);
-                    //String keyword = biodataEditTextSearch.getText().toString().trim();
                     getDataFromAPI(s.toString());
                 }
             }
@@ -110,15 +109,15 @@ public class BiodataFragment extends Fragment {
         apiServices = APIUtilities.getAPIServices();
         apiServices.getListBiodata(SessionManager.getToken(getContext()), keyword).enqueue(new Callback<ModelBiodata>() {
             @Override
-            public void onResponse(Call<ModelBiodata> call, Response<ModelBiodata> response) {
+            public void onResponse(@NonNull Call<ModelBiodata> call, @NonNull Response<ModelBiodata> response) {
                 loading.dismiss();
                 if (response.code() == 200) {
                     listBiodata = new ArrayList<>();
-                    List<BiodataList> tmp = response.body().getDataList();
-                    for (int i = 0; i < tmp.size(); i++) {
-                        BiodataList data = tmp.get(i);
-                        listBiodata.add(data);
+                    if (response.body() != null) {
+                        List<BiodataList> tmp = response.body().getDataList();
+                        listBiodata.addAll(tmp);
                     }
+
                     if (biodataEditTextSearch.getText().toString().trim().length() == 0) {
                         biodataRecyclerViewList.setVisibility(View.INVISIBLE);
                     } else {
@@ -132,23 +131,11 @@ public class BiodataFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ModelBiodata> call, Throwable t) {
+            public void onFailure(@NonNull Call<ModelBiodata> call, @NonNull Throwable t) {
                 loading.dismiss();
                 Toast.makeText(getContext(), "List Biodata onFailure: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void filter(String text) {
-        ArrayList<BiodataList> filteredList = new ArrayList<>();
-
-        for (BiodataList item : listBiodata) {
-            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(item);
-            }
-        }
-
-        biodataListAdapter.filterList(filteredList);
     }
 
     private void tampilkanListBiodata() {
@@ -167,6 +154,5 @@ public class BiodataFragment extends Fragment {
     public void clearSearch() {
         biodataEditTextSearch.setText("");
         biodataRecyclerViewList.setVisibility(View.INVISIBLE);
-
     }
 }

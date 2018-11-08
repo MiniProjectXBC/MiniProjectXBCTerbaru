@@ -183,7 +183,7 @@ public class AddIdleNewsActivity extends Activity {
         RequestBody bodyRequest = RequestBody.create(APIUtilities.mediaType(), json);
         apiServices = APIUtilities.getAPIServices();
 
-        apiServices.createNewIdleNews("application/json", bodyRequest)
+        apiServices.createNewIdleNews(SessionManager.getToken(context),"application/json", bodyRequest)
                 .enqueue(new Callback<ModelIdleNews>() {
                     @Override
                     public void onResponse(Call<ModelIdleNews> call, Response<ModelIdleNews> response) {

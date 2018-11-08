@@ -17,6 +17,7 @@ import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.model.login.ModelLoginMessage;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
+import xbc.miniproject.com.xbcapplication.utility.Constanta;
 import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class LoginActivity extends Activity {
@@ -61,10 +62,8 @@ public class LoginActivity extends Activity {
         String json = APIUtilities.generateLoginMap(username, password);
         RequestBody requestBody = RequestBody.create(APIUtilities.mediaType(), json);
 
-        String contentType = "application/json";
-
         apiServices = APIUtilities.getAPIServices();
-        apiServices.goLogin(contentType, requestBody).enqueue(new Callback<ModelLoginMessage>() {
+        apiServices.goLogin(Constanta.CONTENT_TYPE_API, requestBody).enqueue(new Callback<ModelLoginMessage>() {
             @Override
             public void onResponse(@NonNull Call<ModelLoginMessage> call, @NonNull Response<ModelLoginMessage> response) {
                 if (response.code() == 200) {

@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class DataListQuestionFeedback {
 
+    @SerializedName("question")
+    @Expose
+    private String question;
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -18,6 +21,14 @@ public class DataListQuestionFeedback {
     @SerializedName("active")
     @Expose
     private Boolean active;
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
 
     public Integer getId() {
         return id;

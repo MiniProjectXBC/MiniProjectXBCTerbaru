@@ -24,6 +24,7 @@ import xbc.miniproject.com.xbcapplication.model.technology.ModelTechnology;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class TechnologyViewHolder extends RecyclerView.ViewHolder{
     private TextView listTecnologyName;
@@ -94,7 +95,7 @@ public class TechnologyViewHolder extends RecyclerView.ViewHolder{
         id = dataList.getId();
 
         apiServices.deactiveTechnology(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_DEACTIVATED_TECHNOLOGY, id)
+                SessionManager.getToken(context), id)
                 .enqueue(new Callback<ModelTechnology>() {
                     @Override
                     public void onResponse(Call<ModelTechnology> call, Response<ModelTechnology> response) {

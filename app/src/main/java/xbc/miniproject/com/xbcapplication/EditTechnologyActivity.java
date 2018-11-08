@@ -25,6 +25,7 @@ import xbc.miniproject.com.xbcapplication.model.technology.Technology;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class EditTechnologyActivity extends Activity {
     private Context context=this;
@@ -67,7 +68,7 @@ public class EditTechnologyActivity extends Activity {
     }
     private void getOneTechnologyAPI(int id){
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getOneTechnology(id).enqueue(new Callback<ModelTechnology>() {
+        apiServices.getOneTechnology(SessionManager.getToken(context),id).enqueue(new Callback<ModelTechnology>() {
             @Override
             public void onResponse(Call<ModelTechnology> call, Response<ModelTechnology> response) {
                 if(response.code()==200){
@@ -108,7 +109,7 @@ public class EditTechnologyActivity extends Activity {
         data.setNotes(editTechnologyEditTexNote.getText().toString());
 
         apiServices.editTechnology(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_EDIT_TECHNOLOGY,
+                SessionManager.getToken(context),
                 data)
                 .enqueue(new Callback<ModelTechnology>() {
                     @Override

@@ -58,7 +58,7 @@ public class FeedbackViewHolder extends RecyclerView.ViewHolder {
 
     public void setModel(DataListQuestionFeedback dataListQuestionFeedback, Feedback dataListAnswerFeedback, final int position, final Context context) {
         this.position = position;
-        question.setText(dataListQuestionFeedback.getName());
+        question.setText(dataListQuestionFeedback.getQuestion());
         customListFeedback.setText(dataListAnswerFeedback.getAnswer());
         notesFeedback.setText(""+position);
         //customListFeedback.setText(dataListQuestionFeedback);

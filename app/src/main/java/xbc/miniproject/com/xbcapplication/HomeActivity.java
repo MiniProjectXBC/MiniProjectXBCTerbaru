@@ -1,6 +1,5 @@
 package xbc.miniproject.com.xbcapplication;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
@@ -29,9 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import xbc.miniproject.com.xbcapplication.adapter.HomeMenuAdapter;
-import xbc.miniproject.com.xbcapplication.adapter.HomeRecyclerAdapter;
 import xbc.miniproject.com.xbcapplication.fragment.AssignmentFragment;
 import xbc.miniproject.com.xbcapplication.fragment.BatchFragment;
 import xbc.miniproject.com.xbcapplication.fragment.BiodataFragment;
@@ -60,11 +58,6 @@ public class HomeActivity extends AppCompatActivity
     private ExpandableListView expListView;
     private HomeMenuAdapter listAdapter;
 
-    private RecyclerView leftRecyclerView;
-    private ArrayList<String> listDataHeader2;
-    private HomeRecyclerAdapter homeRecyclerAdapter;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +66,7 @@ public class HomeActivity extends AppCompatActivity
 
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setPopupTheme(R.style.PopupMenu);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -85,9 +78,6 @@ public class HomeActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_menu);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerView = navigationView.getHeaderView(0);
         headerNamaUser = findViewById(R.id.headerNamaUser);
         headerNamaUser.setText(SessionManager.getUsername(context));
 
@@ -96,15 +86,6 @@ public class HomeActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame_all_menu, homeFragment, "XBC MOBILE APPS");
         fragmentTransaction.commit();
-
-//        listDataHeader2 = new ArrayList<String>();
-//        leftRecyclerView = (RecyclerView) findViewById(R.id.leftRecyclerView);
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,
-//                LinearLayoutManager.VERTICAL,false);
-//        leftRecyclerView.setLayoutManager(layoutManager);
-//        prepareHeaderList(listDataHeader2);
-//        homeRecyclerAdapter = new HomeRecyclerAdapter(context,listDataHeader2);
-//        leftRecyclerView.setAdapter(homeRecyclerAdapter);
 
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
@@ -147,34 +128,7 @@ public class HomeActivity extends AppCompatActivity
                     DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
-
-
-                // Toast.makeText(getApplicationContext(),
-                // "Group Clicked " + listDataHeader.get(groupPosition),
-                // Toast.LENGTH_SHORT).show();
                 return false;
-            }
-        });
-        // Listview Group expanded listener
-        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-
-            @Override
-            public void onGroupExpand(int groupPosition) {
-//                Toast.makeText(getApplicationContext(),
-//                        listDataHeader.get(groupPosition) + " Expanded",
-//                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Listview Group collasped listener
-        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-//                Toast.makeText(getApplicationContext(),
-//                        listDataHeader.get(groupPosition) + " Collapsed",
-//                        Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -184,7 +138,6 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                // TODO Auto-generated method stub
                 if (groupPosition == 4) {
                     if (childPosition == 0) {
                         setActionBarTitle("Batch");
@@ -281,80 +234,14 @@ public class HomeActivity extends AppCompatActivity
                     }
                 }
 
-//                Toast.makeText(
-//                        getApplicationContext(),
-//                        listDataHeader.get(groupPosition)
-//                                + " : "
-//                                + listDataChild.get(
-//                                listDataHeader.get(groupPosition)).get(
-//                                childPosition), Toast.LENGTH_SHORT)
-//                        .show();
                 return false;
             }
         });
 
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        //Bagian Menu Yang Terkoneksi dengan Fragment
-        int id = menuItem.getItemId();
-
-        //Menu MonitoringBiodata
-        if (id == R.id.menuBiodata) {
-
-        }
-        //Menu Trainer
-        else if (id == R.id.menuTrainer) {
-
-
-        }
-        //Menu Technologi
-        else if (id == R.id.menuTechnology) {
-
-        }
-        //Menu Bootcamp
-        else if (id == R.id.menuBatch) {
-
-        } else if (id == R.id.menuClass) {
-
-        }
-        //Menu Assestment
-        else if (id == R.id.menuFiltering) {
-
-
-        } else if (id == R.id.menuMiniProject) {
-
-
-        } else if (id == R.id.menuCustom) {
-
-        }
-
-        //Menu Portal
-        else if (id == R.id.menuFeedback) {
-
-        } else if (id == R.id.menuIdleNews) {
-
-        } else if (id == R.id.menuKataIdle) {
-
-        }
-        //Menu Idle
-        else if (id == R.id.menuMonitoring) {
-
-
-        } else if (id == R.id.menuAssignment) {
-
-        } else if (id == R.id.menuUser) {
-
-        }
-
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     private void setActionBarTitle(String title) {
-        getSupportActionBar().setTitle(title);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
     @Override
@@ -364,7 +251,7 @@ public class HomeActivity extends AppCompatActivity
         //deteksi klik burger icon
         if (id == android.R.id.home) {
             //slide navigation drawer
-            drawerLayout.openDrawer(Gravity.LEFT);
+            drawerLayout.openDrawer(Gravity.START);
         } else if (id == R.id.homeOptionLogout) {
             SharedPreferences sharedPreferences = getSharedPreferences(Constanta.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
             sharedPreferences.edit().clear().apply();
@@ -373,12 +260,6 @@ public class HomeActivity extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-        } else if (id == R.id.homeOptionHome) {
-            setActionBarTitle("XBC MOBILE APPS");
-            HomeFragment homeFragment = new HomeFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame_all_menu, homeFragment, "XBC MOBILE APPS");
-            fragmentTransaction.commit();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -414,13 +295,6 @@ public class HomeActivity extends AppCompatActivity
         showAlert.show();
     }
 
-    private void prepareHeaderList(List<String> listDataHeader) {
-        listDataHeader.add("Home");
-        listDataHeader.add("Biodata");
-        listDataHeader.add("Trainer");
-        listDataHeader.add("Technology");
-    }
-
     private void prepareListData(List<String> listDataHeader, Map<String,
             List<String>> listDataChild) {
 
@@ -435,38 +309,38 @@ public class HomeActivity extends AppCompatActivity
         listDataHeader.add("Idle");
         listDataHeader.add("Setting");
 
-        List<String> home = new ArrayList<String>();
-        List<String> biodata = new ArrayList<String>();
-        List<String> trainer = new ArrayList<String>();
-        List<String> technology = new ArrayList<String>();
+        List<String> home = new ArrayList<>();
+        List<String> biodata = new ArrayList<>();
+        List<String> trainer = new ArrayList<>();
+        List<String> technology = new ArrayList<>();
 
         // Adding child data
-        List<String> bootcamp = new ArrayList<String>();
+        List<String> bootcamp = new ArrayList<>();
         bootcamp.add("Batch");
         bootcamp.add("Class");
 
-        List<String> assessment = new ArrayList<String>();
+        List<String> assessment = new ArrayList<>();
         assessment.add("Filtering");
         assessment.add("Mini Project");
         assessment.add("Custom");
 
-        List<String> portal = new ArrayList<String>();
+        List<String> portal = new ArrayList<>();
         portal.add("Feedback");
         portal.add("Idle News");
         portal.add("Kata Idle");
 
-        List<String> idle = new ArrayList<String>();
+        List<String> idle = new ArrayList<>();
         idle.add("Monitoring");
         idle.add("Assignment");
 
-        List<String> setting = new ArrayList<String>();
+        List<String> setting = new ArrayList<>();
         setting.add("User");
 
         listDataChild.put(listDataHeader.get(0), home);
         listDataChild.put(listDataHeader.get(1), biodata);
         listDataChild.put(listDataHeader.get(2), trainer);
         listDataChild.put(listDataHeader.get(3), technology);
-        listDataChild.put(listDataHeader.get(4), bootcamp); // Header, Child data
+        listDataChild.put(listDataHeader.get(4), bootcamp);
         listDataChild.put(listDataHeader.get(5), assessment);
         listDataChild.put(listDataHeader.get(6), portal);
         listDataChild.put(listDataHeader.get(7), idle);
@@ -474,4 +348,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        return false;
+    }
 }

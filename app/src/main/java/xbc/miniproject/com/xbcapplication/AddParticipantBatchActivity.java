@@ -158,7 +158,7 @@ public class AddParticipantBatchActivity extends Activity {
         RequestBody requestBody = RequestBody.create(APIUtilities.mediaType(), JSON);
         apiServices = APIUtilities.getAPIServices();
 
-        apiServices.createNewBatchAddParticipant(contenType,idBatch, requestBody)
+        apiServices.createNewBatchAddParticipant(contenType,SessionManager.getToken(context),idBatch, requestBody)
                 .enqueue(new Callback<ModelBatch>() {
                     @Override
                     public void onResponse(Call<ModelBatch> call, Response<ModelBatch> response) {
