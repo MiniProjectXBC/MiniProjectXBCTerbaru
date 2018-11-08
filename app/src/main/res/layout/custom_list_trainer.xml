@@ -28,7 +28,9 @@
 
             <ImageView
                 android:id="@+id/listTrainerButtonAction"
+                android:contentDescription="TODO"
                 android:padding="5dp"
+                android:background="@drawable/custom_button_dehaze"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_dehaze_black_24dp"/>

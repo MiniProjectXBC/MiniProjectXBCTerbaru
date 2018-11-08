@@ -57,7 +57,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_perm_contact_calendar_black_24dp"/>
+                        android:contentDescription="TODO" android:src="@drawable/ic_perm_contact_calendar_black_24dp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -85,7 +85,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_perm_contact_calendar_black_24dp"/>
+                        android:contentDescription="TODO" android:src="@drawable/ic_perm_contact_calendar_black_24dp"/>
                 </LinearLayout>
             </LinearLayout>
 

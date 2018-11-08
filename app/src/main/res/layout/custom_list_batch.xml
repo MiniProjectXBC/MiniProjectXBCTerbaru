@@ -48,8 +48,9 @@
 
             <ImageView
                 android:id="@+id/listBatchButtonAction"
-                android:padding="5dp"
+                android:contentDescription="TODO" android:padding="5dp"
                 android:layout_width="30dp"
+                android:background="@drawable/custom_button_dehaze"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_dehaze_black_24dp"/>
 

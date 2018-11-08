@@ -41,7 +41,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/custom_button_login"
-                android:src="@android:drawable/ic_menu_add" />
+                android:contentDescription="TODO" android:src="@android:drawable/ic_menu_add" />
 
         </LinearLayout>
 
@@ -86,7 +86,7 @@
                 android:layout_weight="2">
 
                 <ImageView
-                    android:layout_width="30dp"
+                    android:layout_width="30dp" android:contentDescription="TODO" 
                     android:layout_height="30dp"/>
 
             </LinearLayout>

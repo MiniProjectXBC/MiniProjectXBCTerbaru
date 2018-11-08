@@ -57,7 +57,7 @@
                     <ImageView
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:drawableTint="@android:color/black"
+                        android:contentDescription="TODO" android:drawableTint="@android:color/black"
                         android:src="@drawable/ic_perm_contact_calendar_black_24dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -73,14 +73,14 @@
 
                 <EditText
                     android:id="@+id/addBatchEditTextPeriodTo"
-                    android:layout_width="match_parent"
+                    android:layout_width="match_parent" android:inputType="" 
                     android:layout_height="wrap_content"
                     android:hint="Period to" />
 
                 <ImageView
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:drawableTint="@android:color/black"
+                    android:contentDescription="TODO" android:drawableTint="@android:color/black"
                     android:src="@drawable/ic_perm_contact_calendar_black_24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -105,7 +105,7 @@
 
             <EditText
                 android:id="@+id/addBatchEditTextNotes"
-                android:layout_width="match_parent"
+                android:layout_width="match_parent" android:inputType="" 
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="Notes" />

@@ -18,7 +18,7 @@
 
             <EditText
                 android:id="@+id/userEditTextSearch"
-                android:layout_width="0dp"
+                android:layout_width="0dp" android:inputType="" 
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_weight="4"
@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/custom_button_login"
-                android:src="@android:drawable/ic_menu_add" />
+                android:contentDescription="TODO" android:src="@android:drawable/ic_menu_add" />
 
 
         </LinearLayout>
@@ -84,7 +84,7 @@
                 android:layout_weight="1">
 
                 <ImageView
-                    android:layout_width="30dp"
+                    android:layout_width="30dp" android:contentDescription="TODO" 
                     android:layout_height="30dp"/>
 
             </LinearLayout>

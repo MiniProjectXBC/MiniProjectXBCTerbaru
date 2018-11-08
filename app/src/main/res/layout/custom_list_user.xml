@@ -46,6 +46,8 @@
                 android:id="@+id/listUserButtonAction"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:background="@drawable/custom_button_dehaze"
+                android:contentDescription="TODO"
                 android:src="@drawable/ic_dehaze_black_24dp"/>
 
         </LinearLayout>

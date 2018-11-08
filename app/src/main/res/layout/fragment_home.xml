@@ -22,7 +22,7 @@
                 android:id="@+id/logoXsis"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/logo_xsis"/>
+                android:contentDescription="TODO" android:src="@drawable/logo_xsis"/>
 
             <TextView
                 android:id="@+id/welcome"

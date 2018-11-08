@@ -25,7 +25,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="end"
-            android:paddingRight="10dp"
+            android:contentDescription="TODO" android:paddingRight="10dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_arrow_drop_down_black_24dp" />
     </RelativeLayout>
