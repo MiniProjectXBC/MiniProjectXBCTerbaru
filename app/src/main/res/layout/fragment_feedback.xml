@@ -45,16 +45,21 @@
 
                 <Button
                     android:id="@+id/feedbackButtonSave"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button_login"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/white"
                     android:text="Save"
 
                     />
 
                 <Button
                     android:id="@+id/feedbackButtonCancel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button_login"
+                    android:textColor="@color/white"
                     android:text="Cancel"/>
 
             </LinearLayout>

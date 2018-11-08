@@ -23,9 +23,8 @@ import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AddTrainerActivity extends Activity {
 
-    private Context context =this;
-    private EditText addTrainerEditTextName
-            ,addTrainerEditTexNote;
+    private Context context = this;
+    private EditText addTrainerEditTextName, addTrainerEditTexNote;
     private Button addTrainerButtonSave,
             addTrainerButtonCancel;
 
@@ -37,8 +36,9 @@ public class AddTrainerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trainer);
 
-        ActionBar actionBar =  getActionBar();
-        ((ActionBar)actionBar).setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        ((ActionBar) actionBar).setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Add Trainer");
 
         addTrainerEditTextName = (EditText) findViewById(R.id.addTrainerEditTextName);
         addTrainerEditTexNote = (EditText) findViewById(R.id.addTrainerEditTexNote);
@@ -61,14 +61,15 @@ public class AddTrainerActivity extends Activity {
             }
         });
     }
-    private void inputValidation(){
-        if(addTrainerEditTextName.getText().toString().trim().length()==0){
-            Toast.makeText(context,"Name Field still empty!",Toast.LENGTH_SHORT).show();
+
+    private void inputValidation() {
+        if (addTrainerEditTextName.getText().toString().trim().length() == 0) {
+            Toast.makeText(context, "Name Field still empty!", Toast.LENGTH_SHORT).show();
         }
 //        else if (addTrainerEditTexNote.getText().toString().trim().length()==0){
 //            Toast.makeText(context,"Note Field still empty!",Toast.LENGTH_SHORT).show();
 //        }
-        else{
+        else {
             callAPICreateTrainer();
 
 
@@ -82,7 +83,7 @@ public class AddTrainerActivity extends Activity {
         data.setName(addTrainerEditTextName.getText().toString());
         data.setNotes(addTrainerEditTexNote.getText().toString());
 
-        apiServices.createNewTrainer("application/json",SessionManager.getToken(context), data)
+        apiServices.createNewTrainer("application/json", SessionManager.getToken(context), data)
                 .enqueue(new Callback<ModelTrainer>() {
                     @Override
                     public void onResponse(Call<ModelTrainer> call, Response<ModelTrainer> response) {
@@ -99,7 +100,7 @@ public class AddTrainerActivity extends Activity {
     }
 
 
-    public void SaveSuccessNotification(){
+    public void SaveSuccessNotification() {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
@@ -118,7 +119,7 @@ public class AddTrainerActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id==android.R.id.home){
+        if (id == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

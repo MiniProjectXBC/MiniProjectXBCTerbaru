@@ -327,7 +327,7 @@ public class HomeActivity extends AppCompatActivity
         List<String> portal = new ArrayList<>();
         portal.add("Feedback");
         portal.add("Idle News");
-        portal.add("Kata Idle");
+        portal.add("\"Kata\" Idle");
 
         List<String> idle = new ArrayList<>();
         idle.add("Monitoring");

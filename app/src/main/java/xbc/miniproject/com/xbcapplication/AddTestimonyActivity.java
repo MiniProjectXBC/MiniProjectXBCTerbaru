@@ -34,6 +34,8 @@ public class AddTestimonyActivity extends Activity {
         setContentView(R.layout.activity_add_testimony);
         ActionBar actionBar =  getActionBar();
         ((ActionBar)actionBar).setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Add Testimony");
+
         addTestimonyEditTexTitle =  (EditText) findViewById(R.id.addTestimonyEditTextTitle);
         addTestimonyEditTexContent = (EditText) findViewById(R.id.addTestimonyEditTexContent);
         addTestimonyButtonSave = (Button) findViewById(R.id.addTestimonyButtonSave);

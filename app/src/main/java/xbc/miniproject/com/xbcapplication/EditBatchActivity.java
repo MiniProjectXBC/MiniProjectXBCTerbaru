@@ -87,6 +87,7 @@ public class EditBatchActivity extends Activity {
 
         ActionBar actionBar = getActionBar();
         ((ActionBar) actionBar).setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Edit Batch");
 
         editBatchEditTextTechnology = (AutoCompleteTextView) findViewById(R.id.editBatchEditTextTechnology);
         editBatchEditTextTechnology.setThreshold(1);
