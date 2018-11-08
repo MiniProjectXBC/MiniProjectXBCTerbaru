@@ -37,7 +37,7 @@ public class BiodataListAdapter extends RecyclerView.Adapter<BiodataViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull BiodataViewHolder biodataViewHolder, int position) {
-        final BiodataList user = biodataList.get(position);
+        BiodataList user = biodataList.get(position);
         biodataViewHolder.setModel(user, position, context);
     }
 
