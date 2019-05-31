@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -21,7 +20,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.EditBiodataActivity;
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.BiodataModel;
 import xbc.miniproject.com.xbcapplication.fragment.BiodataFragment;
 import xbc.miniproject.com.xbcapplication.model.biodata.BiodataList;
 import xbc.miniproject.com.xbcapplication.model.biodata.ModelBiodata;
@@ -31,11 +29,11 @@ import xbc.miniproject.com.xbcapplication.utility.Constanta;
 import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class BiodataViewHolder extends RecyclerView.ViewHolder {
-    TextView listBiodataTextViewName,
-            listBiodataTextViewMajors,
-            listBiodataTextViewGpa;
+    private TextView listBiodataTextViewName;
+    private TextView listBiodataTextViewMajors;
+    private TextView listBiodataTextViewGpa;
 
-    ImageView listBiodataButtonAction;
+    private ImageView listBiodataButtonAction;
 
     RequestAPIServices apiServices;
 
@@ -60,7 +58,7 @@ public class BiodataViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(context, "Anda Menekan Action Posisi: "+position,Toast.LENGTH_SHORT).show();
-                PopupMenu popupMenu = new PopupMenu(context,listBiodataButtonAction);
+                PopupMenu popupMenu = new PopupMenu(context, listBiodataButtonAction);
                 popupMenu.inflate(R.menu.biodata_action_menu);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -69,12 +67,12 @@ public class BiodataViewHolder extends RecyclerView.ViewHolder {
                             case R.id.biodataMenuEdit:
                                 //Toast.makeText(context, "Anda Menekan Action Edit pada Posisi: "+position,Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, EditBiodataActivity.class);
-                                intent.putExtra("id",biodataModel.getId());
-                                ((Activity)context).startActivity(intent);
+                                intent.putExtra("id", biodataModel.getId());
+                                context.startActivity(intent);
                                 return true;
                             case R.id.biodataMenuDeactivate:
                                 //Toast.makeText(context, "Anda Menekan Action Deactive pada Posisi: "+position,Toast.LENGTH_SHORT).show();
-                                DeactiveQuestion(biodataModel,position,context);
+                                DeactiveQuestion(biodataModel, position, context);
                                 return true;
                             default:
                                 return false;
@@ -90,12 +88,12 @@ public class BiodataViewHolder extends RecyclerView.ViewHolder {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("Warning!")
-                .setMessage("Apakah Anda Yakin Akan MenonAktifkan "+ biodataModel.getName()+"?")
+                .setMessage("Apakah Anda Yakin Akan MenonAktifkan " + biodataModel.getName() + "?")
                 .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //DeactiveSuccessNotification(context);
-                        deactiveBiodataAPI(biodataModel,position,context,dialog);
+                        deactiveBiodataAPI(biodataModel, position, context, dialog);
                     }
                 })
                 .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -113,34 +111,36 @@ public class BiodataViewHolder extends RecyclerView.ViewHolder {
         id = biodataModel.getId();
 
         apiServices.deactivateBiodata(Constanta.CONTENT_TYPE_API,
-                SessionManager.getToken(context),id)
+                SessionManager.getToken(context), id)
                 .enqueue(new Callback<ModelBiodata>() {
                     @Override
-                    public void onResponse(Call<ModelBiodata> call, Response<ModelBiodata> response) {
-                        if (response.code() == 200){
-                            String message = response.body().getMessage();
-                            if (message!=null){
-                                dialog.dismiss();
-                                DeactiveSuccessNotification(context,message);
-                            } else{
-                                DeactiveSuccessNotification(context,"Message Gagal Dinonaktifkan");
+                    public void onResponse(@NonNull Call<ModelBiodata> call, @NonNull Response<ModelBiodata> response) {
+                        if (response.code() == 200) {
+                            if (response.body() != null) {
+                                String message = response.body().getMessage();
+                                if (message != null) {
+                                    dialog.dismiss();
+                                    DeactiveSuccessNotification(context, message);
+                                } else {
+                                    DeactiveSuccessNotification(context, "Biodata Gagal Dinonaktifkan");
+                                }
                             }
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<ModelBiodata> call, Throwable t) {
+                    public void onFailure(@NonNull Call<ModelBiodata> call, @NonNull Throwable t) {
                         Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
 
     }
 
-    private void DeactiveSuccessNotification(final Context context,String message) {
+    private void DeactiveSuccessNotification(final Context context, String message) {
         final AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("NOTIFICATION !")
-                .setMessage(message+"!")
+                .setMessage(message + "!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

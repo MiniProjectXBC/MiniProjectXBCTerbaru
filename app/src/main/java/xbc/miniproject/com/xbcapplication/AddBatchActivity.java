@@ -79,6 +79,7 @@ public class AddBatchActivity extends Activity {
 
         ActionBar actionBar = getActionBar();
         ((ActionBar) actionBar).setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Add Batch");
 
         addBatchEditTextTechnology = (AutoCompleteTextView) findViewById(R.id.addBatchEditTextTechnology);
         addBatchEditTextTechnology.setThreshold(1);
@@ -91,7 +92,7 @@ public class AddBatchActivity extends Activity {
                 xbc.miniproject.com.xbcapplication.model.batch.autoCompleteTechnology.DataList selected = (xbc.miniproject.com.xbcapplication.model.batch.autoCompleteTechnology.DataList) parent.getAdapter().getItem(position);
                 int gg = selected.getId();
                 idBiodata = gg+"";
-                Toast.makeText(context,"idnya ini cuy: "+gg,Toast.LENGTH_LONG).show();
+//                Toast.makeText(context,"idnya ini cuy: "+gg,Toast.LENGTH_LONG).show();
             }
         });
         addBatchEditTextTechnology.addTextChangedListener(new TextWatcher() {
@@ -254,7 +255,7 @@ public class AddBatchActivity extends Activity {
 
     private void getAutoCompleteAPI(String keyword){
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getAutoCompleteBatchTechnologyList(SessionManager.getToken(context), keyword)
+        apiServices.getAutoCompleteBatchTechnologyList2(SessionManager.getToken(context), keyword)
                 .enqueue(new Callback<ModelBatchTechnologyAutoComplete>() {
             @Override
             public void onResponse(Call<ModelBatchTechnologyAutoComplete> call, Response<ModelBatchTechnologyAutoComplete> response) {
@@ -354,7 +355,7 @@ public class AddBatchActivity extends Activity {
 //        data.setNotes(addBatchEditTextNotes.getText().toString());
 
 
-        apiServices.createNewBatch(contenType, requestBody)
+        apiServices.createNewBatch(contenType, SessionManager.getToken(context), requestBody)
                 .enqueue(new Callback<ModelBatch>() {
                     @Override
                     public void onResponse(Call<ModelBatch> call, Response<ModelBatch> response) {

@@ -61,7 +61,7 @@ public class EditTrainerActivity extends Activity {
         });
 
 
-        int id = getIntent().getIntExtra("id",0);
+//        int id = getIntent().getIntExtra("id",0);
         id=getIntent().getIntExtra("id",0);
         getOneTrainerAPI(id);
 
@@ -69,7 +69,7 @@ public class EditTrainerActivity extends Activity {
 
     private void getOneTrainerAPI(int id) {
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getOneTrainer(id).enqueue(new Callback<ModelTrainer>() {
+        apiServices.getOneTrainer(SessionManager.getToken(context),id).enqueue(new Callback<ModelTrainer>() {
             @Override
             public void onResponse(Call<ModelTrainer> call, Response<ModelTrainer> response) {
                 if (response.code() == 200){
@@ -108,7 +108,7 @@ public class EditTrainerActivity extends Activity {
         apiServices = APIUtilities.getAPIServices();
 
         Trainer data = new Trainer();
-        data.setId(idData);
+        data.setId(id);
         data.setName(editTrainerEditTextName.getText().toString());
         data.setNotes(editTrainerEditTexNote.getText().toString());
 

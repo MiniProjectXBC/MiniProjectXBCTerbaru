@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.BiodataModel;
-import xbc.miniproject.com.xbcapplication.dummyModel.MonitoringModel;
 import xbc.miniproject.com.xbcapplication.model.monitoring.ModelMonitoring;
 import xbc.miniproject.com.xbcapplication.model.monitoring.MonitoringDataList;
 import xbc.miniproject.com.xbcapplication.viewHolder.BiodataViewHolder;

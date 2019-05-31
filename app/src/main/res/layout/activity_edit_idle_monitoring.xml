@@ -32,7 +32,7 @@
                 android:layout_weight="9"
                 android:hint="Idle Date"
                 android:inputType="text"
-                android:drawableRight="@drawable/baseline_calendar_today_black_18"/>
+                android:drawableRight="@drawable/ic_perm_contact_calendar_black_24dp"/>
 
             <EditText
                 android:id="@+id/editMonitoringEditTextLastProjectAt"
@@ -60,12 +60,17 @@
                     android:id="@+id/editMonitoringButtonSave"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button_login"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/white"
                     android:text="Save" />
 
                 <Button
                     android:id="@+id/editMonitoringButtonCancel"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button_login"
+                    android:textColor="@color/white"
                     android:text="Cancel" />
 
             </LinearLayout>

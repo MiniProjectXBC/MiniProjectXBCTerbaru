@@ -24,6 +24,7 @@ import xbc.miniproject.com.xbcapplication.model.user.DataList;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.Constanta;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class UserViewHolder extends RecyclerView.ViewHolder {
     private TextView listUserUsername;
@@ -101,7 +102,7 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
         id = dataList.getId();
 
         apiServices.deactivateUser(Constanta.CONTENT_TYPE_API,
-                Constanta.AUTHORIZATION_DEACTIVATED_USER, id)
+                SessionManager.getToken(context), id)
                 .enqueue(new Callback<ModelTrainer>() {
                     @Override
                     public void onResponse(Call<ModelTrainer> call, Response<ModelTrainer> response) {

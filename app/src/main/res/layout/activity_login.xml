@@ -16,7 +16,7 @@
         android:layout_marginRight="50dp"
         android:layout_marginLeft="50dp"
         android:layout_gravity="center"
-        android:src="@drawable/logo_xsis"/>
+        android:contentDescription="TODO" android:src="@drawable/logo_xsis"/>
 
     <EditText
         android:id="@+id/userName"

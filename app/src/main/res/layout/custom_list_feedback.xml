@@ -17,9 +17,18 @@
             android:layout_height="wrap_content"
             android:text="Queestion :"
             />
+        <TextView
+            android:id="@+id/notesFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notes"
+            android:visibility="gone"
+            />
+
+
         <EditText
             android:id="@+id/customListFeedback"
-            android:layout_width="match_parent"
+            android:layout_width="match_parent" android:inputType="" 
             android:layout_height="wrap_content"
             android:hint="Notes"/>
 

@@ -87,6 +87,7 @@ public class EditBatchActivity extends Activity {
 
         ActionBar actionBar = getActionBar();
         ((ActionBar) actionBar).setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Edit Batch");
 
         editBatchEditTextTechnology = (AutoCompleteTextView) findViewById(R.id.editBatchEditTextTechnology);
         editBatchEditTextTechnology.setThreshold(1);
@@ -396,7 +397,7 @@ public class EditBatchActivity extends Activity {
 
         String contenType = Constanta.CONTENT_TYPE_API;
         String token = SessionManager.getToken(context);
-        String JSON =  APIUtilities.generateBatch(idBiodata, idBiodata2, name, periodFrom, periodTo,
+        String JSON =  APIUtilities.generateEditBatch(id+"",idBiodata, idBiodata2, name, periodFrom, periodTo,
                 room,bootcampType, note);
         RequestBody requestBody =  RequestBody.create(APIUtilities.mediaType(), JSON);
         apiServices = APIUtilities.getAPIServices();

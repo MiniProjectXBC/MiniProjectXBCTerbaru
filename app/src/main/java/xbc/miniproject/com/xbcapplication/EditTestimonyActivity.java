@@ -55,7 +55,7 @@ public class EditTestimonyActivity extends Activity {
             }
         });
 
-        int id = getIntent().getIntExtra("id",0);
+//        int id = getIntent().getIntExtra("id",0);
         id=getIntent().getIntExtra("id",0);
         getOneTestimonyAPI(id);
     }
@@ -63,7 +63,7 @@ public class EditTestimonyActivity extends Activity {
 
     private void getOneTestimonyAPI(int id) {
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getOneTestimony(id).enqueue(new Callback<ModelTestimony>() {
+        apiServices.getOneTestimony(SessionManager.getToken(context),id).enqueue(new Callback<ModelTestimony>() {
             @Override
             public void onResponse(Call<ModelTestimony> call, Response<ModelTestimony> response) {
                 if (response.code() == 200){
@@ -103,7 +103,7 @@ public class EditTestimonyActivity extends Activity {
         apiServices = APIUtilities.getAPIServices();
 
         Testimony data = new Testimony();
-        data.setId(idData);
+        data.setId(id);
         data.setTitle(editTestimonyEditTextTitle.getText().toString());
         data.setContent(editTestimonyEditTexContent.getText().toString());
 

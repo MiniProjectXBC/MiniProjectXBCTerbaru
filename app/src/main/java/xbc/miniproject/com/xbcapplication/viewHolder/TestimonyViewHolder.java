@@ -19,7 +19,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.EditTestimonyActivity;
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.TestimonyModel;
 import xbc.miniproject.com.xbcapplication.model.testimony.DataListTestimony;
 import xbc.miniproject.com.xbcapplication.model.testimony.ModelTestimony;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;

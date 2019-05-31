@@ -31,6 +31,7 @@ import xbc.miniproject.com.xbcapplication.model.assignment.ModelAssignment;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class AssignmentFragment extends Fragment {
     private EditText assignmentEditTextSearch;
@@ -119,7 +120,7 @@ public class AssignmentFragment extends Fragment {
         loading.show();
 
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListAssignment().enqueue(new Callback<ModelAssignment>() {
+        apiServices.getListAssignment(SessionManager.getToken(getContext()),keyword).enqueue(new Callback<ModelAssignment>() {
             @Override
             public void onResponse(Call<ModelAssignment> call, Response<ModelAssignment> response) {
                 loading.dismiss();

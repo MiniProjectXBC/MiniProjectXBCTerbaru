@@ -38,7 +38,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.MonitoringModel;
 import xbc.miniproject.com.xbcapplication.model.monitoring.ModelMonitoring;
 import xbc.miniproject.com.xbcapplication.model.monitoring.MonitoringBiodata;
 import xbc.miniproject.com.xbcapplication.model.monitoring.MonitoringDataList;

@@ -32,6 +32,7 @@ import xbc.miniproject.com.xbcapplication.model.idleNews.ModelIdleNews;
 import xbc.miniproject.com.xbcapplication.retrofit.APIUtilities;
 import xbc.miniproject.com.xbcapplication.retrofit.RequestAPIServices;
 import xbc.miniproject.com.xbcapplication.utility.LoadingClass;
+import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 
 public class IdleNewsFragment extends Fragment {
     private EditText idleNewsEditTextSearch;
@@ -121,7 +122,7 @@ public class IdleNewsFragment extends Fragment {
         loading.show();
 
         apiServices = APIUtilities.getAPIServices();
-        apiServices.getListIdleNews().enqueue(new Callback<ModelIdleNews>() {
+        apiServices.getListIdleNews(SessionManager.getToken(getContext()),keyword).enqueue(new Callback<ModelIdleNews>() {
             @Override
             public void onResponse(Call<ModelIdleNews> call, Response<ModelIdleNews> response) {
                 loading.dismiss();

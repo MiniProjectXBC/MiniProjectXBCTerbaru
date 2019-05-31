@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -36,7 +37,8 @@ import xbc.miniproject.com.xbcapplication.utility.SessionManager;
 public class TrainerFragment extends Fragment {
 
     private EditText trainerEditTextSearch;
-    private Button trainerButtonSearch, trainerButtonInsert;
+    private Button trainerButtonSearch;
+    private ImageView trainerButtonInsert;
     private RecyclerView trainerRecyclerViewList;
     private List<DataListTrainer> trainerModelList =  new ArrayList<>();
     private TrainerListAdapter trainerListAdapter;
@@ -48,7 +50,7 @@ public class TrainerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_trainer_layout, container, false);
-        trainerButtonInsert = (Button) view.findViewById(R.id.trainerButtonInsert);
+        trainerButtonInsert = (ImageView) view.findViewById(R.id.trainerButtonInsert);
         trainerButtonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

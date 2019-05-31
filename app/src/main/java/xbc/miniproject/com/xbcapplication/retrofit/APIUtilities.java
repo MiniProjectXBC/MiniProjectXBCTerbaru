@@ -211,6 +211,36 @@ public class APIUtilities {
         return json;
     }
 
+    public static String generateEditBatch (String id, String technology, String trainer, String
+            name, String periodFrom, String periodTo, String room, String bootcampType, String note ){
+        Map<String, Object> map = new HashMap<>();
+        if(technology!=null){
+            Map <String, String> unitObj =  new HashMap<>();
+            unitObj.put("id", technology);
+
+            map.put("technology", unitObj);
+        }
+        if(trainer!=null){
+            Map<String, String> unitObj =  new HashMap<>();
+            unitObj.put("id", trainer);
+
+            map.put("trainer", unitObj);
+        }
+        if (name != null) map.put("name", name);
+        if (periodFrom != null) map.put("periodFrom", periodFrom);
+        if (periodTo != null) map.put("periodTo", periodTo);
+        if (room != null) map.put("room", room);
+        if (bootcampType != null) map.put("bootcampType", bootcampType);
+        if (note != null) map.put("note", note);
+        if (id !=null) map.put("id",id);
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.serializeNulls().create();
+        String json = gson.toJson(map);
+
+        return json;
+    }
+
 
 
     //generate Create Batch AddParticipant

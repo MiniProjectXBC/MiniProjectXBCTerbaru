@@ -197,7 +197,7 @@ public class AddUserActivity extends Activity {
         dataUser.setPassword(addUserEditTexPassword.getText().toString());
         dataUser.setMRoleId(dataListRoles.get(position).getId());
 
-        apiServices.createNewUser("application/json", dataUser)
+        apiServices.createNewUser(SessionManager.getToken(context),"application/json", dataUser)
                 .enqueue(new Callback<ModelUser>() {
                     @Override
                     public void onResponse(Call<ModelUser> call, Response<ModelUser> response) {

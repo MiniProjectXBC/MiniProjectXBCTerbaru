@@ -49,6 +49,7 @@ public class EditUserActivity extends Activity {
     private RequestAPIServices apiServices;
     int id1;
     private boolean isRoleSelected;
+    private Integer cariID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +85,10 @@ public class EditUserActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 isRoleSelected = true;
-                id1 = position;
+                //id1 = position;
                 editUserEditTextRole.setError(null);
                 DataListRole selected = (DataListRole) parent.getAdapter().getItem(position);
-                int cariID =  selected.getId();
+                cariID =  selected.getId();
                // Toast.makeText(context,"idnya ini bos: "+cariID,Toast.LENGTH_LONG).show();
             }
         });
@@ -135,7 +136,7 @@ public class EditUserActivity extends Activity {
 
     private  void getOneUserAPI(final int id){
      apiServices = APIUtilities.getAPIServices();
-     apiServices.getOneUser(id).enqueue(new Callback<ModelUserGetOne>() {
+     apiServices.getOneUser(SessionManager.getToken(context),id).enqueue(new Callback<ModelUserGetOne>() {
          @Override
          public void onResponse(Call<ModelUserGetOne> call, Response<ModelUserGetOne> response) {
              if(response.code()==200){
@@ -207,9 +208,10 @@ public class EditUserActivity extends Activity {
         User data = new User();
         String contentType = Constanta.CONTENT_TYPE_API;
         String token =  SessionManager.getToken(context);
+        data.setId(id1);
         data.setUsername(editUserEditTexUsername.getText().toString());
         data.setPassword(editUserEditTexPassword.getText().toString());
-        data.setMRoleId(dataListRoles.get(position).getId().toString());
+        data.setMRoleId(cariID+"");
 
         apiServices.editUser(contentType,token, data)
                 .enqueue(new Callback<ModelUser>() {

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SessionManager {
-    protected static SharedPreferences retrieveSharedReferences(Context context){
-        return context.getSharedPreferences( Constanta.SHARED_PREFERENCE_NAME, context.MODE_PRIVATE);
+    private static SharedPreferences retrieveSharedReferences(Context context){
+        return context.getSharedPreferences( Constanta.SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 
-    protected static SharedPreferences.Editor retieveSharedPreferenceEditor (Context context){
+    private static SharedPreferences.Editor retieveSharedPreferenceEditor(Context context){
         return retrieveSharedReferences(context).edit();
     }
 

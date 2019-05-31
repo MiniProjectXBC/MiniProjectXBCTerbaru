@@ -22,7 +22,6 @@ import xbc.miniproject.com.xbcapplication.AddPlacementMonitoringActivity;
 import xbc.miniproject.com.xbcapplication.EditBiodataActivity;
 import xbc.miniproject.com.xbcapplication.EditIdleMonitoringActivity;
 import xbc.miniproject.com.xbcapplication.R;
-import xbc.miniproject.com.xbcapplication.dummyModel.MonitoringModel;
 import xbc.miniproject.com.xbcapplication.fragment.BiodataFragment;
 import xbc.miniproject.com.xbcapplication.fragment.MonitoringFragment;
 import xbc.miniproject.com.xbcapplication.model.monitoring.ModelMonitoring;

@@ -33,12 +33,17 @@
                     android:id="@+id/addParticipantBatchButtonSave"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button_login"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/white"
                     android:text="Save"/>
 
                 <Button
                     android:id="@+id/addParticipantBatchButtonCancel"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button_login"
+                    android:textColor="@color/white"
                     android:text="Cancel"/>
 
             </LinearLayout>

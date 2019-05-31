@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,30 +10,32 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/biodataEditTextSearch"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:inputType="text"
-            android:layout_marginRight="10dp"
-            android:hint="Searh by Name" />
+            android:orientation="horizontal">
 
-        <ImageView
-            android:layout_gravity="center_vertical"
-            android:id="@+id/biodataButtonInsert"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/custom_button_login"
-            android:src="@android:drawable/ic_menu_add" />
+            <EditText
+                android:id="@+id/biodataEditTextSearch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="4"
+                android:hint="Searh by Name"
+                android:inputType="text"
+                tools:ignore="Autofill" />
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/biodataButtonInsert"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button_login"
+                android:src="@android:drawable/ic_menu_add"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,21 +47,21 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:textColor="@color/white"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:padding="5dp"
                 android:gravity="center_vertical"
+                android:padding="5dp"
                 android:text="NAME"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"
-                android:padding="5dp"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:gravity="center_vertical"
+                android:padding="5dp"
                 android:text="MAJORS"
                 android:textColor="@color/white"
                 android:textSize="16sp"
@@ -68,9 +70,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:padding="5dp"
                 android:layout_weight="2"
                 android:gravity="center_vertical"
+                android:padding="5dp"
                 android:text="GPA"
                 android:textColor="@color/white"
                 android:textSize="16sp"
@@ -83,7 +85,8 @@
 
                 <ImageView
                     android:layout_width="30dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 
@@ -92,7 +95,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/biodataRecyclerViewList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
