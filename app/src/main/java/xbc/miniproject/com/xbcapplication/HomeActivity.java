@@ -53,7 +53,8 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
 
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar)
+                findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setPopupTheme(R.style.PopupMenu);
